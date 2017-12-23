@@ -292,6 +292,7 @@ __pycache__/
 
 # debug-files
 debug
+.vscode
 
 # project-files
 config.ini
