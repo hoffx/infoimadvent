@@ -5,10 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{.i18n.Tr "home"}} | {{.i18n.Tr "service"}}</title>
-    <link rel="stylesheet" type="text/css" href="/style/main.css"/>
     <link rel="stylesheet" type="text/css" href="/style/home.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Zilla+Slab" rel="stylesheet">
 </head>
 <body>
-    
+    <div class="title">
+        <h1>{{.i18n.Tr "service"}}</h1>
+    </div>
+    <div class="container option-container">
+        <div class="options">
+            {{if .New}}
+            <div class="option register">
+                <a href="/register"><h2>{{.i18n.Tr "register"}}</a></h2>
+            </div>
+            <div class="option login">
+            <a href="/login"><h2>{{.i18n.Tr "login"}}</a></h2>
+            </div>
+            {{end}}
+            {{if not .New}}
+            <div class="option current">
+                <a href="/current"><h2>{{.i18n.Tr "current"}}</a></h2>
+            </div>
+            <div class="option calendar">
+                <a href="/calendar"><h2>{{.i18n.Tr "calendar"}}</a></h2>
+            </div>
+            {{end}}
+            <div class="option about">
+                <a href="/about"><h2>{{.i18n.Tr "about"}}</a></h2>
+            </div>
+        </div>
+    </div>
+    <div class="description content">
+        <p class="text">{{.i18n.Tr "description"}}</p>
+    </div>
 </body>
 </html>

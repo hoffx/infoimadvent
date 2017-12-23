@@ -35,5 +35,7 @@ func runWeb(ctx *cli.Context) {
 	m.Get("/calendar", routes.Calendar)
 	m.Get("/register", routes.Register)
 	m.Get("/login", routes.Login)
+	m.Get("/current", routes.Current)
+	m.Get("/about", routes.About)
 	m.Run()
 }

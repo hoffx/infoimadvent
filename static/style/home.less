@@ -1,5 +1,87 @@
+@import "main";
+
 @media all {
     body {
-        
+        grid-template-columns: 45vw 55vw;
+        grid-template-rows: 38.2vh 61.8vh;
+
+        .title{
+            grid-column-start:1;
+            grid-column-end:2;
+            grid-row-start:1;
+            grid-row-end: 2;
+
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+
+            padding: 2em;
+            
+            h1{
+                text-align: center;
+                font-size: 50pt;
+            }
+        }
+
+        .content{
+            background-color: @background-gray;
+            color: @text-white;
+        }
+
+        .description{
+            grid-column-start: 2;
+            grid-column-end: 3;
+            grid-row-start: 1;
+            grid-row-end: 3;
+
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+
+            font-size: 1.2em;
+            padding:5em;
+            vertical-align: middle;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            p {
+                max-height: 100%;
+                overflow-y: auto;
+            }
+
+        }
+
+        .option-container{
+            grid-column-start: 1;
+            grid-column-end:2;
+            grid-row-start:2;
+            grid-row-end:3;
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            .options{
+
+                .option{
+                    box-sizing: border-box;
+                    -moz-box-sizing: border-box;
+                    -webkit-box-sizing: border-box;
+
+                    display: block;
+                    width: 100%;
+                    padding: 1em;
+                    border-top: solid 1px black;
+                    text-align: center;
+                    color: @text-gray;
+
+                    &:first-of-type{
+                        border:none;
+                    }
+                }
+            }
+        }
     }
 }

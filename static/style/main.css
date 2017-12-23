@@ -1,0 +1,32 @@
+@media all {
+  body {
+    font-family: 'Zilla Slab', serif;
+    display: grid;
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+  }
+  body p {
+    line-height: 1.5;
+  }
+  body p::first-letter {
+    font-family: 'Zilla Slab', serif;
+    float: left;
+    line-height: 0.9em;
+    font-size: 3em;
+    margin-right: 10px;
+    color: #c4bb45;
+  }
+  body a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s;
+  }
+  body a:hover {
+    color: #c4bb45;
+  }
+  body .text {
+    font-family: Arial, Helvetica, sans-serif !important;
+  }
+}

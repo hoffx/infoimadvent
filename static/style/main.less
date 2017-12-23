@@ -1,5 +1,41 @@
+@import "colors";
+
+@transition: 0.2s;
+
 @media all {
     body {
-        
+        font-family: 'Zilla Slab', serif;
+        display: grid;
+        margin: 0;
+        padding: 0;
+        width: 100vw;
+        height: 100vh;
+
+        p{
+            line-height: 1.5;
+
+            &::first-letter{
+                font-family: 'Zilla Slab', serif;
+                float:left;
+                line-height: 0.9em;
+                font-size: 3em;
+                margin-right: 10px;
+                color: @gold;
+            }
+        }
+
+        a{
+            text-decoration: none;
+            color: inherit;
+            transition: color @transition;
+
+            &:hover{
+                color: @gold;
+            }
+        }
+
+        .text{
+            font-family: Arial, Helvetica, sans-serif !important;
+        }
     }
 }

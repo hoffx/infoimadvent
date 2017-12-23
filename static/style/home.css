@@ -1,0 +1,98 @@
+@media all {
+  body {
+    font-family: 'Zilla Slab', serif;
+    display: grid;
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+  }
+  body p {
+    line-height: 1.5;
+  }
+  body p::first-letter {
+    font-family: 'Zilla Slab', serif;
+    float: left;
+    line-height: 0.9em;
+    font-size: 3em;
+    margin-right: 10px;
+    color: #c4bb45;
+  }
+  body a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s;
+  }
+  body a:hover {
+    color: #c4bb45;
+  }
+  body .text {
+    font-family: Arial, Helvetica, sans-serif !important;
+  }
+}
+@media all {
+  body {
+    grid-template-columns: 45vw 55vw;
+    grid-template-rows: 38.2vh 61.8vh;
+  }
+  body .title {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    padding: 2em;
+  }
+  body .title h1 {
+    text-align: center;
+    font-size: 50pt;
+  }
+  body .content {
+    background-color: #222222;
+    color: #d2d2d2;
+  }
+  body .description {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 3;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    font-size: 1.2em;
+    padding: 5em;
+    vertical-align: middle;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  body .description p {
+    max-height: 100%;
+    overflow-y: auto;
+  }
+  body .option-container {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  body .option-container .options .option {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    display: block;
+    width: 100%;
+    padding: 1em;
+    border-top: solid 1px black;
+    text-align: center;
+    color: #222222;
+  }
+  body .option-container .options .option:first-of-type {
+    border: none;
+  }
+}
