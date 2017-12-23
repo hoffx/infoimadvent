@@ -13,10 +13,10 @@
   body p::first-letter {
     font-family: 'Zilla Slab', serif;
     float: left;
-    line-height: 0.9em;
-    font-size: 3em;
-    margin-right: 10px;
+    font-size: 2.9em;
+    line-height: 1em;
     color: #c4bb45;
+    margin-right: 10px;
   }
   body a {
     text-decoration: none;
