@@ -32,10 +32,16 @@ func runWeb(ctx *cli.Context) {
 		Directory: "templates",
 	}))
 	m.Get("/", routes.Home)
-	m.Get("/calendar", routes.Calendar)
+
 	m.Get("/register", routes.Register)
 	m.Get("/login", routes.Login)
-	m.Get("/current", routes.Current)
+
+	m.Get("/calendar", routes.Calendar)
+	m.Group("/day", func() {
+		m.Get("/", routes.Current)
+		m.Get("/:day", routes.Day)
+	})
+
 	m.Get("/about", routes.About)
 	m.Run()
 }
