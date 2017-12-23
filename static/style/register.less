@@ -29,9 +29,6 @@
         .content{
             background-color: @background-gray;
             color: @text-white;
-        }
-
-        .description{
             grid-column-start: 2;
             grid-column-end: 3;
             grid-row-start: 1;
@@ -48,12 +45,56 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow-y: auto;
 
-            p {
-                max-height: 100%;
-                overflow-y: auto;
+            form{
+                input{
+                    font-size: inherit;
+                    padding: 0.2em;
+                    margin-top: 1em;
+                    margin-bottom: 1em;
+                    display: block;
+                }
+
+                .textfield{
+                    border: none;
+                    border-bottom: solid 1px @text-white;
+                    background: none;
+                    color: @text-white;
+
+                    &:active{
+                        border-bottom-color: @gold;
+                        color: @gold;
+                    }
+                }
+
+                .dropdown{
+                    border: none;
+                    border-bottom: solid 1px @text-white;
+                    background: none;
+                    color: @text-white;
+                    width: 100%;
+
+                    &:active{
+                        border-bottom-color: @gold;
+                        color: @gold;
+                    }
+                }
+
+                .button{
+                    margin-top: 2em;
+                    border: none;
+                    background: none;
+                    color: @text-white;
+                    width: 100%;
+                    font-size: inherit;
+
+                    &:hover{
+                        cursor: pointer;
+                        color: @gold;
+                    }
+                }
             }
-
         }
 
         .option-container{

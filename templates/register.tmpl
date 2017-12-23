@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="{{.Lang}}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{.i18n.Tr "register"}} | {{.i18n.Tr "service"}}</title>
+    <link rel="stylesheet" type="text/css" href="/style/register.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Zilla+Slab" rel="stylesheet">
+</head>
+<body>
+    <div class="title">
+        <h1>{{.i18n.Tr "register"}}</h1>
+    </div>
+    <div class="container option-container">
+        <div class="options">
+            <div class="option login">
+                <a href="/login"><h2>{{.i18n.Tr "login"}}</a></h2>
+            </div>
+            <div class="option back">
+                <a href="/"><h2>{{.i18n.Tr "back"}}</a></h2>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <form name="register" method="post" autocomplete="on">
+            <input class="textfield" type="email" placeholder={{.i18n.Tr "email"}} />
+            <input class="textfield" type="password" placeholder={{.i18n.Tr "password"}} />
+            <input class="textfield" type="password" placeholder={{.i18n.Tr "password"}} />
+            <input class="dropdown" type="number" min=1 max=12 placeholder={{.i18n.Tr "yearlevel"}} />
+            <button class="button" type="submit">{{.i18n.Tr "register"}}</button>
+        </form>
+    </div>
+</body>
+</html>

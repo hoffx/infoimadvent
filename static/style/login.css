@@ -55,8 +55,6 @@
   body .content {
     background-color: #222222;
     color: #d2d2d2;
-  }
-  body .description {
     grid-column-start: 2;
     grid-column-end: 3;
     grid-row-start: 1;
@@ -70,10 +68,36 @@
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-  body .description p {
-    max-height: 100%;
     overflow-y: auto;
+  }
+  body .content form input {
+    font-size: inherit;
+    padding: 0.2em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    display: block;
+  }
+  body .content form .textfield {
+    border: none;
+    border-bottom: solid 1px #d2d2d2;
+    background: none;
+    color: #d2d2d2;
+  }
+  body .content form .textfield:active {
+    border-bottom-color: #c4bb45;
+    color: #c4bb45;
+  }
+  body .content form .button {
+    margin-top: 2em;
+    border: none;
+    background: none;
+    color: #d2d2d2;
+    width: 100%;
+    font-size: inherit;
+  }
+  body .content form .button:hover {
+    cursor: pointer;
+    color: #c4bb45;
   }
   body .option-container {
     grid-column-start: 1;

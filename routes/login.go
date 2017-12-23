@@ -7,5 +7,5 @@ import (
 )
 
 func Login(ctx *macaron.Context, log *log.Logger) {
-	ctx.Redirect("/")
+	ctx.HTML(200, "login")
 }

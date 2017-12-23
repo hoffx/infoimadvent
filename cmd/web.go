@@ -29,7 +29,7 @@ func runWeb(ctx *cli.Context) {
 		Names:     []string{"Deutsch", "Englisch"},
 	}))
 	m.Use(macaron.Renderer(macaron.RenderOptions{
-		Directory: "static/templates",
+		Directory: "templates",
 	}))
 	m.Get("/", routes.Home)
 	m.Get("/calendar", routes.Calendar)
