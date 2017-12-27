@@ -66,8 +66,10 @@ func Restore(ctx *macaron.Context, log *log.Logger, storer *storage.Storer) {
 		if err := d.DialAndSend(m); err != nil {
 			ctx.Error(500, ErrMail.Error())
 			log.Println(err)
-			ctx.Redirect("/login", 302)
+			ctx.Redirect("/login", 500)
+			return
 		}
 	}
-	ctx.Redirect("/login", 302)
+
+	ctx.Redirect("/login?Email="+user.Email, 302)
 }

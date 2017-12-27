@@ -7,19 +7,25 @@ import (
 
 func Confirm(ctx *macaron.Context, storer *storage.Storer) {
 	query := ctx.Req.URL.Query()
+	var user storage.User
+	var err error
 	// check if request is formatted correctly
 	if query["user"] != nil && query["token"] != nil {
 		// get according user
-		user, err := storer.Get(query["user"][0])
+		user, err = storer.Get(query["user"][0])
 		if err != nil {
 			ctx.Error(500, ErrDB.Error())
 			ctx.Redirect("/", 500)
 			return
 		}
 		// check if token and user status are ok
-		if !user.Confirmed && user.ConfirmationToken == query["token"][0] {
+		if user.Email != "" && !user.Confirmed && user.ConfirmationToken == query["token"][0] {
 			user.ConfirmationToken = ""
 			user.Confirmed = true
+			user.Active = true
+
+			//TODO: session login
+
 			err = storer.Put(user)
 			if err != nil {
 				ctx.Error(500, ErrDB.Error())
@@ -37,6 +43,5 @@ func Confirm(ctx *macaron.Context, storer *storage.Storer) {
 		ctx.Redirect("/", 406)
 		return
 	}
-	// TODO: automated login
-	ctx.Redirect("/login", 302)
+	ctx.Redirect("/", 302)
 }

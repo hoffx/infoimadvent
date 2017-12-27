@@ -17,6 +17,7 @@ var ErrNotConfirmed = errors.New("user_not_confirmed")
 
 func Login(ctx *macaron.Context, log *log.Logger, storer *storage.Storer) {
 	defer ctx.HTML(200, "login")
+	defer parseURL(ctx)
 
 	type Config struct {
 		MinPwL, MaxPwL uint
@@ -58,4 +59,15 @@ func Login(ctx *macaron.Context, log *log.Logger, storer *storage.Storer) {
 		// TODO: create session
 	}
 
+}
+
+func parseURL(ctx *macaron.Context) {
+	query := ctx.Req.URL.Query()
+	for k, v := range query {
+		if len(v) == 1 {
+			ctx.Data[k] = v[0]
+		} else if len(v) > 1 {
+			ctx.Data[k] = v
+		}
+	}
 }
