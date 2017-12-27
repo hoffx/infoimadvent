@@ -2,6 +2,7 @@ package routes
 
 import (
 	"errors"
+	"log"
 
 	"github.com/hoffx/infoimadvent/config"
 	"github.com/hoffx/infoimadvent/storage"
@@ -14,7 +15,7 @@ var ErrUnexpected = errors.New("unexpected_error")
 var ErrWrongCredentials = errors.New("wrong_credentials_error")
 var ErrNotConfirmed = errors.New("user_not_confirmed")
 
-func Login(ctx *macaron.Context, storer *storage.Storer) {
+func Login(ctx *macaron.Context, log *log.Logger, storer *storage.Storer) {
 	defer ctx.HTML(200, "login")
 
 	type Config struct {
@@ -31,20 +32,24 @@ func Login(ctx *macaron.Context, storer *storage.Storer) {
 	} else {
 		fEmail := ctx.Req.FormValue("email")
 		fPw := ctx.Req.FormValue("pw")
+
+		ctx.Data["Email"] = fEmail
+
 		user, err := storer.Get(fEmail)
 		if err != nil {
-			ctx.Data["Error"] = ErrDB.Error()
+			ctx.Data["Error"] = ctx.Tr(ErrDB.Error())
+			log.Println(err)
 			return
 		} else if user.Email == "" {
-			ctx.Data["Error"] = ErrWrongCredentials.Error()
+			ctx.Data["Error"] = ctx.Tr(ErrWrongCredentials.Error())
 		}
 		err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(fPw))
 		if err != nil {
-			ctx.Data["Error"] = ErrWrongCredentials.Error()
+			ctx.Data["Error"] = ctx.Tr(ErrWrongCredentials.Error())
 			return
 		}
 		if !user.Confirmed {
-			ctx.Data["Error"] = ErrNotConfirmed.Error()
+			ctx.Data["Error"] = ctx.Tr(ErrNotConfirmed.Error())
 			return
 		}
 		ctx.Data["LoggedIn"] = true

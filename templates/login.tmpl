@@ -23,20 +23,24 @@
         </div>
     </div>
     <div class="content">
-        {{if not .LoggedIn}}
-        <form name="login"  method="post" autocomplete="on">
-            <input name="email" class="textfield" type="email" placeholder={{.i18n.Tr "email"}} required=true />
-            <input name="pw" class="textfield" type="password" placeholder={{.i18n.Tr "password"}} required=true minlength={{.Config.MinPwL}} maxlength={{.Config.MaxPwL}} />
-            <button class="button" type="submit">{{.i18n.Tr "login"}}</button>
-        </form>
-        {{end}}
-        {{if .LoggedIn}}
-            <a href="/logout" class="button">{{.i18n.Tr "logout"}}</a>
-        {{end}}
-        {{if .Error}}
-            <!-- TODO: change to proper user-friendly error message -->
-            {{.Error}}
-        {{end}}
+        <div>
+            {{if not .LoggedIn}}
+            <form name="login"  method="post" autocomplete="on">
+                <input name="email" class="textfield" type="email" placeholder={{.i18n.Tr "email"}} required=true {{if .Email}} value={{.Email}} {{end}} />
+                <input name="pw" class="textfield" type="password" placeholder={{.i18n.Tr "password"}} required=true minlength={{.Config.MinPwL}} maxlength={{.Config.MaxPwL}} />
+                <button class="button" type="submit">{{.i18n.Tr "login"}}</button>
+                {{if .Error}}
+                    <button formaction="/restore" type="submit" class="button small">{{.i18n.Tr "restore_pw"}}</button>
+                {{end}}
+            </form>
+            {{end}}
+            {{if .LoggedIn}}
+                <a href="/logout" class="button text">{{.i18n.Tr "logout"}}</a>
+            {{end}}
+            {{if .Error}}
+                <div class="error text">{{.Error}}</div>
+            {{end}}
+        </div>
     </div>
 </body>
 </html>

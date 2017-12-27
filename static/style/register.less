@@ -48,12 +48,19 @@
             overflow-y: auto;
 
             form{
+
                 input{
                     font-size: inherit;
                     padding: 0.2em;
+                    margin: 0 auto;
                     margin-top: 1em;
                     margin-bottom: 1em;
                     display: block;
+                    width: 250px;
+
+                    box-sizing: border-box;
+                    -moz-box-sizing: border-box;
+                    -webkit-box-sizing: border-box;
                 }
 
                 .textfield{
@@ -73,7 +80,7 @@
                     border-bottom: solid 1px @text-white;
                     background: none;
                     color: @text-white;
-                    width: 100%;
+                    
 
                     &:active{
                         border-bottom-color: @gold;
@@ -95,6 +102,14 @@
                     }
                 }
             }
+
+            .error{
+                margin-top: 2em;
+                color: @red;
+                width: 100%;
+                text-align: center;
+            }
+
         }
 
         .option-container{

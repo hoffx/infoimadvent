@@ -13,10 +13,10 @@
   body p::first-letter {
     font-family: 'Zilla Slab', serif;
     float: left;
-    line-height: 0.9em;
-    font-size: 3em;
-    margin-right: 10px;
+    font-size: 2.9em;
+    line-height: 1em;
     color: #c4bb45;
+    margin-right: 10px;
   }
   body a {
     text-decoration: none;
@@ -25,6 +25,11 @@
   }
   body a:hover {
     color: #c4bb45;
+  }
+  body .small {
+    font-size: 10pt !important;
+    margin-top: 0.5em !important;
+    margin-bottom: 0.5em !important;
   }
   body .text {
     font-family: Arial, Helvetica, sans-serif !important;
@@ -73,9 +78,14 @@
   body .content form input {
     font-size: inherit;
     padding: 0.2em;
+    margin: 0 auto;
     margin-top: 1em;
     margin-bottom: 1em;
     display: block;
+    width: 250px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
   }
   body .content form .textfield {
     border: none;
@@ -92,7 +102,6 @@
     border-bottom: solid 1px #d2d2d2;
     background: none;
     color: #d2d2d2;
-    width: 100%;
   }
   body .content form .dropdown:active {
     border-bottom-color: #c4bb45;
@@ -109,6 +118,12 @@
   body .content form .button:hover {
     cursor: pointer;
     color: #c4bb45;
+  }
+  body .content .error {
+    margin-top: 2em;
+    color: #d24e4c;
+    width: 100%;
+    text-align: center;
   }
   body .option-container {
     grid-column-start: 1;

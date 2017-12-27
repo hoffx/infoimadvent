@@ -26,6 +26,11 @@
   body a:hover {
     color: #c4bb45;
   }
+  body .small {
+    font-size: 10pt !important;
+    margin-top: 0.5em !important;
+    margin-bottom: 0.5em !important;
+  }
   body .text {
     font-family: Arial, Helvetica, sans-serif !important;
   }

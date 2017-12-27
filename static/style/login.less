@@ -51,9 +51,15 @@
                 input{
                     font-size: inherit;
                     padding: 0.2em;
+                    margin: 0 auto;
                     margin-top: 1em;
                     margin-bottom: 1em;
                     display: block;
+                    width: 250px;
+
+                    box-sizing: border-box;
+                    -moz-box-sizing: border-box;
+                    -webkit-box-sizing: border-box;
                 }
 
                 .textfield{
@@ -81,6 +87,13 @@
                         color: @gold;
                     }
                 }
+            }
+
+            .error{
+                margin-top: 2em;
+                color: @red;
+                width: 100%;
+                text-align: center;
             }
         }
 

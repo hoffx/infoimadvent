@@ -5,6 +5,8 @@ import (
 	"log"
 	"strconv"
 
+	"golang.org/x/crypto/bcrypt"
+
 	"github.com/elgs/gostrgen"
 	"github.com/hoffx/infoimadvent/config"
 	"github.com/hoffx/infoimadvent/storage"
@@ -45,40 +47,59 @@ func Register(ctx *macaron.Context, log *log.Logger, storer *storage.Storer) {
 		fPw := ctx.Req.FormValue("pw1")
 		fPw2 := ctx.Req.FormValue("pw2")
 		g, err := strconv.Atoi(ctx.Req.FormValue("grade"))
+
+		ctx.Data["Email"] = fEmail
+		ctx.Data["Pw"] = fPw
+		ctx.Data["Grade"] = g
+
 		if err != nil {
-			ctx.Data["Error"] = err.Error()
+			ctx.Data["Error"] = ctx.Tr(ErrWrongGrade.Error())
+			ctx.Data["Grade"] = nil
 			return
 		}
 		fGrade := uint(g)
 		if fGrade < config.Config.Grades.Min || fGrade > config.Config.Grades.Max {
-			ctx.Data["Error"] = ErrWrongGrade.Error()
+			ctx.Data["Error"] = ctx.Tr(ErrWrongGrade.Error())
+			ctx.Data["Grade"] = nil
 			return
 		}
 		if fPw != fPw2 {
-			ctx.Data["Error"] = ErrUnequalPasswords.Error()
+			ctx.Data["Error"] = ctx.Tr(ErrUnequalPasswords.Error())
+			ctx.Data["Pw"] = nil
 			return
 		}
 
 		user, err := storer.Get(fEmail)
 		if err != nil {
-			ctx.Data["Error"] = ErrDB.Error()
+			ctx.Data["Error"] = ctx.Tr(ErrDB.Error())
+			log.Println(err)
 			return
 		}
 		if user.Email != "" {
-			ctx.Data["Error"] = ErrUserExists.Error()
+			ctx.Data["Error"] = ctx.Tr(ErrUserExists.Error())
+			ctx.Data["Grade"] = nil
 		} else {
 			// request accepted -> generating new user
 
 			// create user and write to db
 			confirmationToken, err := gostrgen.RandGen(40, gostrgen.LowerUpperDigit, "", "")
 			if err != nil {
-				ctx.Data["Error"] = ErrUnexpected.Error()
+				ctx.Data["Error"] = ctx.Tr(ErrUnexpected.Error())
+				log.Println(err)
 				return
 			}
-			user = storage.User{fEmail, fPw, uint(fGrade), false, false, confirmationToken}
+			hash, err := bcrypt.GenerateFromPassword([]byte(fPw), bcrypt.DefaultCost)
+			if err != nil {
+				ctx.Data["Error"] = ctx.Tr(ErrUnexpected.Error())
+				log.Println(err)
+				return
+			}
+
+			user = storage.User{fEmail, string(hash), uint(fGrade), false, false, confirmationToken}
 			err = storer.Create(user)
 			if err != nil {
-				ctx.Data["Error"] = ErrDB.Error()
+				ctx.Data["Error"] = ctx.Tr(ErrDB.Error())
+				log.Println(err)
 				return
 			}
 
@@ -92,7 +113,8 @@ func Register(ctx *macaron.Context, log *log.Logger, storer *storage.Storer) {
 			d := gomail.NewDialer(config.Config.Mail.Address, config.Config.Mail.Port, config.Config.Mail.Username, config.Config.Mail.Password)
 
 			if err := d.DialAndSend(m); err != nil {
-				ctx.Data["Error"] = ErrMail.Error()
+				ctx.Data["Error"] = ctx.Tr(ErrMail.Error())
+				log.Println(err)
 			}
 		}
 	}

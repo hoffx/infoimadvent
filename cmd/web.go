@@ -58,6 +58,7 @@ func runWeb(ctx *cli.Context) {
 	m.Route("/login", "GET,POST", routes.Login)
 	m.Get("/about", routes.About)
 	m.Get("/confirm", routes.Confirm)
+	m.Post("/restore", routes.Restore)
 
 	m.Group("", func() {
 		m.Get("/logout", routes.Logout)
