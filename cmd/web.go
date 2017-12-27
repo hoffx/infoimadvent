@@ -4,6 +4,7 @@ import (
 	"github.com/go-macaron/i18n"
 	"github.com/hoffx/infoimadvent/config"
 	"github.com/hoffx/infoimadvent/routes"
+	"github.com/hoffx/infoimadvent/storage"
 	"github.com/urfave/cli"
 	macaron "gopkg.in/macaron.v1"
 )
@@ -14,10 +15,19 @@ var Web = cli.Command{
 	Action: runWeb,
 }
 
+var storer storage.Storer
+
 func runWeb(ctx *cli.Context) {
 	config.Load(ctx.GlobalString("config"))
 
+	if config.Config.Server.DevMode == true {
+		macaron.Env = macaron.DEV
+	} else {
+		macaron.Env = macaron.PROD
+	}
+
 	m := macaron.New()
+
 	m.Use(macaron.Logger())
 	m.Use(macaron.Recovery())
 	m.Use(macaron.Static("static", macaron.StaticOptions{
@@ -31,17 +41,32 @@ func runWeb(ctx *cli.Context) {
 	m.Use(macaron.Renderer(macaron.RenderOptions{
 		Directory: "templates",
 	}))
+	/**m.Use(session.Sessioner(session.Options{
+		Provider:       "file",
+		ProviderConfig: "data/sessions",
+	}))**/
+
+	if !storer.Active {
+		initStorer()
+	}
+
+	m.Map(&storer)
+
 	m.Get("/", routes.Home)
 
-	m.Get("/register", routes.Register)
-	m.Get("/login", routes.Login)
-
-	m.Get("/calendar", routes.Calendar)
-	m.Group("/day", func() {
-		m.Get("/", routes.Current)
-		m.Get("/:day", routes.Day)
-	})
-
+	m.Route("/register", "GET,POST", routes.Register)
+	m.Route("/login", "GET,POST", routes.Login)
 	m.Get("/about", routes.About)
-	m.Run()
+	m.Get("/confirm", routes.Confirm)
+
+	m.Group("", func() {
+		m.Get("/logout", routes.Logout)
+		m.Get("/calendar", routes.Calendar)
+		m.Group("/day", func() {
+			m.Get("/", routes.Current)
+			m.Get("/:day", routes.Day)
+		})
+	}, routes.Protect)
+
+	m.Run(config.Config.Server.Ip, config.Config.Server.Port)
 }

@@ -23,11 +23,20 @@
         </div>
     </div>
     <div class="content">
+        {{if not .LoggedIn}}
         <form name="login"  method="post" autocomplete="on">
-            <input class="textfield" type="email" placeholder={{.i18n.Tr "email"}} />
-            <input class="textfield" type="password" placeholder={{.i18n.Tr "password"}} />
+            <input name="email" class="textfield" type="email" placeholder={{.i18n.Tr "email"}} required=true />
+            <input name="pw" class="textfield" type="password" placeholder={{.i18n.Tr "password"}} required=true minlength={{.Config.MinPwL}} maxlength={{.Config.MaxPwL}} />
             <button class="button" type="submit">{{.i18n.Tr "login"}}</button>
         </form>
+        {{end}}
+        {{if .LoggedIn}}
+            <a href="/logout" class="button">{{.i18n.Tr "logout"}}</a>
+        {{end}}
+        {{if .Error}}
+            <!-- TODO: change to proper user-friendly error message -->
+            {{.Error}}
+        {{end}}
     </div>
 </body>
 </html>

@@ -23,13 +23,22 @@
         </div>
     </div>
     <div class="content">
-        <form name="register" method="post" autocomplete="on">
-            <input class="textfield" type="email" placeholder={{.i18n.Tr "email"}} />
-            <input class="textfield" type="password" placeholder={{.i18n.Tr "password"}} />
-            <input class="textfield" type="password" placeholder={{.i18n.Tr "password"}} />
-            <input class="dropdown" type="number" min={{.Config.MinYL}} max={{.Config.MaxYL}} placeholder={{.i18n.Tr "yearlevel"}} />
-            <button class="button" type="submit">{{.i18n.Tr "register"}}</button>
-        </form>
+        {{if not .LoggedIn}}
+            <form name="register" method="post" autocomplete="on">
+                <input name="email" class="textfield" type="email" placeholder={{.i18n.Tr "email"}} required=true />
+                <input name="pw1" class="textfield" type="password" placeholder={{.i18n.Tr "password"}} required=true minlength={{.Config.MinPwL}} maxlength={{.Config.MaxPwL}} />
+                <input name="pw2" class="textfield" type="password" placeholder={{.i18n.Tr "password"}} required=true minlength={{.Config.MinPwL}} maxlength={{.Config.MaxPwL}} />
+                <input name="grade" class="dropdown" type="number" min={{.Config.MinYL}} max={{.Config.MaxYL}} placeholder={{.i18n.Tr "yearlevel"}} required=true />
+                <button class="button" type="submit">{{.i18n.Tr "register"}}</button>
+            </form>
+        {{end}}
+        {{if .LoggedIn}}
+            <a href="/logout" class="button">{{.i18n.Tr "logout"}}</a>
+        {{end}}
+        {{if .Error}}
+            <!-- TODO: change to proper user-friendly error message -->
+            {{.Error}}
+        {{end}}
     </div>
 </body>
 </html>

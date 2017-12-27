@@ -19,6 +19,6 @@ func main() {
 			Usage: "Configuration file path",
 		},
 	}
-	app.Commands = []cli.Command{cmd.Web}
+	app.Commands = []cli.Command{cmd.Web, cmd.Reset}
 	app.Run(os.Args)
 }
