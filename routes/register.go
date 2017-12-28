@@ -8,6 +8,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/elgs/gostrgen"
+	"github.com/go-macaron/session"
 	"github.com/hoffx/infoimadvent/config"
 	"github.com/hoffx/infoimadvent/storage"
 	macaron "gopkg.in/macaron.v1"
@@ -20,7 +21,9 @@ var ErrUserExists = errors.New("user_exists")
 var ErrMail = errors.New("mail_error")
 var ErrWrongGrade = errors.New("wrong_grade_error")
 
-func Register(ctx *macaron.Context, log *log.Logger, storer *storage.Storer) {
+var MessConfirmMailSent = "confirm_mail_sent"
+
+func Register(ctx *macaron.Context, log *log.Logger, storer *storage.Storer, sess session.Store) {
 	defer ctx.HTML(200, "register")
 
 	// TODO: handle form refill on failure
@@ -35,8 +38,9 @@ func Register(ctx *macaron.Context, log *log.Logger, storer *storage.Storer) {
 	if ctx.Req.Method == "GET" {
 		// handle get requests
 
-		// TODO: check if user is logged in using session and print logout link instead of register form
-		if false {
+		value := sess.Get("user")
+		sUser, ok := value.(storage.User)
+		if ok && sUser.Active {
 			ctx.Data["LoggedIn"] = true
 		}
 	} else {
@@ -116,6 +120,8 @@ func Register(ctx *macaron.Context, log *log.Logger, storer *storage.Storer) {
 				ctx.Data["Error"] = ctx.Tr(ErrMail.Error())
 				log.Println(err)
 			}
+
+			ctx.Data["Message"] = ctx.Tr(MessConfirmMailSent)
 		}
 	}
 }

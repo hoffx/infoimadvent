@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 
+	"github.com/go-macaron/session"
 	"github.com/hoffx/infoimadvent/config"
 	"github.com/hoffx/infoimadvent/storage"
 	"golang.org/x/crypto/bcrypt"
@@ -15,7 +16,7 @@ var ErrUnexpected = errors.New("unexpected_error")
 var ErrWrongCredentials = errors.New("wrong_credentials_error")
 var ErrNotConfirmed = errors.New("user_not_confirmed")
 
-func Login(ctx *macaron.Context, log *log.Logger, storer *storage.Storer) {
+func Login(ctx *macaron.Context, log *log.Logger, storer *storage.Storer, sess session.Store) {
 	defer ctx.HTML(200, "login")
 	defer parseURL(ctx)
 
@@ -26,8 +27,9 @@ func Login(ctx *macaron.Context, log *log.Logger, storer *storage.Storer) {
 	ctx.Data["Config"] = Config{config.Config.Auth.MinPwLength, config.Config.Auth.MaxPwLength}
 
 	if ctx.Req.Method == "GET" {
-		// TODO: check if user is logged in using session and print logout link instead of login form
-		if false {
+		value := sess.Get("user")
+		sUser, ok := value.(storage.User)
+		if ok && sUser.Active {
 			ctx.Data["LoggedIn"] = true
 		}
 	} else {
@@ -54,9 +56,10 @@ func Login(ctx *macaron.Context, log *log.Logger, storer *storage.Storer) {
 			return
 		}
 		ctx.Data["LoggedIn"] = true
+		ctx.Data["Message"] = ctx.Tr(MessLoggedIn)
 		user.Active = true
 
-		// TODO: create session
+		sess.Set("user", user)
 	}
 
 }

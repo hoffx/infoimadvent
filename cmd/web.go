@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/go-macaron/i18n"
+	"github.com/go-macaron/session"
 	"github.com/hoffx/infoimadvent/config"
 	"github.com/hoffx/infoimadvent/routes"
 	"github.com/hoffx/infoimadvent/storage"
@@ -28,6 +29,10 @@ func runWeb(ctx *cli.Context) {
 
 	m := macaron.New()
 
+	mp := make(map[interface{}]interface{})
+	mp["user"] = storage.User{}
+	session.EncodeGob(mp)
+
 	m.Use(macaron.Logger())
 	m.Use(macaron.Recovery())
 	m.Use(macaron.Static("static", macaron.StaticOptions{
@@ -41,10 +46,10 @@ func runWeb(ctx *cli.Context) {
 	m.Use(macaron.Renderer(macaron.RenderOptions{
 		Directory: "templates",
 	}))
-	/**m.Use(session.Sessioner(session.Options{
+	m.Use(session.Sessioner(session.Options{
 		Provider:       "file",
-		ProviderConfig: "data/sessions",
-	}))**/
+		ProviderConfig: config.Config.Sessioner.StoragePath,
+	}))
 
 	if !storer.Active {
 		initStorer()

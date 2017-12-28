@@ -1,11 +1,14 @@
 package routes
 
 import (
+	"github.com/go-macaron/session"
 	"github.com/hoffx/infoimadvent/storage"
 	macaron "gopkg.in/macaron.v1"
 )
 
-func Confirm(ctx *macaron.Context, storer *storage.Storer) {
+var MessLoggedIn = "login_success"
+
+func Confirm(ctx *macaron.Context, storer *storage.Storer, sess session.Store) {
 	query := ctx.Req.URL.Query()
 	var user storage.User
 	var err error
@@ -24,7 +27,7 @@ func Confirm(ctx *macaron.Context, storer *storage.Storer) {
 			user.Confirmed = true
 			user.Active = true
 
-			//TODO: session login
+			sess.Set("user", user)
 
 			err = storer.Put(user)
 			if err != nil {
@@ -33,7 +36,7 @@ func Confirm(ctx *macaron.Context, storer *storage.Storer) {
 				return
 			}
 		} else {
-			// redirect user (that was messing around with the links) to home-page
+			// redirect user (that was messing around with the link) to home-page
 			ctx.Error(406, ErrWrongCredentials.Error())
 			ctx.Redirect("/", 406)
 			return
@@ -43,5 +46,5 @@ func Confirm(ctx *macaron.Context, storer *storage.Storer) {
 		ctx.Redirect("/", 406)
 		return
 	}
-	ctx.Redirect("/", 302)
+	ctx.Redirect("/login?Message="+MessLoggedIn, 302)
 }

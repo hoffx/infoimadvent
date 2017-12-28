@@ -12,6 +12,8 @@ import (
 	macaron "gopkg.in/macaron.v1"
 )
 
+var MessRestoreMailSent = "restore_mail_sent"
+
 func Restore(ctx *macaron.Context, log *log.Logger, storer *storage.Storer) {
 	email := ctx.Req.FormValue("email")
 
@@ -25,7 +27,10 @@ func Restore(ctx *macaron.Context, log *log.Logger, storer *storage.Storer) {
 		return
 	} else if user.Email == "" {
 		// user not found, but stating an e-mail was sent, so that this information can't abused for bruteforce-hacking
-		ctx.Redirect("/login", 302)
+		ctx.Redirect("/login?Email="+user.Email+"&Message="+ctx.Tr(MessRestoreMailSent), 302)
+		return
+	} else if !user.Confirmed {
+		ctx.Redirect("/login?Error="+ErrNotConfirmed.Error(), 302)
 		return
 	} else {
 		pw, err := gostrgen.RandGen(int(config.Config.Grades.Max), gostrgen.LowerUpperDigit, "", "")
@@ -53,7 +58,7 @@ func Restore(ctx *macaron.Context, log *log.Logger, storer *storage.Storer) {
 			return
 		}
 
-		// TODO: write restore mail
+		// TODO: write restore mail's text
 
 		m := gomail.NewMessage()
 		m.SetHeader("From", config.Config.Mail.Sender)
@@ -71,5 +76,5 @@ func Restore(ctx *macaron.Context, log *log.Logger, storer *storage.Storer) {
 		}
 	}
 
-	ctx.Redirect("/login?Email="+user.Email, 302)
+	ctx.Redirect("/login?Email="+user.Email+"&Message="+ctx.Tr(MessRestoreMailSent), 302)
 }

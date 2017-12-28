@@ -14,7 +14,7 @@
     </div>
     <div class="container option-container">
         <div class="options">
-            {{if not .New}} <!--remove not-->
+            {{if not .LoggedIn}}
             <div class="option register">
                 <a href="/register"><h2>{{.i18n.Tr "register"}}</a></h2>
             </div>
@@ -22,7 +22,7 @@
             <a href="/login"><h2>{{.i18n.Tr "login"}}</a></h2>
             </div>
             {{end}}
-            {{if .New}} <!--add not-->
+            {{if .LoggedIn}}
             <div class="option current">
                 <a href="/current"><h2>{{.i18n.Tr "current"}}</a></h2>
             </div>

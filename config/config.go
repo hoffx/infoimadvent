@@ -7,11 +7,16 @@ import (
 )
 
 var Config struct {
-	Server Server           `ini:"server"`
-	DB     DBConfig         `ini:"db"`
-	Grades Grades           `ini:"grades"`
-	Auth   Authentification `ini:"auth"`
-	Mail   Mail             `ini:"mail"`
+	Server    Server           `ini:"server"`
+	DB        DBConfig         `ini:"db"`
+	Grades    Grades           `ini:"grades"`
+	Auth      Authentification `ini:"auth"`
+	Mail      Mail             `ini:"mail"`
+	Sessioner Sessioner        `ini:"sessioner"`
+}
+
+type Sessioner struct {
+	StoragePath string `ini:"storagepath"`
 }
 
 type Server struct {

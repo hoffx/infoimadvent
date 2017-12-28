@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"log"
+	"os"
 
 	"github.com/hoffx/infoimadvent/config"
 	"github.com/hoffx/infoimadvent/storage"
@@ -11,11 +12,11 @@ import (
 
 var Reset = cli.Command{
 	Name:   "reset",
-	Usage:  "resets database",
-	Action: resetDB,
+	Usage:  "resets database and session-storage",
+	Action: reset,
 }
 
-func resetDB(ctx *cli.Context) {
+func reset(ctx *cli.Context) {
 	if config.Config.DB.Name == "" {
 		config.Load(ctx.GlobalString("config"))
 	}
@@ -29,6 +30,10 @@ func resetDB(ctx *cli.Context) {
 
 	if ctx.Args().First() == "web" {
 		runWeb(ctx)
+	}
+	err = os.RemoveAll(config.Config.Sessioner.StoragePath)
+	if err != nil {
+		log.Println(err)
 	}
 }
 
