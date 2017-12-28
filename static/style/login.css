@@ -34,6 +34,27 @@
   body .text {
     font-family: Arial, Helvetica, sans-serif !important;
   }
+  body input {
+    font-size: inherit;
+    padding: 0.2em;
+    margin: 0 auto;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    display: block;
+    width: 250px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+  }
+  body input::-ms-input-placeholder {
+    color: rgba(210, 210, 210, 0.8);
+  }
+  body input::-webkit-input-placeholder {
+    color: rgba(210, 210, 210, 0.8);
+  }
+  body input::-moz-placeholder {
+    color: rgba(210, 210, 210, 0.8);
+  }
 }
 @media all {
   body {
@@ -77,18 +98,6 @@
   }
   body .content .box {
     text-align: center;
-  }
-  body .content .box form input {
-    font-size: inherit;
-    padding: 0.2em;
-    margin: 0 auto;
-    margin-top: 1em;
-    margin-bottom: 1em;
-    display: block;
-    width: 250px;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
   }
   body .content .box form .textfield {
     border: none;

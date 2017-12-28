@@ -51,20 +51,6 @@
                 text-align: center;
 
                 form{
-
-                    input{
-                        font-size: inherit;
-                        padding: 0.2em;
-                        margin: 0 auto;
-                        margin-top: 1em;
-                        margin-bottom: 1em;
-                        display: block;
-                        width: 250px;
-    
-                        box-sizing: border-box;
-                        -moz-box-sizing: border-box;
-                        -webkit-box-sizing: border-box;
-                    }
     
                     .textfield{
                         border: none;
@@ -88,6 +74,28 @@
                         &:active{
                             border-bottom-color: @gold;
                             color: @gold;
+                        }
+                    }
+
+                    .checkbox-container{
+                        margin: 0 auto;
+                        border-bottom: solid 1px @text-white;
+                        color: @text-white;
+                        text-align: left;
+                        color: @text-white-placeholder;
+                        width: 250px;
+                        box-sizing: border-box;
+                        -moz-box-sizing: border-box;
+                        -webkit-box-sizing: border-box;
+
+
+
+                        .checkbox{
+                            margin: 0.2em;
+                            display: inline;
+                            width: initial;
+                            line-height: 1em;
+                            margin-right: 0.5em;
                         }
                     }
     

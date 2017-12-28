@@ -24,10 +24,13 @@
             {{end}}
             {{if .LoggedIn}}
             <div class="option current">
-                <a href="/current"><h2>{{.i18n.Tr "current"}}</a></h2>
+                <a href="/day"><h2>{{.i18n.Tr "current"}}</a></h2>
             </div>
             <div class="option calendar">
                 <a href="/calendar"><h2>{{.i18n.Tr "calendar"}}</a></h2>
+            </div>
+            <div class="option account">
+                <a href="/account"><h2>{{.i18n.Tr "account"}}</a></h2>
             </div>
             {{end}}
             <div class="option about">

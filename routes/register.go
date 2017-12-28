@@ -20,6 +20,7 @@ var ErrUnequalPasswords = errors.New("passwords_unequal")
 var ErrUserExists = errors.New("user_exists")
 var ErrMail = errors.New("mail_error")
 var ErrWrongGrade = errors.New("wrong_grade_error")
+var ErrIllegalInput = errors.New("illegal_input_error")
 
 var MessConfirmMailSent = "confirm_mail_sent"
 
@@ -34,6 +35,7 @@ func Register(ctx *macaron.Context, log *log.Logger, storer *storage.Storer, ses
 	}
 
 	ctx.Data["Config"] = Config{config.Config.Grades.Min, config.Config.Grades.Max, config.Config.Auth.MinPwLength, config.Config.Auth.MaxPwLength}
+	ctx.Data["Teacher"] = false
 
 	if ctx.Req.Method == "GET" {
 		// handle get requests
@@ -50,17 +52,26 @@ func Register(ctx *macaron.Context, log *log.Logger, storer *storage.Storer, ses
 		fEmail := ctx.Req.FormValue("email")
 		fPw := ctx.Req.FormValue("pw1")
 		fPw2 := ctx.Req.FormValue("pw2")
-		g, err := strconv.Atoi(ctx.Req.FormValue("grade"))
 
 		ctx.Data["Email"] = fEmail
 		ctx.Data["Pw"] = fPw
-		ctx.Data["Grade"] = g
+
+		var t bool
+		if ctx.Req.FormValue("teacher") == "on" {
+			t = true
+		}
+
+		ctx.Data["Teacher"] = t
+
+		g, err := strconv.Atoi(ctx.Req.FormValue("grade"))
 
 		if err != nil {
-			ctx.Data["Error"] = ctx.Tr(ErrWrongGrade.Error())
-			ctx.Data["Grade"] = nil
+			ctx.Data["Error"] = ctx.Tr(ErrIllegalInput.Error())
 			return
 		}
+
+		ctx.Data["Grade"] = g
+
 		fGrade := uint(g)
 		if fGrade < config.Config.Grades.Min || fGrade > config.Config.Grades.Max {
 			ctx.Data["Error"] = ctx.Tr(ErrWrongGrade.Error())
@@ -99,7 +110,7 @@ func Register(ctx *macaron.Context, log *log.Logger, storer *storage.Storer, ses
 				return
 			}
 
-			user = storage.User{fEmail, string(hash), uint(fGrade), false, false, confirmationToken}
+			user = storage.User{fEmail, string(hash), uint(fGrade), false, false, confirmationToken, t, []string{}, []string{}}
 			err = storer.Create(user)
 			if err != nil {
 				ctx.Data["Error"] = ctx.Tr(ErrDB.Error())

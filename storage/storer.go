@@ -11,12 +11,15 @@ import (
 )
 
 type User struct {
-	Email             string
-	Password          string
-	Grade             uint
-	Active            bool
-	Confirmed         bool
-	ConfirmationToken string
+	Email              string
+	Password           string
+	Grade              uint
+	Active             bool
+	Confirmed          bool
+	ConfirmationToken  string
+	Teacher            bool
+	ConfirmedRelations []string
+	RequestedRelations []string
 	// Calendar  CalendarInfo
 }
 

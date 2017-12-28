@@ -10,15 +10,22 @@
 </head>
 <body>
     <div class="title">
-        <h1>{{.i18n.Tr "login"}}</h1>
+        <h1>{{if not .LoggedIn}}{{.i18n.Tr "login"}}{{end}}{{if .LoggedIn}}{{.i18n.Tr "logout"}}{{end}}</h1>
     </div>
     <div class="container option-container">
         <div class="options">
-            <div class="option register">
-                <a href="/register"><h2>{{.i18n.Tr "register"}}</a></h2>
-            </div>
+            {{if not .LoggedIn}}
+                <div class="option register">
+                    <a href="/register"><h2>{{.i18n.Tr "register"}}</h2></a>
+                </div>
+            {{end}}
+            {{if .LoggedIn}}
+                <div class="option current">
+                    <a href="/day"><h2>{{.i18n.Tr "current"}}</a></h2>
+                </div>
+            {{end}}
             <div class="option back">
-                <a href="/"><h2>{{.i18n.Tr "back"}}</a></h2>
+                <a href="/"><h2>{{.i18n.Tr "back"}}</h2></a>
             </div>
         </div>
     </div>

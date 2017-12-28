@@ -30,6 +30,7 @@
                     <input name="pw1" class="textfield" type="password" placeholder={{.i18n.Tr "password"}} required=true minlength={{.Config.MinPwL}} maxlength={{.Config.MaxPwL}} {{if .Pw}} value={{.Pw}} {{end}} />
                     <input name="pw2" class="textfield" type="password" placeholder={{.i18n.Tr "password"}} required=true minlength={{.Config.MinPwL}} maxlength={{.Config.MaxPwL}} {{if .Pw}} value={{.Pw}} {{end}} />
                     <input name="grade" class="dropdown" type="number" min={{.Config.MinYL}} max={{.Config.MaxYL}} placeholder={{.i18n.Tr "yearlevel"}} required=true {{if .Grade}} value={{.Grade}} {{end}} />
+                    <div class="checkbox-container text"><input class="checkbox" type="checkbox" name="teacher" {{if .Teacher}} checked=true {{end}} /><span>{{.i18n.Tr "teacher"}}</span></div>
                     <button class="button" type="submit">{{.i18n.Tr "register"}}</button>
                 </form>
             {{end}}

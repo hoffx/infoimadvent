@@ -66,6 +66,7 @@ func runWeb(ctx *cli.Context) {
 	m.Post("/restore", routes.Restore)
 
 	m.Group("", func() {
+		m.Route("/account", "GET,POST", routes.Account)
 		m.Get("/logout", routes.Logout)
 		m.Get("/calendar", routes.Calendar)
 		m.Group("/day", func() {
