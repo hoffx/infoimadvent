@@ -1,0 +1,42 @@
+@import "main";
+@media all {
+    body {
+        display: block;
+
+
+        .fixed {
+            font-size: 14pt;
+            display: block;
+            position: fixed;
+            top: 1em;
+            left: 1em;
+            color: @gold;
+        }
+        .option {
+            float: left;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            display: block;
+            width: ~"calc(100vw / 6)";
+            height: ~"calc(100vh / 4)";
+            text-align: center;
+            color: @text-gray;
+            background-color: @background-white;
+            vertical-align: middle;
+            margin: 0;
+            padding: 0;
+            span {
+                font-size: 25pt;
+                line-height:  ~"calc(100vh / 4)";
+            }
+            .current {
+                color: @gold;
+            }
+        }
+        .opened {
+            background-color: @background-gray;
+            color: @text-white;
+        }
+    }
+}

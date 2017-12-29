@@ -10,6 +10,29 @@ import (
 	"github.com/go-xorm/xorm"
 )
 
+// answers
+const (
+	None = iota
+	A
+	B
+	C
+	D
+)
+
+// scores
+const (
+	// calculation
+	Right   = 10
+	Wrong   = 0
+	Missing = 2
+	// grading
+	Full       = 240
+	Insane     = 220
+	Incredible = 200
+	Good       = 160
+	Ok         = 120
+)
+
 type User struct {
 	Email              string
 	Password           string
@@ -20,10 +43,8 @@ type User struct {
 	Teacher            bool
 	ConfirmedRelations []string
 	RequestedRelations []string
-	// Calendar  CalendarInfo
-}
-
-type CalendarInfo struct {
+	Days               []int
+	Score              int
 }
 
 type Storer struct {

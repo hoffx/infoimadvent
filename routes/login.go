@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"errors"
 	"log"
 
 	"github.com/go-macaron/session"
@@ -10,11 +9,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	macaron "gopkg.in/macaron.v1"
 )
-
-var ErrDB = errors.New("database_error")
-var ErrUnexpected = errors.New("unexpected_error")
-var ErrWrongCredentials = errors.New("wrong_credentials_error")
-var ErrNotConfirmed = errors.New("user_not_confirmed")
 
 func Login(ctx *macaron.Context, log *log.Logger, storer *storage.Storer, sess session.Store) {
 	defer ctx.HTML(200, "login")
@@ -40,19 +34,19 @@ func Login(ctx *macaron.Context, log *log.Logger, storer *storage.Storer, sess s
 
 		user, err := storer.Get(fEmail)
 		if err != nil {
-			ctx.Data["Error"] = ctx.Tr(ErrDB.Error())
+			ctx.Data["Error"] = ctx.Tr(ErrDB)
 			log.Println(err)
 			return
 		} else if user.Email == "" {
-			ctx.Data["Error"] = ctx.Tr(ErrWrongCredentials.Error())
+			ctx.Data["Error"] = ctx.Tr(ErrWrongCredentials)
 		}
 		err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(fPw))
 		if err != nil {
-			ctx.Data["Error"] = ctx.Tr(ErrWrongCredentials.Error())
+			ctx.Data["Error"] = ctx.Tr(ErrWrongCredentials)
 			return
 		}
 		if !user.Confirmed {
-			ctx.Data["Error"] = ctx.Tr(ErrNotConfirmed.Error())
+			ctx.Data["Error"] = ctx.Tr(ErrNotConfirmed)
 			return
 		}
 		ctx.Data["LoggedIn"] = true

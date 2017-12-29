@@ -6,8 +6,6 @@ import (
 	macaron "gopkg.in/macaron.v1"
 )
 
-var MessLoggedIn = "login_success"
-
 func Confirm(ctx *macaron.Context, storer *storage.Storer, sess session.Store) {
 	query := ctx.Req.URL.Query()
 	var user storage.User
@@ -17,7 +15,7 @@ func Confirm(ctx *macaron.Context, storer *storage.Storer, sess session.Store) {
 		// get according user
 		user, err = storer.Get(query["user"][0])
 		if err != nil {
-			ctx.Error(500, ErrDB.Error())
+			ctx.Error(500, ErrDB)
 			ctx.Redirect("/", 500)
 			return
 		}
@@ -31,18 +29,18 @@ func Confirm(ctx *macaron.Context, storer *storage.Storer, sess session.Store) {
 
 			err = storer.Put(user)
 			if err != nil {
-				ctx.Error(500, ErrDB.Error())
+				ctx.Error(500, ErrDB)
 				ctx.Redirect("/", 500)
 				return
 			}
 		} else {
 			// redirect user (that was messing around with the link) to home-page
-			ctx.Error(406, ErrWrongCredentials.Error())
+			ctx.Error(406, ErrWrongCredentials)
 			ctx.Redirect("/", 406)
 			return
 		}
 	} else {
-		ctx.Error(406, ErrWrongCredentials.Error())
+		ctx.Error(406, ErrWrongCredentials)
 		ctx.Redirect("/", 406)
 		return
 	}
