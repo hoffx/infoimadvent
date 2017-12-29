@@ -80,6 +80,10 @@
   }
   body .content {
     background-color: #222222;
+    background-image: url("img/right.svg");
+    background-position: right center;
+    background-size: contain;
+    background-repeat: no-repeat;
     color: #d2d2d2;
   }
   body .description {
@@ -109,6 +113,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    background-image: url("img/left.svg");
+    background-position: left bottom;
+    background-size: contain;
+    background-repeat: no-repeat;
   }
   body .option-container .options .option {
     box-sizing: border-box;

@@ -13,5 +13,6 @@
     {{range .Days}}
         <a href={{.Link}} {{if not .Opened}} class="option" {{end}} {{if .Opened}} class="option opened" {{end}}  ><span {{if .Current}} class="current" {{end}} >{{.Date}}</span></a>
     {{end}}
+    <!-- TODO: make background image shine through -->
 </body>
 </html>

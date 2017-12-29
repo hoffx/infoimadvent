@@ -59,6 +59,11 @@
 @media all {
   body {
     display: block;
+    background-image: url("img/calendar.svg");
+    background-color: #ffffff;
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
   }
   body .fixed {
     font-size: 14pt;
@@ -78,7 +83,6 @@
     height: calc(100vh / 4);
     text-align: center;
     color: #222222;
-    background-color: #ffffff;
     vertical-align: middle;
     margin: 0;
     padding: 0;
