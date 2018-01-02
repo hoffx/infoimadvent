@@ -20,10 +20,18 @@ func reset(ctx *cli.Context) {
 	if config.Config.DB.Name == "" {
 		config.Load(ctx.GlobalString("config"))
 	}
-	if !storer.Active {
+	if !uStorer.Active || !qStorer.Active {
 		initStorer()
 	}
-	err := storer.ResetDB()
+	err := uStorer.ResetDB()
+	if err != nil {
+		log.Println(err)
+	}
+	err = qStorer.ResetDB()
+	if err != nil {
+		log.Println(err)
+	}
+	err = os.RemoveAll(config.Config.Sessioner.StoragePath)
 	if err != nil {
 		log.Println(err)
 	}
@@ -31,15 +39,15 @@ func reset(ctx *cli.Context) {
 	if ctx.Args().First() == "web" {
 		runWeb(ctx)
 	}
-	err = os.RemoveAll(config.Config.Sessioner.StoragePath)
-	if err != nil {
-		log.Println(err)
-	}
 }
 
 func initStorer() {
 	var err error
-	storer, err = storage.NewStorer(config.Config.DB.Name, config.Config.DB.User, config.Config.DB.Password, macaron.Env == macaron.DEV)
+	uStorer, err = storage.NewUserStorer(config.Config.DB.Name, config.Config.DB.User, config.Config.DB.Password, macaron.Env == macaron.DEV)
+	if err != nil {
+		log.Fatal(err)
+	}
+	qStorer, err = storage.NewQuestStorer(config.Config.DB.Name, config.Config.DB.User, config.Config.DB.Password, macaron.Env == macaron.DEV)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -6,7 +6,7 @@ import (
 	macaron "gopkg.in/macaron.v1"
 )
 
-func Logout(ctx *macaron.Context, storer *storage.Storer, sess session.Store) {
+func Logout(ctx *macaron.Context, uStorer *storage.UserStorer, sess session.Store) {
 	value := sess.Get("user")
 	sUser, ok := value.(storage.User)
 	if ok {
@@ -17,7 +17,7 @@ func Logout(ctx *macaron.Context, storer *storage.Storer, sess session.Store) {
 			ctx.Redirect("/login", 500)
 			return
 		}
-		err = storer.Put(sUser)
+		err = uStorer.Put(sUser)
 		if err != nil {
 			ctx.Error(500, ctx.Tr(ErrDB))
 			ctx.Redirect("/login", 500)

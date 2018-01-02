@@ -6,7 +6,7 @@ import (
 	macaron "gopkg.in/macaron.v1"
 )
 
-func Account(ctx *macaron.Context, sess session.Store, storer *storage.Storer) {
+func Account(ctx *macaron.Context, sess session.Store, uStorer *storage.UserStorer) {
 	if ctx.Req.Method == "GET" {
 
 	} else {

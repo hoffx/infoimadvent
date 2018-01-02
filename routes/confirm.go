@@ -6,15 +6,18 @@ import (
 	macaron "gopkg.in/macaron.v1"
 )
 
-func Confirm(ctx *macaron.Context, storer *storage.Storer, sess session.Store) {
+func Confirm(ctx *macaron.Context, uStorer *storage.UserStorer, sess session.Store) {
 	query := ctx.Req.URL.Query()
 	var user storage.User
 	var err error
 	// check if request is formatted correctly
 	if query["user"] != nil && query["token"] != nil {
 		// get according user
-		user, err = storer.Get(query["user"][0])
-		if err != nil {
+		var ok bool
+		var element interface{}
+		element, err = uStorer.Get(map[string]interface{}{"email": query["user"][0]})
+		user, ok = element.(storage.User)
+		if err != nil || !ok {
 			ctx.Error(500, ErrDB)
 			ctx.Redirect("/", 500)
 			return
@@ -27,7 +30,7 @@ func Confirm(ctx *macaron.Context, storer *storage.Storer, sess session.Store) {
 
 			sess.Set("user", user)
 
-			err = storer.Put(user)
+			err = uStorer.Put(user)
 			if err != nil {
 				ctx.Error(500, ErrDB)
 				ctx.Redirect("/", 500)

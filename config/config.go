@@ -35,8 +35,9 @@ type Mail struct {
 }
 
 type Authentification struct {
-	MinPwLength uint `ini:"minpwlength"`
-	MaxPwLength uint `ini:"maxpwlength"`
+	MinPwLength   uint   `ini:"minpwlength"`
+	MaxPwLength   uint   `ini:"maxpwlength"`
+	AdminPassword string `ini:"adminpassword"`
 }
 
 type Grades struct {

@@ -10,7 +10,7 @@ import (
 	macaron "gopkg.in/macaron.v1"
 )
 
-func Login(ctx *macaron.Context, log *log.Logger, storer *storage.Storer, sess session.Store) {
+func Login(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer, sess session.Store) {
 	defer ctx.HTML(200, "login")
 	defer parseURL(ctx)
 
@@ -32,7 +32,7 @@ func Login(ctx *macaron.Context, log *log.Logger, storer *storage.Storer, sess s
 
 		ctx.Data["Email"] = fEmail
 
-		user, err := storer.Get(fEmail)
+		user, err := uStorer.Get(map[string]interface{}{"email": fEmail})
 		if err != nil {
 			ctx.Data["Error"] = ctx.Tr(ErrDB)
 			log.Println(err)

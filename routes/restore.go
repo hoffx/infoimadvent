@@ -12,12 +12,12 @@ import (
 	macaron "gopkg.in/macaron.v1"
 )
 
-func Restore(ctx *macaron.Context, log *log.Logger, storer *storage.Storer) {
+func Restore(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer) {
 	email := ctx.Req.FormValue("email")
 
 	// try to find user
 
-	user, err := storer.Get(email)
+	user, err := uStorer.Get(map[string]interface{}{"email": email})
 	if err != nil {
 		ctx.Error(500, ErrDB)
 		log.Println(err)
@@ -48,7 +48,7 @@ func Restore(ctx *macaron.Context, log *log.Logger, storer *storage.Storer) {
 		}
 
 		user.Password = string(hash)
-		err = storer.Put(user)
+		err = uStorer.Put(user)
 		if err != nil {
 			ctx.Error(500, ErrDB)
 			log.Println(err)

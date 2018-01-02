@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Upload</title>
+</head>
+<body>
+        <form action="/upload" name="register" method="post" autocomplete="on">
+            <input style="display: block; min-width: 200px; font-size: 12pt; margin: 1em;" name="pw"type="password" placeholder="admin password" required=true {{if .Pw}} value={{.Pw}} {{end}} />
+            <input style="display: block; min-width: 200px; font-size: 12pt; margin: 1em;" name="grade" type="number" min={{.MinYL}} max={{.MaxYL}} placeholder="grade" required=true {{if .Grade}} value={{.Grade}} {{end}} />
+            <input style="display: block; min-width: 200px; font-size: 12pt; margin: 1em;" name="day" type="number" min=1 max=24 placeholder="day" required=true {{if .Day}} value={{.Day}} {{end}} />
+            <label style="display: block; min-width: 200px; font-size: 12pt; margin: 1em;" >solution:
+                    <select name="solution" size="4">
+                      <option {{if .A}} selected {{end}}>A</option>
+                      <option {{if .B}} selected {{end}}>B</option>
+                      <option {{if .C}} selected {{end}}>C</option>
+                      <option {{if .D}} selected {{end}}>D</option>
+                    </select>
+                  </label>
+            <textarea style="display: block; width: 90%; height: 500px; font-size: 12pt; margin: 1em;" name="md" placeholder="Markdown-Document">{{if .Markdown }}{{.Markdown}}{{end}}</textarea>
+            <button style="display: block; min-width: 200px; font-size: 12pt; margin: 1em;" class="button" type="submit">Submit</button>
+        </form>
+        <div style="display: block; min-width: 200px; font-size: 12pt; margin: 1em;" >{{if .Error}}{{.Error}}{{end}}</div>
+</body>
+</html>

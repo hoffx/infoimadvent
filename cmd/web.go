@@ -16,7 +16,8 @@ var Web = cli.Command{
 	Action: runWeb,
 }
 
-var storer storage.Storer
+var uStorer storage.UserStorer
+var qStorer storage.QuestStorer
 
 func runWeb(ctx *cli.Context) {
 	config.Load(ctx.GlobalString("config"))
@@ -51,11 +52,12 @@ func runWeb(ctx *cli.Context) {
 		ProviderConfig: config.Config.Sessioner.StoragePath,
 	}))
 
-	if !storer.Active {
+	if !qStorer.Active || !uStorer.Active {
 		initStorer()
 	}
 
-	m.Map(&storer)
+	m.Map(&qStorer)
+	m.Map(&uStorer)
 
 	m.Get("/", routes.Home)
 
@@ -64,6 +66,7 @@ func runWeb(ctx *cli.Context) {
 	m.Get("/about", routes.About)
 	m.Get("/confirm", routes.Confirm)
 	m.Post("/restore", routes.Restore)
+	m.Route("/upload", "GET,POST", routes.Upload)
 
 	m.Group("", func() {
 		m.Route("/account", "GET,POST", routes.Account)
