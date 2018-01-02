@@ -55,6 +55,20 @@
   body input::-moz-placeholder {
     color: rgba(210, 210, 210, 0.8);
   }
+  body .content {
+    background-color: #222222;
+    background-image: url("img/right.svg");
+    background-position: right center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    color: #d2d2d2;
+  }
+  body .option-container {
+    background-image: url("img/left.svg");
+    background-position: left bottom;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
 }
 @media all {
   body {
