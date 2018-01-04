@@ -75,44 +75,84 @@
 }
 @media all {
   body {
-    display: block;
-    background-image: url("img/calendar.svg");
+    grid-template-columns: 25vw 75vw;
+    grid-template-rows: 25vh 75vh;
+  }
+  body .title {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    padding: 2em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #222222;
+    color: #d2d2d2;
+  }
+  body .title h1 {
+    text-align: center;
+    font-size: 50pt;
+  }
+  body .description {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 3;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    font-size: 1.2em;
+    padding: 5em;
+    vertical-align: middle;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: #ffffff;
-    background-position: center center;
-    background-size: cover;
-    background-repeat: no-repeat;
+    color: #222222;
   }
-  body .fixed {
-    font-size: 14pt;
-    display: block;
-    position: fixed;
-    top: 1em;
-    left: 1em;
-    color: #c4bb45;
+  body .description .text {
+    max-height: 100%;
+    overflow-y: auto;
   }
-  body .option {
-    float: left;
+  body .option-container {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: none;
+    background-color: #222222;
+  }
+  body .option-container .options .blocked .tip {
+    color: #d24e4c !important;
+  }
+  body .option-container .options .blocked .solution {
+    color: #c4bb45 !important;
+  }
+  body .option-container .options .blocked .solution .tip {
+    color: #41902a !important;
+  }
+  body .option-container .options .tip {
+    color: #c4bb45 !important;
+  }
+  body .option-container .options .option {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     display: block;
-    width: calc(100vw / 6);
-    height: calc(100vh / 4);
+    width: 100%;
+    padding: 1em;
+    border-top: solid 1px #d2d2d2;
     text-align: center;
-    color: #222222;
-    vertical-align: middle;
-    margin: 0;
-    padding: 0;
-  }
-  body .option span {
-    font-size: 25pt;
-    line-height: calc(100vh / 4);
-  }
-  body .option .current {
-    color: #c4bb45;
-  }
-  body .opened {
-    background-color: #222222;
     color: #d2d2d2;
+  }
+  body .option-container .options .option:first-of-type {
+    border: none;
   }
 }

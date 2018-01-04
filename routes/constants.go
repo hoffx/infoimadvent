@@ -11,6 +11,8 @@ const (
 	ErrMail             = "mail_error"
 	ErrWrongGrade       = "wrong_grade_error"
 	ErrIllegalInput     = "illegal_input_error"
+	ErrFS               = "filesystem_error"
+	ErrIllegalDate      = "illegal_date_error"
 )
 
 // messages

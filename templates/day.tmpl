@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="{{.Lang}}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{.i18n.Tr "day"}} {{.Day}} | {{.i18n.Tr "service"}}</title>
+    <link rel="stylesheet" type="text/css" href="/style/day.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Zilla+Slab" rel="stylesheet">
+</head>
+<body>
+    <div class="title">
+        <h1>{{.i18n.Tr "day"}} {{.Day}}</h1>
+    </div>
+    <div class="container option-container">
+        <div class="options">
+            <div {{if not .Current}} class="blocked" {{end}}>
+                <div {{if not .SolutionA }} class="option" {{end}} {{if .SolutionA}} class="option solution" {{end}} >
+                    <a href="/day?tip=A" {{if .TipA}} class="tip" {{end}} ><h2>{{.i18n.Tr "option"}} A</a></h2>
+                </div>
+                <div {{if not .SolutionB }} class="option" {{end}} {{if .SolutionB}} class="option solution" {{end}} >
+                    <a href="/day?tip=B" {{if .TipB}} class="tip" {{end}}><h2>{{.i18n.Tr "option"}} B</a></h2>
+                </div>
+                <div {{if not .SolutionC }} class="option" {{end}} {{if .SolutionC}} class="option solution" {{end}} >
+                    <a href="/day?tip=C" {{if .TipC}} class="tip" {{end}}><h2>{{.i18n.Tr "option"}} C</a></h2>
+                </div>
+                <div {{if not .SolutionD }} class="option" {{end}} {{if .SolutionD}} class="option solution" {{end}} >
+                    <a href="/day?tip=D" {{if .TipD}} class="tip" {{end}} ><h2>{{.i18n.Tr "option"}} D</a></h2>
+                </div>
+            </div>
+            <div class="option calendar">
+                <a href="/calendar"><h2>{{.i18n.Tr "back"}}</a></h2>
+            </div>
+        </div>
+    </div>
+    <div class="description content">
+        <div class="text">{{.Text}}</div>
+    </div>
+</body>
+</html>

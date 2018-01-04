@@ -18,7 +18,7 @@ func Confirm(ctx *macaron.Context, uStorer *storage.UserStorer, sess session.Sto
 		element, err = uStorer.Get(map[string]interface{}{"email": query["user"][0]})
 		user, ok = element.(storage.User)
 		if err != nil || !ok {
-			ctx.Error(500, ErrDB)
+			ctx.Error(500, ctx.Tr(ErrDB))
 			ctx.Redirect("/", 500)
 			return
 		}
@@ -32,18 +32,18 @@ func Confirm(ctx *macaron.Context, uStorer *storage.UserStorer, sess session.Sto
 
 			err = uStorer.Put(user)
 			if err != nil {
-				ctx.Error(500, ErrDB)
+				ctx.Error(500, ctx.Tr(ErrDB))
 				ctx.Redirect("/", 500)
 				return
 			}
 		} else {
 			// redirect user (that was messing around with the link) to home-page
-			ctx.Error(406, ErrWrongCredentials)
+			ctx.Error(406, ctx.Tr(ErrWrongCredentials))
 			ctx.Redirect("/", 406)
 			return
 		}
 	} else {
-		ctx.Error(406, ErrWrongCredentials)
+		ctx.Error(406, ctx.Tr(ErrWrongCredentials))
 		ctx.Redirect("/", 406)
 		return
 	}

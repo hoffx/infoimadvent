@@ -19,7 +19,7 @@ func Restore(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer)
 
 	user, err := uStorer.Get(map[string]interface{}{"email": email})
 	if err != nil {
-		ctx.Error(500, ErrDB)
+		ctx.Error(500, ctx.Tr(ErrDB))
 		log.Println(err)
 		ctx.Redirect("/login", 500)
 		return
@@ -33,7 +33,7 @@ func Restore(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer)
 	} else {
 		pw, err := gostrgen.RandGen(int(config.Config.Grades.Max), gostrgen.LowerUpperDigit, "", "")
 		if err != nil {
-			ctx.Error(500, ErrUnexpected)
+			ctx.Error(500, ctx.Tr(ErrUnexpected))
 			log.Println(err)
 			ctx.Redirect("/login", 500)
 			return
@@ -41,7 +41,7 @@ func Restore(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer)
 
 		hash, err := bcrypt.GenerateFromPassword([]byte(pw), bcrypt.DefaultCost)
 		if err != nil {
-			ctx.Error(500, ErrUnexpected)
+			ctx.Error(500, ctx.Tr(ErrUnexpected))
 			log.Println(err)
 			ctx.Redirect("/login", 500)
 			return
@@ -50,7 +50,7 @@ func Restore(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer)
 		user.Password = string(hash)
 		err = uStorer.Put(user)
 		if err != nil {
-			ctx.Error(500, ErrDB)
+			ctx.Error(500, ctx.Tr(ErrDB))
 			log.Println(err)
 			ctx.Redirect("/login", 500)
 			return
@@ -67,7 +67,7 @@ func Restore(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer)
 		d := gomail.NewDialer(config.Config.Mail.Address, config.Config.Mail.Port, config.Config.Mail.Username, config.Config.Mail.Password)
 
 		if err := d.DialAndSend(m); err != nil {
-			ctx.Error(500, ErrMail)
+			ctx.Error(500, ctx.Tr(ErrMail))
 			log.Println(err)
 			ctx.Redirect("/login", 500)
 			return

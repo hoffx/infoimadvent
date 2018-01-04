@@ -16,25 +16,31 @@ type templDay struct {
 	Opened  bool
 	Date    int
 	Current bool
+	Locked  bool
 }
 
 func Calendar(ctx *macaron.Context, log *log.Logger, sess session.Store) {
 
 	value := sess.Get("user")
 	// protected therefore user must exist
-	user, _ := value.(storage.User)
+	user := value.(storage.User)
 
 	tDays := make([]templDay, 0)
 	for i, d := range user.Days {
-		var opened, current bool
+		var opened, current, locked bool
 		if d != storage.None {
 			opened = true
 		}
 		_, month, day := time.Now().Date()
-		if month == time.December && day == i+1 {
+		// TODO: change back to december after testing
+		if month == time.January && day == i+1 {
 			current = true
 		}
-		tDays = append(tDays, templDay{"/day/" + strconv.Itoa(i+1), opened, i + 1, current})
+		// TODO: change back to december after testing
+		if month != time.January || day < i+1 {
+			locked = true
+		}
+		tDays = append(tDays, templDay{"/day/" + strconv.Itoa(i+1), opened, i + 1, current, locked})
 	}
 	randomize(&tDays)
 	ctx.Data["Days"] = tDays

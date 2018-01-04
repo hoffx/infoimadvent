@@ -300,4 +300,6 @@ config.ini
 *.min.css
 data/sessions/*
 !data/sessions/keep.me
+data/quests/*
+!data/quests/keep.me
 sql.log

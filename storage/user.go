@@ -9,6 +9,24 @@ import (
 	"github.com/go-xorm/xorm"
 )
 
+type UserStorer struct {
+	Storer
+}
+
+type User struct {
+	Email              string
+	Password           string
+	Grade              uint
+	Active             bool
+	Confirmed          bool
+	ConfirmationToken  string
+	Teacher            bool
+	ConfirmedRelations []string
+	RequestedRelations []string
+	Days               []int
+	Score              int
+}
+
 func NewUserStorer(name, user, password string, doLog bool) (UserStorer, error) {
 	db, err := xorm.NewEngine("mysql", user+":"+password+"@/"+name+"?charset=utf8")
 	if err != nil {

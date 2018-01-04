@@ -9,6 +9,17 @@ import (
 	"github.com/go-xorm/xorm"
 )
 
+type QuestStorer struct {
+	Storer
+}
+
+type Quest struct {
+	Path     string
+	Grade    int
+	Day      int
+	Solution int
+}
+
 func NewQuestStorer(name, user, password string, doLog bool) (QuestStorer, error) {
 	db, err := xorm.NewEngine("mysql", user+":"+password+"@/"+name+"?charset=utf8")
 	if err != nil {

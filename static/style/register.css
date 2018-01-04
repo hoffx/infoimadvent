@@ -18,6 +18,9 @@
     color: #c4bb45;
     margin-right: 10px;
   }
+  body .blocked {
+    pointer-events: none;
+  }
   body a {
     text-decoration: none;
     color: inherit;

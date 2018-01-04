@@ -1,0 +1,108 @@
+@import "main";
+
+@media all {
+    body {
+        grid-template-columns: 25vw 75vw;
+        grid-template-rows: 25vh 75vh;
+
+        .title{
+            grid-column-start:1;
+            grid-column-end:2;
+            grid-row-start:1;
+            grid-row-end: 2;
+
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+
+            padding: 2em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background-color: @background-gray;
+            color: @text-white;
+            
+            h1{
+                text-align: center;
+                font-size: 50pt;
+            }
+        }
+
+        .description{
+            grid-column-start: 2;
+            grid-column-end: 3;
+            grid-row-start: 1;
+            grid-row-end: 3;
+
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+
+            font-size: 1.2em;
+            padding:5em;
+            vertical-align: middle;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background-color: @background-white;
+            color: @text-gray;
+            
+            .text {
+                max-height: 100%;
+                overflow-y: auto;
+            }
+
+        }
+
+        .option-container{
+            grid-column-start: 1;
+            grid-column-end:2;
+            grid-row-start:2;
+            grid-row-end:3;
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background: none;
+            background-color: @background-gray;
+            
+            .options{                
+                .blocked {
+                    .tip {
+                        color: @red !important;
+                    }
+                    .solution {
+                        color: @gold !important;
+    
+                        .tip {
+                            color: @green !important;
+                        }
+                    }
+                }
+                .tip{
+                    color: @gold !important;
+                }
+                .option{
+                    box-sizing: border-box;
+                    -moz-box-sizing: border-box;
+                    -webkit-box-sizing: border-box;
+
+                    display: block;
+                    width: 100%;
+                    padding: 1em;
+                    border-top: solid 1px @text-white;
+                    text-align: center;
+                    color: @text-white;
+
+                    &:first-of-type{
+                        border:none;
+                    }
+                }
+            }
+        }
+    }
+}
