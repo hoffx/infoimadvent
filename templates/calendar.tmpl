@@ -9,11 +9,13 @@
     <link href="https://fonts.googleapis.com/css?family=Zilla+Slab" rel="stylesheet">
 </head>
 <body>
-    <div class="fixed"><a href="/">{{.i18n.Tr "back"}}</a></div>
-    {{range .Days}}
-    <div {{if .Locked}} class="blocked" {{end}} >
-        <a href={{.Link}} {{if not .Opened}} class="option" {{end}} {{if .Opened}} class="option opened" {{end}}  ><span {{if .Current}} class="current" {{end}} >{{.Date}}</span></a>
+    <div class="background">
+        <div class="fixed"><a href="/">{{.i18n.Tr "back"}}</a></div>
+        {{range .Days}}
+        <div {{if .Locked}} class="blocked" {{end}} >
+            <a href={{.Link}} {{if not .Opened}} class="option" {{end}} {{if .Opened}} class="option opened" {{end}}  ><span {{if .Current}} class="current" {{end}} >{{.Date}}</span></a>
+        </div>
+        {{end}}
     </div>
-    {{end}}
 </body>
 </html>
