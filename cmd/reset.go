@@ -29,15 +29,27 @@ func reset(ctx *cli.Context) {
 	for _, a := range args {
 		switch a {
 		case "filesystem":
-			err := os.RemoveAll(config.Config.FileSystem.StoragePath)
+			err := os.RemoveAll(config.Config.FileSystem.MDStoragePath)
 			if err != nil {
 				log.Println(err)
 			}
-			err = os.Mkdir(config.Config.FileSystem.StoragePath, os.ModePerm)
+			err = os.Mkdir(config.Config.FileSystem.MDStoragePath, os.ModePerm)
 			if err != nil {
 				log.Println(err)
 			}
-			_, err = os.Create(config.Config.FileSystem.StoragePath + "/keep.me")
+			_, err = os.Create(config.Config.FileSystem.MDStoragePath + "/keep.me")
+			if err != nil {
+				log.Println(err)
+			}
+			err = os.RemoveAll(config.Config.FileSystem.AssetsStoragePath)
+			if err != nil {
+				log.Println(err)
+			}
+			err = os.Mkdir(config.Config.FileSystem.AssetsStoragePath, os.ModePerm)
+			if err != nil {
+				log.Println(err)
+			}
+			_, err = os.Create(config.Config.FileSystem.AssetsStoragePath + "/keep.me")
 			if err != nil {
 				log.Println(err)
 			}
@@ -74,15 +86,27 @@ func reset(ctx *cli.Context) {
 				log.Println(err)
 			}
 		case "all":
-			err := os.RemoveAll(config.Config.FileSystem.StoragePath)
+			err := os.RemoveAll(config.Config.FileSystem.MDStoragePath)
 			if err != nil {
 				log.Println(err)
 			}
-			err = os.Mkdir(config.Config.FileSystem.StoragePath, os.ModePerm)
+			err = os.Mkdir(config.Config.FileSystem.MDStoragePath, os.ModePerm)
 			if err != nil {
 				log.Println(err)
 			}
-			_, err = os.Create(config.Config.FileSystem.StoragePath + "/keep.me")
+			_, err = os.Create(config.Config.FileSystem.MDStoragePath + "/keep.me")
+			if err != nil {
+				log.Println(err)
+			}
+			err = os.RemoveAll(config.Config.FileSystem.AssetsStoragePath)
+			if err != nil {
+				log.Println(err)
+			}
+			err = os.Mkdir(config.Config.FileSystem.AssetsStoragePath, os.ModePerm)
+			if err != nil {
+				log.Println(err)
+			}
+			_, err = os.Create(config.Config.FileSystem.AssetsStoragePath + "/keep.me")
 			if err != nil {
 				log.Println(err)
 			}

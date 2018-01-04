@@ -8,7 +8,7 @@
 </head>
 <body>
     <div style="display: block; min-width: 200px; font-size: 12pt; margin: 1em;" >{{if .Error}}{{.Error}}{{end}}</div>
-    <form action="/upload" name="register" method="post" autocomplete="on">
+    <form action="/upload" name="register" method="post" autocomplete="on" enctype="multipart/form-data">
         <input style="display: block; min-width: 200px; font-size: 12pt; margin: 1em;" name="pw"type="password" placeholder="admin password" required=true {{if .Pw}} value={{.Pw}} {{end}} />
         <input style="display: block; min-width: 200px; font-size: 12pt; margin: 1em;" name="mingrade" type="number" min={{.MinYL}} max={{.MaxYL}} placeholder="min grade" required=true {{if .MinGrade}} value={{.MinGrade}} {{end}} />
         <input style="display: block; min-width: 200px; font-size: 12pt; margin: 1em;" name="maxgrade" type="number" min={{.MinYL}} max={{.MaxYL}} placeholder="max grade" required=true {{if .MaxGrade}} value={{.MaxGrade}} {{end}} />
@@ -21,7 +21,8 @@
                     <option {{if .D}} selected {{end}}>D</option>
                 </select>
                 </label>
-        <textarea style="display: block; width: 90%; height: 500px; font-size: 12pt; margin: 1em;" name="md" placeholder="Markdown-Document">{{if .Markdown }}{{.Markdown}}{{end}}</textarea>
+        <label>markdown: <input type="file" style="display: block; font-size: 12pt; margin: 1em;" name="md"/></label>
+        <label>assets zip: <input type="file" style="display: block; font-size: 12pt; margin: 1em;" name="assets"/></label>
         <button style="display: block; min-width: 200px; font-size: 12pt; margin: 1em;" class="button" type="submit">Submit</button>
     </form>
 </body>

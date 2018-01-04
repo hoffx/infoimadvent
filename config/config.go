@@ -17,7 +17,8 @@ var Config struct {
 }
 
 type FileSystem struct {
-	StoragePath string `ini:"storagepath"`
+	MDStoragePath     string `ini:"mdstoragepath"`
+	AssetsStoragePath string `ini:"assetsstoragepath"`
 }
 
 type Sessioner struct {

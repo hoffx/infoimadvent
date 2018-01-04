@@ -39,6 +39,9 @@ func runWeb(ctx *cli.Context) {
 	m.Use(macaron.Static("static", macaron.StaticOptions{
 		SkipLogging: true,
 	}))
+	m.Use(macaron.Static(config.Config.FileSystem.AssetsStoragePath, macaron.StaticOptions{
+		SkipLogging: true,
+	}))
 	m.Use(i18n.I18n(i18n.Options{
 		Directory: "locales",
 		Langs:     []string{"de-DE", "en-US"},

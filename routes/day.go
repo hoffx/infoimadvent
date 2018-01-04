@@ -5,7 +5,9 @@ import (
 	"html/template"
 	"io/ioutil"
 	"log"
+	"path"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/go-macaron/session"
@@ -14,6 +16,8 @@ import (
 
 	macaron "gopkg.in/macaron.v1"
 )
+
+type Name string
 
 func Day(ctx *macaron.Context, log *log.Logger, qStorer *storage.QuestStorer, sess session.Store, uStorer *storage.UserStorer) {
 	num := ctx.ParamsInt("day")
@@ -65,12 +69,22 @@ func Day(ctx *macaron.Context, log *log.Logger, qStorer *storage.QuestStorer, se
 
 	data, err := ioutil.ReadFile(quest.Path)
 	if err != nil {
+		ctx.Error(500, ctx.Tr(ErrFS))
 		ctx.Redirect("/calendar", 500)
 		log.Println(err)
 		return
 	}
 
-	ctx.Data["Text"] = template.HTML(parser.Parse(data))
+	name := Name(path.Base(quest.Path))
+	html, err := parser.ParseAndProcess(data, []func(*string) error{name.parseUrls})
+	if err != nil {
+		ctx.Error(500, ctx.Tr(ErrUnexpected))
+		ctx.Redirect("/calendar", 500)
+		log.Println(err)
+		return
+	}
+
+	ctx.Data["Text"] = template.HTML(html)
 	tipString, _ := solutionToString(user.Days[num-1])
 	ctx.Data["Tip"+tipString] = true
 	ctx.Data["Day"] = num
@@ -85,6 +99,14 @@ func Day(ctx *macaron.Context, log *log.Logger, qStorer *storage.QuestStorer, se
 	}
 
 	ctx.HTML(200, "day")
+}
+
+// adds the files name to all assets paths
+func (n Name) parseUrls(s *string) (err error) {
+	*s = strings.Replace(*s, `src="http`, `\\\src="http///`, -1)
+	*s = strings.Replace(*s, `src="`, `src="/`+string(n)+"/", -1)
+	*s = strings.Replace(*s, `\\\src="http///`, `src="http`, -1)
+	return nil
 }
 
 func solutionToString(sol int) (solution string, err error) {
