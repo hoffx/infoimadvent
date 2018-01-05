@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="{{.Lang}}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{.i18n.Tr "account"}} | {{.i18n.Tr "service"}}</title>
+    <link rel="stylesheet" type="text/css" href="/style/account.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Zilla+Slab" rel="stylesheet">
+</head>
+<body>
+    <div class="title">
+        <h1>{{.i18n.Tr "account"}}</h1>
+    </div>
+    <div class="container option-container">
+        <div class="options">
+            {{if .ChangePw}}
+                <div class="option score">
+                    <a href="/account"><h2>{{.i18n.Tr "score"}}</h2></a>
+                </div>
+            {{end}}
+            {{if not .ChangePw}}
+                <div class="option changepw">
+                    <a href="/account?mode=changepw"><h2>{{.i18n.Tr "change_password"}}</a></h2>
+                </div>
+            {{end}}
+            <div class="option back">
+                <a href="/"><h2>{{.i18n.Tr "back"}}</h2></a>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="box">
+            {{if .ChangePw}}
+                <form action="/account" name="changepw"  method="post" autocomplete="on">
+                    <input name="pwOld" class="textfield" type="password" placeholder={{.i18n.Tr "password_old"}} required=true minlength={{.Config.MinPwL}} maxlength={{.Config.MaxPwL}} {{if .PwOld}} value={{.PwOld}} {{end}} />
+                    <input name="pw1" class="textfield" type="password" placeholder={{.i18n.Tr "password_new"}} required=true minlength={{.Config.MinPwL}} maxlength={{.Config.MaxPwL}}  {{if .Pw}} value={{.Pw}} {{end}}/>
+                    <input name="pw2" class="textfield" type="password" placeholder={{.i18n.Tr "password_new"}} required=true minlength={{.Config.MinPwL}} maxlength={{.Config.MaxPwL}}  {{if .Pw}} value={{.Pw}} {{end}}/>
+                    <button class="button" type="submit">{{.i18n.Tr "change_password"}}</button>
+                    {{if .Error}}
+                        <button formaction="/restore" type="submit" class="button small">{{.i18n.Tr "restore_pw"}}</button>
+                    {{end}}
+                </form>
+                {{if .Error}}
+                <div class="error text">{{.Error}}</div>
+                {{end}}
+                {{if .Message}}
+                <div class="message text">{{.Message}}</div>
+                {{end}}
+            {{end}}
+            {{if not .ChangePw}}
+                <div class="description">
+                    <h2>{{.Score}}</h2>
+                    <h4 class="text" >{{.i18n.Tr "score"}}</h4>
+                </div>
+            {{end}}
+        </div>
+    </div>
+</body>
+</html>

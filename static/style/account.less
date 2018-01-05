@@ -1,0 +1,129 @@
+@import "main";
+
+@media all {
+    body {
+        grid-template-columns: 45vw 55vw;
+        grid-template-rows: 38.2vh 61.8vh;
+
+        .title{
+            grid-column-start:1;
+            grid-column-end:2;
+            grid-row-start:1;
+            grid-row-end: 2;
+
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+
+            padding: 2em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            h1{
+                text-align: center;
+                font-size: 50pt;
+            }
+        }
+
+        .content{
+            background-color: @background-gray;
+            color: @text-white;
+            grid-column-start: 2;
+            grid-column-end: 3;
+            grid-row-start: 1;
+            grid-row-end: 3;
+
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+
+            font-size: 1.2em;
+            padding:5em;
+            vertical-align: middle;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+
+
+            .box{
+                text-align: center;
+
+                .description {
+                    h2 {
+                        font-size: 100pt;
+                        margin: 10px;
+                    }
+
+                    h4 {
+                        font-weight: normal;
+                    }
+                }
+
+
+                form{
+    
+                    .button{
+                        margin-top: 2em;
+                        border: none;
+                        background: none;
+                        color: @text-white;
+                        width: 100%;
+                        font-size: inherit;
+    
+                        &:hover{
+                            cursor: pointer;
+                            color: @gold;
+                        }
+                    }
+                }
+    
+                .error{
+                    margin-top: 2em;
+                    color: @red;
+                    width: 100%;
+                    text-align: center;
+                }
+                .message{
+                    margin-top: 2em;
+                    color: @gold;
+                    width: 100%;
+                    text-align: center;
+                }
+            }
+        }
+
+        .option-container{
+            grid-column-start: 1;
+            grid-column-end:2;
+            grid-row-start:2;
+            grid-row-end:3;
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            .options{
+
+                .option{
+                    box-sizing: border-box;
+                    -moz-box-sizing: border-box;
+                    -webkit-box-sizing: border-box;
+
+                    display: block;
+                    width: 100%;
+                    padding: 1em;
+                    border-top: solid 1px black;
+                    text-align: center;
+                    color: @text-gray;
+
+                    &:first-of-type{
+                        border:none;
+                    }
+                }
+            }
+        }
+    }
+}

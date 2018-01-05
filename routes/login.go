@@ -53,7 +53,19 @@ func Login(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer, s
 		ctx.Data["Message"] = ctx.Tr(MessLoggedIn)
 		user.Active = true
 
-		sess.Set("user", user)
+		err = sess.Set("user", user)
+		if err != nil {
+			ctx.Data["Error"] = ctx.Tr(ErrUnexpected)
+			log.Println(err)
+			return
+		}
+
+		err = uStorer.Put(user)
+		if err != nil {
+			ctx.Data["Error"] = ctx.Tr(ErrDB)
+			log.Println(err)
+			return
+		}
 	}
 
 }

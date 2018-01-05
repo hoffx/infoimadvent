@@ -21,4 +21,5 @@ const (
 	MessLoggedOut       = "logged_out"
 	MessConfirmMailSent = "confirm_mail_sent"
 	MessRestoreMailSent = "restore_mail_sent"
+	MessChangedPassword = "password_changed"
 )
