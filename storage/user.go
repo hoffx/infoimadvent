@@ -102,3 +102,8 @@ func (s *UserStorer) Get(keys map[string]interface{}) (User, error) {
 	_, err := s.db.Table("user").Where(query, values...).Get(&user)
 	return user, err
 }
+
+func (s *UserStorer) GetAll() (users []User, err error) {
+	err = s.db.Table("user").Find(&users)
+	return
+}

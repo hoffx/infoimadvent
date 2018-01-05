@@ -1,11 +1,16 @@
 package cmd
 
 import (
+	"log"
+	"time"
+
 	"github.com/go-macaron/i18n"
 	"github.com/go-macaron/session"
 	"github.com/hoffx/infoimadvent/config"
 	"github.com/hoffx/infoimadvent/routes"
+	"github.com/hoffx/infoimadvent/services"
 	"github.com/hoffx/infoimadvent/storage"
+	"github.com/rakanalh/scheduler"
 	"github.com/urfave/cli"
 	macaron "gopkg.in/macaron.v1"
 )
@@ -27,6 +32,25 @@ func runWeb(ctx *cli.Context) {
 	} else {
 		macaron.Env = macaron.PROD
 	}
+
+	// set up score-calculation service
+
+	s := services.NewDBStorage(&uStorer, &qStorer)
+	scheduler := scheduler.New(s)
+
+	// TODO: change back to december after testing
+	for i := 1; i <= 24; i++ {
+		loc, err := time.LoadLocation("Local")
+		if err != nil {
+			log.Fatal(err)
+		}
+		_, err = scheduler.RunAt(time.Date(time.Now().Year(), time.January, i, 3, 0, 0, 0, loc), s.CalcScores)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	// set up web service
 
 	m := macaron.New()
 

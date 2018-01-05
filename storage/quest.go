@@ -95,3 +95,8 @@ func (s *QuestStorer) Get(keys map[string]interface{}) (Quest, error) {
 	_, err := s.db.Table("quest").Where(query, values...).Get(&quest)
 	return quest, err
 }
+
+func (s *QuestStorer) GetAll() (quests []Quest, err error) {
+	err = s.db.Table("quest").Find(&quests)
+	return
+}
