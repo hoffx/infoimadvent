@@ -1,7 +1,9 @@
 package cmd
 
 import (
+	"html/template"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/go-macaron/i18n"
@@ -73,6 +75,20 @@ func runWeb(ctx *cli.Context) {
 	}))
 	m.Use(macaron.Renderer(macaron.RenderOptions{
 		Directory: "templates",
+		Funcs: []template.FuncMap{map[string]interface{}{
+			"add": func(summands ...interface{}) int {
+				var sum int
+				for _, s := range summands {
+					if i, ok := s.(int); ok {
+						sum += i
+					} else if s, ok := s.(string); ok {
+						i, _ := strconv.Atoi(s)
+						sum += i
+					}
+				}
+				return sum
+			},
+		}},
 	}))
 	m.Use(session.Sessioner(session.Options{
 		Provider:       "file",
@@ -86,14 +102,17 @@ func runWeb(ctx *cli.Context) {
 	m.Map(&qStorer)
 	m.Map(&uStorer)
 
-	m.Get("/", routes.Home)
-
-	m.Route("/register", "GET,POST", routes.Register)
-	m.Route("/login", "GET,POST", routes.Login)
-	m.Get("/about", routes.About)
-	m.Get("/confirm", routes.Confirm)
-	m.Post("/restore", routes.Restore)
 	m.Route("/upload", "GET,POST", routes.Upload)
+	m.Get("/overview", routes.Overview)
+	m.Group("", func() {
+		m.Get("/", routes.Home)
+
+		m.Route("/register", "GET,POST", routes.Register)
+		m.Route("/login", "GET,POST", routes.Login)
+		m.Get("/about", routes.About)
+		m.Get("/confirm", routes.Confirm)
+		m.Post("/restore", routes.Restore)
+	}, routes.PublicReady)
 
 	m.Group("", func() {
 		m.Route("/account", "GET,POST", routes.Account)
@@ -103,7 +122,7 @@ func runWeb(ctx *cli.Context) {
 			m.Get("/", routes.Current)
 			m.Get("/:day", routes.Day)
 		})
-	}, routes.Protect)
+	}, routes.PublicReady, routes.Protect)
 
 	m.Run(config.Config.Server.Ip, config.Config.Server.Port)
 }

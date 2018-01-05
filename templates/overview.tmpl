@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Overview</title>
+</head>
+<body>
+    {{range $day, $grades := .Days}}
+        {{if eq $day 0}}
+            <span style="display: inline-block; width: 30px;"></span>
+            {{range $g, $v := $grades }}
+                <span style="display: inline-block; width: 30px;">{{$g}}</span>
+            {{end}}
+            <span style="display: inline-block; width: 30px;">grade</span> 
+        {{end}}
+        <div>
+            <span style="display: inline-block; width: 30px;">{{add $day 1}}</span>
+            {{range $g, $v := $grades }}
+                <span style="display: inline-block; width: 30px;">{{$v}}</span>
+            {{end}}
+        </div>
+    {{end}}
+    <span style="display: inline-block; width: 30px;">day</span>
+</body>
+</html>

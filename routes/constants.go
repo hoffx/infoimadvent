@@ -13,6 +13,7 @@ const (
 	ErrIllegalInput     = "illegal_input_error"
 	ErrFS               = "filesystem_error"
 	ErrIllegalDate      = "illegal_date_error"
+	ErrNotReady         = "server_not_ready_error"
 )
 
 // messages

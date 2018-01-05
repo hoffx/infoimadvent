@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/go-xorm/core"
+	"github.com/hoffx/infoimadvent/config"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
@@ -11,6 +12,7 @@ import (
 
 type QuestStorer struct {
 	Storer
+	Complete bool
 }
 
 type Quest struct {
@@ -43,10 +45,14 @@ func NewQuestStorer(name, user, password string, doLog bool) (QuestStorer, error
 		return QuestStorer{}, err
 	}
 
-	return QuestStorer{Storer{db, true}}, nil
+	qs := QuestStorer{Storer{db, true}, false}
+	qs.Complete = qs.isComplete()
+
+	return qs, nil
 }
 
 func (s *QuestStorer) ResetDB() error {
+	s.Complete = false
 	err := s.db.DropTables(Quest{})
 	if err != nil {
 		return err
@@ -57,7 +63,13 @@ func (s *QuestStorer) ResetDB() error {
 
 func (s *QuestStorer) Create(quest Quest) error {
 	_, err := s.db.Insert(quest)
-	return err
+	if err != nil {
+		return err
+	}
+
+	s.Complete = s.isComplete()
+
+	return nil
 }
 
 func (s *QuestStorer) Put(quest Quest) error {
@@ -99,4 +111,16 @@ func (s *QuestStorer) Get(keys map[string]interface{}) (Quest, error) {
 func (s *QuestStorer) GetAll() (quests []Quest, err error) {
 	err = s.db.Table("quest").Find(&quests)
 	return
+}
+
+func (s *QuestStorer) isComplete() bool {
+	for day := 1; day <= 24; day++ {
+		for grade := config.Config.Grades.Min; grade <= config.Config.Grades.Max; grade++ {
+			q, err := s.Get(map[string]interface{}{"day": day, "grade": grade})
+			if q.Path == "" || err != nil {
+				return false
+			}
+		}
+	}
+	return true
 }
