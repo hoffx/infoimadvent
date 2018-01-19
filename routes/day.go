@@ -60,7 +60,7 @@ func Day(ctx *macaron.Context, log *log.Logger, qStorer *storage.QuestStorer, se
 		}
 	}
 
-	quest, err := qStorer.Get(map[string]interface{}{"day": num, "grade": user.Grade})
+	quest, err := qStorer.Get(map[string]interface{}{"day": num, "grade": user.Grade, "is_about": false})
 	if err != nil {
 		ctx.Redirect("/calendar", 500)
 		log.Println(err)

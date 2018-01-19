@@ -41,9 +41,10 @@ type Mail struct {
 }
 
 type Authentification struct {
-	MinPwLength   uint   `ini:"minpwlength"`
-	MaxPwLength   uint   `ini:"maxpwlength"`
-	AdminPassword string `ini:"adminpassword"`
+	MinPwLength uint   `ini:"minpwlength"`
+	MaxPwLength uint   `ini:"maxpwlength"`
+	AdminMail   string `ini:"adminmail"`
+	AdminHash   string `ini:"adminhash"`
 }
 
 type Grades struct {

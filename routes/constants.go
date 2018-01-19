@@ -14,6 +14,7 @@ const (
 	ErrFS               = "filesystem_error"
 	ErrIllegalDate      = "illegal_date_error"
 	ErrNotReady         = "server_not_ready_error"
+	ErrNoAssets         = "no_assets_error"
 )
 
 // messages

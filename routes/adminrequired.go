@@ -6,10 +6,10 @@ import (
 	macaron "gopkg.in/macaron.v1"
 )
 
-func Protect(ctx *macaron.Context, sess session.Store) {
+func RequireAdmin(ctx *macaron.Context, sess session.Store) {
 	value := sess.Get("user")
 	sUser, ok := value.(storage.User)
-	if !ok || !sUser.Active {
+	if !ok || !sUser.Active || !sUser.IsAdmin {
 		ctx.Redirect("/", 401)
 	}
 }

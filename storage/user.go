@@ -15,7 +15,7 @@ type UserStorer struct {
 
 type User struct {
 	Email              string
-	Password           string
+	Hash               string
 	Grade              uint
 	Active             bool
 	Confirmed          bool
@@ -25,6 +25,7 @@ type User struct {
 	RequestedRelations []string
 	Days               []int
 	Score              int
+	IsAdmin            bool
 }
 
 func NewUserStorer(name, user, password string, doLog bool) (UserStorer, error) {

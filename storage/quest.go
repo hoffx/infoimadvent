@@ -20,6 +20,7 @@ type Quest struct {
 	Grade    int
 	Day      int
 	Solution int
+	IsAbout  bool
 }
 
 func NewQuestStorer(name, user, password string, doLog bool) (QuestStorer, error) {

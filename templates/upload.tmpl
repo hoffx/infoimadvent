@@ -9,7 +9,6 @@
 <body>
     <div style="display: block; min-width: 200px; font-size: 12pt; margin: 1em;" >{{if .Error}}{{.Error}}{{end}}</div>
     <form action="/upload" name="register" method="post" autocomplete="on" enctype="multipart/form-data">
-        <input style="display: block; min-width: 200px; font-size: 12pt; margin: 1em;" name="pw"type="password" placeholder="admin password" required=true {{if .Pw}} value={{.Pw}} {{end}} />
         <input style="display: block; min-width: 200px; font-size: 12pt; margin: 1em;" name="mingrade" type="number" min={{.MinYL}} max={{.MaxYL}} placeholder="min grade" required=true {{if .MinGrade}} value={{.MinGrade}} {{end}} />
         <input style="display: block; min-width: 200px; font-size: 12pt; margin: 1em;" name="maxgrade" type="number" min={{.MinYL}} max={{.MaxYL}} placeholder="max grade" required=true {{if .MaxGrade}} value={{.MaxGrade}} {{end}} />
         <input style="display: block; min-width: 200px; font-size: 12pt; margin: 1em;" name="day" type="number" min=1 max=24 placeholder="day" required=true {{if .Day}} value={{.Day}} {{end}} />
@@ -21,8 +20,9 @@
                     <option {{if .D}} selected {{end}}>D</option>
                 </select>
                 </label>
-        <label>markdown: <input type="file" style="display: block; font-size: 12pt; margin: 1em;" name="md"/></label>
+        <label>markdown: <input type="file" style="display: block; font-size: 12pt; margin: 1em;" name="md" required=true /></label>
         <label>assets zip: <input type="file" style="display: block; font-size: 12pt; margin: 1em;" name="assets"/></label>
+        <label>is about text: <input class="checkbox" type="checkbox" name="about" /> </label>
         <button style="display: block; min-width: 200px; font-size: 12pt; margin: 1em;" class="button" type="submit">Submit</button>
     </form>
 </body>

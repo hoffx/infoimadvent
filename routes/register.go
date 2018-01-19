@@ -47,10 +47,7 @@ func Register(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer
 		ctx.Data["Email"] = fEmail
 		ctx.Data["Pw"] = fPw
 
-		var t bool
-		if ctx.Req.FormValue("teacher") == "on" {
-			t = true
-		}
+		t := ctx.Req.FormValue("teacher") == "on"
 
 		ctx.Data["Teacher"] = t
 
@@ -101,7 +98,7 @@ func Register(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer
 				return
 			}
 
-			user = storage.User{fEmail, string(hash), uint(fGrade), false, false, confirmationToken, t, []string{}, []string{}, make([]int, 24), 0}
+			user = storage.User{fEmail, string(hash), uint(fGrade), false, false, confirmationToken, t, []string{}, []string{}, make([]int, 24), 0, false}
 			err = uStorer.Create(user)
 			if err != nil {
 				ctx.Data["Error"] = ctx.Tr(ErrDB)

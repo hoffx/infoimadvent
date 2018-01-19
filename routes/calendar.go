@@ -27,11 +27,14 @@ func Calendar(ctx *macaron.Context, log *log.Logger, sess session.Store) {
 
 	tDays := make([]templDay, 0)
 	for i, d := range user.Days {
+		_, month, day := time.Now().Date()
+
 		var opened, current, locked bool
-		if d != storage.None {
+
+		// TODO: change back to december after testing
+		if d != storage.None || (i+1 < day && month == time.January) || month != time.January {
 			opened = true
 		}
-		_, month, day := time.Now().Date()
 		// TODO: change back to december after testing
 		if month == time.January && day == i+1 {
 			current = true

@@ -27,7 +27,6 @@ func Upload(ctx *macaron.Context, log *log.Logger, qStorer *storage.QuestStorer)
 		return
 	} else {
 		// parse trivial form values
-		fPw := ctx.Req.FormValue("pw")
 		fMinGrade, err := strconv.Atoi(ctx.Req.FormValue("mingrade"))
 		if err != nil {
 			ctx.Data["Error"] = ErrIllegalInput
@@ -44,20 +43,13 @@ func Upload(ctx *macaron.Context, log *log.Logger, qStorer *storage.QuestStorer)
 			return
 		}
 		fSolution := ctx.Req.FormValue("solution")
+		fIsAbout := ctx.Req.FormValue("about") == "on"
 
 		// save trivial form values
-		ctx.Data["Pw"] = fPw
 		ctx.Data["Day"] = fDay
 		ctx.Data["MinGrade"] = fMinGrade
 		ctx.Data["MaxGrade"] = fMaxGrade
 		ctx.Data[fSolution] = true
-
-		// parse non-trivial form values
-
-		if fPw != config.Config.Auth.AdminPassword {
-			ctx.Data["Error"] = ErrWrongCredentials
-			return
-		}
 
 		solution, err := solutionToInt(fSolution)
 		if err != nil {
@@ -91,36 +83,36 @@ func Upload(ctx *macaron.Context, log *log.Logger, qStorer *storage.QuestStorer)
 
 		fAssets, _, err := ctx.Req.FormFile("assets")
 		if err != nil {
-			ctx.Data["Error"] = ctx.Tr(ErrIllegalInput)
+			ctx.Data["Error"] = ctx.Tr(ErrNoAssets)
 			log.Println(err)
-			return
-		}
-		defer fAssets.Close()
-		buf := new(bytes.Buffer)
-		length, err := buf.ReadFrom(fAssets)
-		if err != nil {
-			ctx.Data["Error"] = ctx.Tr(ErrIllegalInput)
-			log.Println(err)
-		}
+		} else {
+			defer fAssets.Close()
+			buf := new(bytes.Buffer)
+			length, err := buf.ReadFrom(fAssets)
+			if err != nil {
+				ctx.Data["Error"] = ctx.Tr(ErrIllegalInput)
+				log.Println(err)
+			}
 
-		reader, err := zip.NewReader(bytes.NewReader(buf.Bytes()), length)
-		if err != nil {
-			ctx.Data["Error"] = ctx.Tr(ErrIllegalInput)
-			log.Println(err)
-			return
-		}
-		err = unzipAndSave(*reader, config.Config.FileSystem.AssetsStoragePath+"/"+path.Base(f.Name()))
-		if err != nil {
-			ctx.Data["Error"] = ctx.Tr(ErrFS)
-			log.Println(err)
-			return
+			reader, err := zip.NewReader(bytes.NewReader(buf.Bytes()), length)
+			if err != nil {
+				ctx.Data["Error"] = ctx.Tr(ErrIllegalInput)
+				log.Println(err)
+				return
+			}
+			err = unzipAndSave(*reader, config.Config.FileSystem.AssetsStoragePath+"/"+path.Base(f.Name()))
+			if err != nil {
+				ctx.Data["Error"] = ctx.Tr(ErrFS)
+				log.Println(err)
+				return
+			}
 		}
 
 		// create db entries
 
 		for i := fMinGrade; i <= fMaxGrade; i++ {
-			quest := storage.Quest{f.Name(), i, fDay, solution}
-			oldQ, err := qStorer.Get(map[string]interface{}{"grade": i, "day": fDay})
+			quest := storage.Quest{f.Name(), i, fDay, solution, fIsAbout}
+			oldQ, err := qStorer.Get(map[string]interface{}{"grade": i, "day": fDay, "is_about": fIsAbout})
 			if err != nil {
 				ctx.Data["Error"] = ctx.Tr(ErrDB)
 				log.Println(err)

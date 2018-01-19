@@ -199,19 +199,38 @@
 }
 @media all {
   body {
-    grid-template-columns: 45vw 55vw;
-    grid-template-rows: 38.2vh 61.8vh;
+    grid-template-columns: 25vw 75vw;
+    grid-template-rows: 25vh 75vh;
+  }
+  body .title {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    background-color: #222222;
+    color: #d2d2d2;
   }
   body .content {
     grid-column-start: 2;
     grid-column-end: 3;
     grid-row-start: 1;
     grid-row-end: 3;
+    background: none !important;
+    background-color: #ffffff !important;
+  }
+  body .text {
+    color: #222222;
   }
   body .option-container {
     grid-column-start: 1;
     grid-column-end: 2;
     grid-row-start: 2;
     grid-row-end: 3;
+    background-image: url("img/left-black.svg");
+    background-color: #222222;
+  }
+  body .option-container .options .option {
+    border-top-color: #d2d2d2;
+    color: #d2d2d2;
   }
 }

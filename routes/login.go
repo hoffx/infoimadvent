@@ -40,7 +40,7 @@ func Login(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer, s
 		} else if user.Email == "" {
 			ctx.Data["Error"] = ctx.Tr(ErrWrongCredentials)
 		}
-		err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(fPw))
+		err = bcrypt.CompareHashAndPassword([]byte(user.Hash), []byte(fPw))
 		if err != nil {
 			ctx.Data["Error"] = ctx.Tr(ErrWrongCredentials)
 			return

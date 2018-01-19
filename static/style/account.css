@@ -40,6 +40,14 @@
   body .text {
     font-family: Arial, Helvetica, sans-serif !important;
   }
+  body .text img {
+    display: block;
+    margin: 0 auto;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    max-width: 90%;
+    max-height: 80vh;
+  }
   body input {
     font-size: inherit;
     padding: 0.2em;
@@ -61,25 +69,67 @@
   body input::-moz-placeholder {
     color: rgba(210, 210, 210, 0.8);
   }
-  body .content {
-    background-color: #222222;
-    background-image: url("img/right.svg");
-    background-position: right center;
-    background-size: contain;
-    background-repeat: no-repeat;
+  body .textfield {
+    border: none;
+    border-bottom: solid 1px #d2d2d2;
+    background: none;
     color: #d2d2d2;
   }
-  body .option-container {
-    background-image: url("img/left.svg");
-    background-position: left bottom;
-    background-size: contain;
-    background-repeat: no-repeat;
+  body .textfield:active {
+    border-bottom-color: #c4bb45;
+    color: #c4bb45;
   }
-}
-@media all {
-  body {
-    grid-template-columns: 45vw 55vw;
-    grid-template-rows: 38.2vh 61.8vh;
+  body .checkbox-container {
+    margin: 0 auto;
+    border-bottom: solid 1px #d2d2d2;
+    color: #d2d2d2;
+    text-align: left;
+    color: rgba(210, 210, 210, 0.8);
+    width: 250px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+  }
+  body .checkbox-container .checkbox {
+    margin: 0.2em;
+    display: inline;
+    width: initial;
+    line-height: 1em;
+    margin-right: 0.5em;
+  }
+  body .error {
+    margin-top: 2em;
+    color: #d24e4c;
+    width: 100%;
+    text-align: center;
+  }
+  body .message {
+    margin-top: 2em;
+    color: #c4bb45;
+    width: 100%;
+    text-align: center;
+  }
+  body .dropdown {
+    border: none;
+    border-bottom: solid 1px #d2d2d2;
+    background: none;
+    color: #d2d2d2;
+  }
+  body .dropdown:active {
+    border-bottom-color: #c4bb45;
+    color: #c4bb45;
+  }
+  body .button {
+    margin-top: 2em;
+    border: none;
+    background: none;
+    color: #d2d2d2;
+    width: 100%;
+    font-size: inherit;
+  }
+  body .button:hover {
+    cursor: pointer;
+    color: #c4bb45;
   }
   body .title {
     grid-column-start: 1;
@@ -100,11 +150,11 @@
   }
   body .content {
     background-color: #222222;
+    background-image: url("img/right.svg");
+    background-position: right center;
+    background-size: contain;
+    background-repeat: no-repeat;
     color: #d2d2d2;
-    grid-column-start: 2;
-    grid-column-end: 3;
-    grid-row-start: 1;
-    grid-row-end: 3;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -114,47 +164,20 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow-y: auto;
   }
   body .content .box {
+    overflow-y: auto;
     text-align: center;
+    max-height: 100%;
   }
-  body .content .box .description h2 {
-    font-size: 100pt;
-    margin: 10px;
-  }
-  body .content .box .description h4 {
-    font-weight: normal;
-  }
-  body .content .box form .button {
-    margin-top: 2em;
-    border: none;
-    background: none;
-    color: #d2d2d2;
-    width: 100%;
-    font-size: inherit;
-  }
-  body .content .box form .button:hover {
-    cursor: pointer;
-    color: #c4bb45;
-  }
-  body .content .box .error {
-    margin-top: 2em;
-    color: #d24e4c;
-    width: 100%;
-    text-align: center;
-  }
-  body .content .box .message {
-    margin-top: 2em;
-    color: #c4bb45;
-    width: 100%;
-    text-align: center;
+  body .content .text {
+    text-align: left;
   }
   body .option-container {
-    grid-column-start: 1;
-    grid-column-end: 2;
-    grid-row-start: 2;
-    grid-row-end: 3;
+    background-image: url("img/left.svg");
+    background-position: left bottom;
+    background-size: contain;
+    background-repeat: no-repeat;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -172,5 +195,30 @@
   }
   body .option-container .options .option:first-of-type {
     border: none;
+  }
+}
+@media all {
+  body {
+    grid-template-columns: 45vw 55vw;
+    grid-template-rows: 38.2vh 61.8vh;
+  }
+  body .content {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 3;
+  }
+  body .content h2 {
+    font-size: 100pt;
+    margin: 10px;
+  }
+  body .content h4 {
+    font-weight: normal;
+  }
+  body .option-container {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 3;
   }
 }

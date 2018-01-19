@@ -47,7 +47,7 @@ func Restore(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer)
 			return
 		}
 
-		user.Password = string(hash)
+		user.Hash = string(hash)
 		err = uStorer.Put(user)
 		if err != nil {
 			ctx.Error(500, ctx.Tr(ErrDB))

@@ -65,7 +65,7 @@ func Account(ctx *macaron.Context, log *log.Logger, sess session.Store, uStorer 
 
 		ctx.Data["Pw"] = fPw
 
-		err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(fPwOld))
+		err = bcrypt.CompareHashAndPassword([]byte(user.Hash), []byte(fPwOld))
 		if err != nil {
 			ctx.Data["Error"] = ctx.Tr(ErrWrongCredentials)
 			return
@@ -76,7 +76,7 @@ func Account(ctx *macaron.Context, log *log.Logger, sess session.Store, uStorer 
 			ctx.Data["Error"] = ctx.Tr(ErrUnexpected)
 			return
 		}
-		user.Password = string(pwBytes)
+		user.Hash = string(pwBytes)
 
 		err = uStorer.Put(user)
 		if err != nil {

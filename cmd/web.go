@@ -27,12 +27,23 @@ var uStorer storage.UserStorer
 var qStorer storage.QuestStorer
 
 func runWeb(ctx *cli.Context) {
+	// load config
 	config.Load(ctx.GlobalString("config"))
 
-	if config.Config.Server.DevMode == true {
-		macaron.Env = macaron.DEV
-	} else {
-		macaron.Env = macaron.PROD
+	// init storers
+	if !qStorer.Active || !uStorer.Active {
+		initStorer()
+	}
+
+	// write admin to db
+	user, err := uStorer.Get(map[string]interface{}{"email": config.Config.Auth.AdminMail})
+	if err != nil {
+		log.Fatal(err)
+	} else if user.Email == "" {
+		err = uStorer.Create(storage.User{config.Config.Auth.AdminMail, config.Config.Auth.AdminHash, config.Config.Grades.Max, true, true, "", true, []string{}, []string{}, make([]int, 24), 0, true})
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	// set up score-calculation service
@@ -54,11 +65,23 @@ func runWeb(ctx *cli.Context) {
 
 	// set up web service
 
+	m := initMacaron()
+
+	m.Run(config.Config.Server.Ip, config.Config.Server.Port)
+}
+
+func initMacaron() *macaron.Macaron {
 	m := macaron.New()
 
 	mp := make(map[interface{}]interface{})
 	mp["user"] = storage.User{}
 	session.EncodeGob(mp)
+
+	if config.Config.Server.DevMode == true {
+		macaron.Env = macaron.DEV
+	} else {
+		macaron.Env = macaron.PROD
+	}
 
 	m.Use(macaron.Logger())
 	m.Use(macaron.Recovery())
@@ -95,28 +118,27 @@ func runWeb(ctx *cli.Context) {
 		ProviderConfig: config.Config.Sessioner.StoragePath,
 	}))
 
-	if !qStorer.Active || !uStorer.Active {
-		initStorer()
-	}
-
 	m.Map(&qStorer)
 	m.Map(&uStorer)
 
-	m.Route("/upload", "GET,POST", routes.Upload)
-	m.Get("/overview", routes.Overview)
-	m.Group("", func() {
-		m.Get("/", routes.Home)
-
-		m.Route("/register", "GET,POST", routes.Register)
-		m.Route("/login", "GET,POST", routes.Login)
-		m.Get("/about", routes.About)
-		m.Get("/confirm", routes.Confirm)
-		m.Post("/restore", routes.Restore)
-	}, routes.PublicReady)
+	m.Get("/", routes.Home)
+	m.Route("/login", "GET,POST", routes.Login)
+	m.Get("/about", routes.About)
+	m.Route("/register", "GET,POST", routes.Register)
+	m.Get("/confirm", routes.Confirm)
+	m.Post("/restore", routes.Restore)
 
 	m.Group("", func() {
-		m.Route("/account", "GET,POST", routes.Account)
+		m.Route("/upload", "GET,POST", routes.Upload)
+		m.Get("/overview", routes.Overview)
+	}, routes.RequireAdmin)
+
+	m.Group("", func() {
 		m.Get("/logout", routes.Logout)
+		m.Route("/account", "GET,POST", routes.Account)
+	}, routes.Protect)
+
+	m.Group("", func() {
 		m.Get("/calendar", routes.Calendar)
 		m.Group("/day", func() {
 			m.Get("/", routes.Current)
@@ -124,5 +146,5 @@ func runWeb(ctx *cli.Context) {
 		})
 	}, routes.PublicReady, routes.Protect)
 
-	m.Run(config.Config.Server.Ip, config.Config.Server.Port)
+	return m
 }

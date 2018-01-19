@@ -4,6 +4,7 @@
 
 @media all {
     body {
+        // body style
         position: fixed;
         top: 0;
         left: 0;
@@ -14,6 +15,7 @@
         width: 100vw;
         height: 100vh;
 
+        // general elements
         p{
             line-height: 1.5;
 
@@ -86,6 +88,103 @@
             }
         }
 
+        .textfield{
+            border: none;
+            border-bottom: solid 1px @text-white;
+            background: none;
+            color: @text-white;
+
+            &:active{
+                border-bottom-color: @gold;
+                color: @gold;
+            }
+        }
+
+        .checkbox-container{
+            margin: 0 auto;
+            border-bottom: solid 1px @text-white;
+            color: @text-white;
+            text-align: left;
+            color: @text-white-placeholder;
+            width: 250px;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+
+
+
+            .checkbox{
+                margin: 0.2em;
+                display: inline;
+                width: initial;
+                line-height: 1em;
+                margin-right: 0.5em;
+            }
+        }
+
+        .error{
+            margin-top: 2em;
+            color: @red;
+            width: 100%;
+            text-align: center;
+        }
+        .message{
+            margin-top: 2em;
+            color: @gold;
+            width: 100%;
+            text-align: center;
+        }
+
+        .dropdown{
+            border: none;
+            border-bottom: solid 1px @text-white;
+            background: none;
+            color: @text-white;
+            
+
+            &:active{
+                border-bottom-color: @gold;
+                color: @gold;
+            }
+        }
+
+        .button{
+            margin-top: 2em;
+            border: none;
+            background: none;
+            color: @text-white;
+            width: 100%;
+            font-size: inherit;
+
+            &:hover{
+                cursor: pointer;
+                color: @gold;
+            }
+        }
+
+        // page's title
+        .title {
+            grid-column-start:1;
+            grid-column-end:2;
+            grid-row-start:1;
+            grid-row-end: 2;
+
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+
+            padding: 2em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            h1{
+                text-align: center;
+                font-size: 50pt;
+            }
+        }
+
+        // page's content
         .content{
             background-color: @background-gray;
             background-image: url("img/right.svg");
@@ -93,13 +192,61 @@
             background-size: contain;
             background-repeat: no-repeat;
             color: @text-white;
+
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+
+            font-size: 1.2em;
+            padding:5em;
+            vertical-align: middle;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            
+            .box{
+                overflow-y: auto;
+                text-align: center;
+                max-height: 100%;
+            }
+
+            .text {
+                text-align: left;
+            }
         }
 
+        // page's menu
         .option-container {
             background-image: url("img/left.svg");
             background-position: left bottom;
             background-size: contain;
             background-repeat: no-repeat;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            .options{
+
+                .option{
+                    box-sizing: border-box;
+                    -moz-box-sizing: border-box;
+                    -webkit-box-sizing: border-box;
+
+                    display: block;
+                    width: 100%;
+                    padding: 1em;
+                    border-top: solid 1px black;
+                    text-align: center;
+                    color: @text-gray;
+
+                    &:first-of-type{
+                        border:none;
+                    }
+                }
+            }
         }
     }
 }
