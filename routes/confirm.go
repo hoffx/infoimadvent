@@ -1,6 +1,8 @@
 package routes
 
 import (
+	"encoding/base64"
+
 	"github.com/go-macaron/session"
 	"github.com/hoffx/infoimadvent/storage"
 	macaron "gopkg.in/macaron.v1"
@@ -9,13 +11,18 @@ import (
 func Confirm(ctx *macaron.Context, uStorer *storage.UserStorer, sess session.Store) {
 	query := ctx.Req.URL.Query()
 	var user storage.User
-	var err error
 	// check if request is formatted correctly
 	if query["user"] != nil && query["token"] != nil {
 		// get according user
 		var ok bool
 		var element interface{}
-		element, err = uStorer.Get(map[string]interface{}{"email": query["user"][0]})
+		email, err := base64.StdEncoding.DecodeString(query["user"][0])
+		if err != nil {
+			ctx.Error(406, ctx.Tr(ErrWrongCredentials))
+			ctx.Redirect("/", 406)
+			return
+		}
+		element, err = uStorer.Get(map[string]interface{}{"email": string(email)})
 		user, ok = element.(storage.User)
 		if err != nil || !ok {
 			ctx.Error(500, ctx.Tr(ErrDB))

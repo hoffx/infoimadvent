@@ -125,3 +125,23 @@ func (s *QuestStorer) isComplete() bool {
 	}
 	return true
 }
+
+func (s *QuestStorer) Delete(keys map[string]interface{}) error {
+	if len(keys) == 0 {
+		return ErrNoKey
+	}
+	var query string
+	var values []interface{}
+	first := true
+	for k, v := range keys {
+		values = append(values, v)
+		if !first {
+			query += " AND "
+		} else {
+			first = false
+		}
+		query += k + " = ?"
+	}
+	_, err := s.db.Table("quest").Where(query, values...).Delete(Quest{})
+	return err
+}

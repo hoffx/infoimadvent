@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"encoding/base64"
 	"log"
 	"strconv"
 
@@ -111,13 +112,22 @@ func Register(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer
 			m.SetHeader("From", config.Config.Mail.Sender)
 			m.SetHeader("To", user.Email)
 			m.SetHeader("Subject", ctx.Tr("confirmation_mail_header"))
-			m.SetBody("text/html", ctx.Tr("confirmation_mail_body")+`<a href="http://`+config.Config.Server.Address+`/confirm?user=`+user.Email+`&token=`+confirmationToken+`" > http://`+config.Config.Server.Address+`/confirm?user=`+user.Email+`&token=`+confirmationToken+`</a>`)
+			m.SetBody("text/html", ctx.Tr("confirmation_mail_body")+`<a href="http://`+config.Config.Server.Address+`/confirm?user=`+base64.StdEncoding.EncodeToString([]byte(user.Email))+`&token=`+confirmationToken+`" > http://`+config.Config.Server.Address+`/confirm?user=`+user.Email+`&token=`+confirmationToken+`</a>`)
 
 			d := gomail.NewDialer(config.Config.Mail.Address, config.Config.Mail.Port, config.Config.Mail.Username, config.Config.Mail.Password)
 
 			if err := d.DialAndSend(m); err != nil {
 				ctx.Data["Error"] = ctx.Tr(ErrMail)
 				log.Println(err)
+
+				err = uStorer.Delete(map[string]interface{}{"email": user.Email})
+				if err != nil {
+					ctx.Data["Error"] = ctx.Tr(ErrDB)
+					log.Println(err)
+					return
+				}
+
+				return
 			}
 
 			ctx.Data["Message"] = ctx.Tr(MessConfirmMailSent)

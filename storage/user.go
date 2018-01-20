@@ -108,3 +108,23 @@ func (s *UserStorer) GetAll() (users []User, err error) {
 	err = s.db.Table("user").Find(&users)
 	return
 }
+
+func (s *UserStorer) Delete(keys map[string]interface{}) error {
+	if len(keys) == 0 {
+		return ErrNoKey
+	}
+	var query string
+	var values []interface{}
+	first := true
+	for k, v := range keys {
+		values = append(values, v)
+		if !first {
+			query += " AND "
+		} else {
+			first = false
+		}
+		query += k + " = ?"
+	}
+	_, err := s.db.Table("user").Where(query, values...).Delete(User{})
+	return err
+}
