@@ -1,9 +1,14 @@
-all: minify
+# you need the following tools installed and in your path variable
+# - github.com/tdewolff/minify/cmd/minify
+# - lessc
+# - wget
+
+all: init minify generate-css
 	go install
 
 init: update
 
-update: update-js update-go all
+update: update-js update-go
 
 update-go:
 	go get -u
@@ -15,3 +20,11 @@ update-js:
 
 minify:
 	minify -r --match .+\.js static/js/quest static/extensions/katex static/js static/extensions/katex-autorender -o static/js/quest.min.js
+
+generate-css:
+	lessc static/style/about.less static/style/about.css
+	lessc static/style/account.less static/style/account.css
+	lessc static/style/calendar.less static/style/calendar.css
+	lessc static/style/day.less static/style/day.css
+	lessc static/style/home.less static/style/home.css
+	lessc static/style/register.less static/style/register.css

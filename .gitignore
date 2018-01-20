@@ -298,6 +298,7 @@ debug
 config.ini
 *.min.js
 *.min.css
+*.css
 data/*
 !data/*/keep.me
 sql.log
