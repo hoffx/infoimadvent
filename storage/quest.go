@@ -92,25 +92,15 @@ func (s *QuestStorer) Get(keys map[string]interface{}) (Quest, error) {
 	if len(keys) == 0 {
 		return Quest{}, ErrNoKey
 	}
-	var query string
-	var values []interface{}
-	first := true
-	for k, v := range keys {
-		values = append(values, v)
-		if !first {
-			query += " AND "
-		} else {
-			first = false
-		}
-		query += k + " = ?"
-	}
+	query, values := buildQuery(keys)
 	quest := Quest{}
 	_, err := s.db.Table("quest").Where(query, values...).Get(&quest)
 	return quest, err
 }
 
-func (s *QuestStorer) GetAll() (quests []Quest, err error) {
-	err = s.db.Table("quest").Find(&quests)
+func (s *QuestStorer) GetAll(keys map[string]interface{}) (quests []Quest, err error) {
+	query, values := buildQuery(keys)
+	err = s.db.Table("quest").Where(query, values...).Find(&quests)
 	return
 }
 
@@ -130,18 +120,7 @@ func (s *QuestStorer) Delete(keys map[string]interface{}) error {
 	if len(keys) == 0 {
 		return ErrNoKey
 	}
-	var query string
-	var values []interface{}
-	first := true
-	for k, v := range keys {
-		values = append(values, v)
-		if !first {
-			query += " AND "
-		} else {
-			first = false
-		}
-		query += k + " = ?"
-	}
+	query, values := buildQuery(keys)
 	_, err := s.db.Table("quest").Where(query, values...).Delete(Quest{})
 	return err
 }

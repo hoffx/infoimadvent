@@ -19,7 +19,7 @@ func NewDBStorage(uStorer *iiastorage.UserStorer, qStorer *iiastorage.QuestStore
 }
 
 func (s *DBStorage) CalcScores() {
-	users, err := s.UStorer.GetAll()
+	users, err := s.UStorer.GetAll(map[string]interface{}{})
 	if err != nil {
 		log.Println(err)
 		return

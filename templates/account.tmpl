@@ -14,7 +14,7 @@
     </div>
     <div class="container option-container">
         <div class="options">
-            {{if .ChangePw}}
+            {{if not .Score}}
                 <div class="option score">
                     <a href="/account"><h2>{{.i18n.Tr "score"}}</h2></a>
                 </div>
@@ -22,6 +22,11 @@
             {{if not .ChangePw}}
                 <div class="option changepw">
                     <a href="/account?mode=changepw"><h2>{{.i18n.Tr "change_password"}}</a></h2>
+                </div>
+            {{end}}
+            {{if not .Relations}}
+                <div class="option relations">
+                    <a href="/account?mode=relations"><h2>{{if .IsTeacher}}{{.i18n.Tr "your_students"}}{{end}}{{if not .IsTeacher}}{{.i18n.Tr "your_teachers"}}{{end}}</h2></a>
                 </div>
             {{end}}
             <div class="option logout">
@@ -51,10 +56,31 @@
                 <div class="message text">{{.Message}}</div>
                 {{end}}
             {{end}}
-            {{if not .ChangePw}}
+            {{if .Score}}
                 <div>
-                    <h2>{{.Score}}</h2>
+                    <h2>{{.ScoreVal}}</h2>
                     <h4 class="text" >{{.i18n.Tr "score"}}</h4>
+                </div>
+            {{end}}
+            {{if .Relations}}
+                {{if .IsTeacher}}
+                    <form action="/account?mode=relations" name="addstudent"  method="post" autocomplete="on">
+                        <input name="email" class="textfield" type="email" placeholder={{.i18n.Tr "email"}} required=true />
+                        <button class="button" type="submit">{{.i18n.Tr "add_student"}}</button>
+                    </form>
+                {{end}}
+                {{if .Error}}
+                <div class="error text">{{.Error}}</div>
+                {{end}}
+                {{if .Message}}
+                <div class="message text">{{.Message}}</div>
+                {{end}}
+                <div class="element-container">
+                    {{range .RelationsList}}
+                        <div class="element text">
+                            {{if $.IsTeacher}}{{.Student}} | {{if .Confirmed}}{{$.i18n.Tr "score"}}: {{.Score}}{{end}}{{if not .Confirmed}}{{$.NotConfirmed}}{{end}} | <a href="/account?mode=relations&action=delete&email={{.Student}}">{{$.i18n.Tr "remove"}}</a>{{end}}
+                            {{if not $.IsTeacher}}{{.Teacher}} | {{if .Confirmed}} <a href="/account?mode=relations&action=delete&email={{.Teacher}}">{{$.Remove}}</a>{{end}}{{if not .Confirmed}} <a href="/account?mode=relations&action=confirm&email={{.Teacher}}">{{$.Confirm}}</a>{{end}}{{end}}</div>
+                    {{end}}
                 </div>
             {{end}}
         </div>

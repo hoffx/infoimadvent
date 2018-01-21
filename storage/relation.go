@@ -78,25 +78,15 @@ func (s *RelationStorer) Get(keys map[string]interface{}) (Relation, error) {
 	if len(keys) == 0 {
 		return Relation{}, ErrNoKey
 	}
-	var query string
-	var values []interface{}
-	first := true
-	for k, v := range keys {
-		values = append(values, v)
-		if !first {
-			query += " AND "
-		} else {
-			first = false
-		}
-		query += k + " = ?"
-	}
+	query, values := buildQuery(keys)
 	relation := Relation{}
 	_, err := s.db.Table("relation").Where(query, values...).Get(&relation)
 	return relation, err
 }
 
-func (s *RelationStorer) GetAll() (relations []Relation, err error) {
-	err = s.db.Table("relation").Find(&relations)
+func (s *RelationStorer) GetAll(keys map[string]interface{}) (relations []Relation, err error) {
+	query, values := buildQuery(keys)
+	err = s.db.Table("relation").Where(query, values...).Find(&relations)
 	return
 }
 
@@ -104,18 +94,7 @@ func (s *RelationStorer) Delete(keys map[string]interface{}) error {
 	if len(keys) == 0 {
 		return ErrNoKey
 	}
-	var query string
-	var values []interface{}
-	first := true
-	for k, v := range keys {
-		values = append(values, v)
-		if !first {
-			query += " AND "
-		} else {
-			first = false
-		}
-		query += k + " = ?"
-	}
+	query, values := buildQuery(keys)
 	_, err := s.db.Table("relation").Where(query, values...).Delete(Relation{})
 	return err
 }

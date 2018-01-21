@@ -15,6 +15,9 @@ const (
 	ErrIllegalDate      = "illegal_date_error"
 	ErrNotReady         = "server_not_ready_error"
 	ErrNoAssets         = "no_assets_error"
+	ErrUserNotFound     = "user_not_found_error"
+	ErrRelationExists   = "relation_already_exists_error"
+	ErrNoStudent        = "this_is_a_teacher_error"
 )
 
 // messages
@@ -24,4 +27,8 @@ const (
 	MessConfirmMailSent = "confirm_mail_sent"
 	MessRestoreMailSent = "restore_mail_sent"
 	MessChangedPassword = "password_changed"
+	MessUserAssigned    = "user_assigned"
+	MessUserConfirmed   = "user_confirmed"
+	MessUserUnconfirmed = "user_unconfirmed"
+	MessUserRemoved     = "user_removed"
 )

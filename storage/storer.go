@@ -36,3 +36,17 @@ type Storer struct {
 	db     *xorm.Engine
 	Active bool
 }
+
+func buildQuery(keys map[string]interface{}) (query string, values []interface{}) {
+	first := true
+	for k, v := range keys {
+		values = append(values, v)
+		if !first {
+			query += " AND "
+		} else {
+			first = false
+		}
+		query += k + " = ?"
+	}
+	return
+}

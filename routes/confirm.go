@@ -54,5 +54,5 @@ func Confirm(ctx *macaron.Context, uStorer *storage.UserStorer, sess session.Sto
 		ctx.Redirect("/", 406)
 		return
 	}
-	ctx.Redirect("/login?Message="+MessLoggedIn, 302)
+	ctx.Redirect("/login?Message="+ctx.Tr(MessLoggedIn), 302)
 }

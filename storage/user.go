@@ -85,25 +85,15 @@ func (s *UserStorer) Get(keys map[string]interface{}) (User, error) {
 	if len(keys) == 0 {
 		return User{}, ErrNoKey
 	}
-	var query string
-	var values []interface{}
-	first := true
-	for k, v := range keys {
-		values = append(values, v)
-		if !first {
-			query += " AND "
-		} else {
-			first = false
-		}
-		query += k + " = ?"
-	}
+	query, values := buildQuery(keys)
 	user := User{}
 	_, err := s.db.Table("user").Where(query, values...).Get(&user)
 	return user, err
 }
 
-func (s *UserStorer) GetAll() (users []User, err error) {
-	err = s.db.Table("user").Find(&users)
+func (s *UserStorer) GetAll(keys map[string]interface{}) (users []User, err error) {
+	query, values := buildQuery(keys)
+	err = s.db.Table("user").Where(query, values...).Find(&users)
 	return
 }
 
@@ -111,18 +101,7 @@ func (s *UserStorer) Delete(keys map[string]interface{}) error {
 	if len(keys) == 0 {
 		return ErrNoKey
 	}
-	var query string
-	var values []interface{}
-	first := true
-	for k, v := range keys {
-		values = append(values, v)
-		if !first {
-			query += " AND "
-		} else {
-			first = false
-		}
-		query += k + " = ?"
-	}
+	query, values := buildQuery(keys)
 	_, err := s.db.Table("user").Where(query, values...).Delete(User{})
 	return err
 }
