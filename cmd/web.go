@@ -25,6 +25,7 @@ var Web = cli.Command{
 
 var uStorer storage.UserStorer
 var qStorer storage.QuestStorer
+var rStorer storage.RelationStorer
 
 func runWeb(ctx *cli.Context) {
 	// load config
@@ -40,7 +41,7 @@ func runWeb(ctx *cli.Context) {
 	if err != nil {
 		log.Fatal(err)
 	} else if user.Email == "" {
-		err = uStorer.Create(storage.User{config.Config.Auth.AdminMail, config.Config.Auth.AdminHash, config.Config.Grades.Max, true, true, "", true, []string{}, []string{}, make([]int, 24), 0, true})
+		err = uStorer.Create(storage.User{config.Config.Auth.AdminMail, config.Config.Auth.AdminHash, config.Config.Grades.Max, true, true, "", true, make([]int, 24), 0, true})
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -120,6 +121,7 @@ func initMacaron() *macaron.Macaron {
 
 	m.Map(&qStorer)
 	m.Map(&uStorer)
+	m.Map(&rStorer)
 
 	m.Get("/", routes.Home)
 	m.Route("/login", "GET,POST", routes.Login)

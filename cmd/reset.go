@@ -67,6 +67,10 @@ func resetUsers() (err error) {
 		return
 	}
 	err = uStorer.ResetDB()
+	if err != nil {
+		return
+	}
+	err = rStorer.ResetDB()
 	return
 }
 
@@ -106,6 +110,10 @@ func initStorer() {
 		log.Fatal(err)
 	}
 	qStorer, err = storage.NewQuestStorer(config.Config.DB.Name, config.Config.DB.User, config.Config.DB.Password, macaron.Env == macaron.DEV)
+	if err != nil {
+		log.Fatal(err)
+	}
+	rStorer, err = storage.NewRelationStorer(config.Config.DB.Name, config.Config.DB.User, config.Config.DB.Password, macaron.Env == macaron.DEV)
 	if err != nil {
 		log.Fatal(err)
 	}
