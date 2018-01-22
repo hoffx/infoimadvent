@@ -3,12 +3,12 @@ package cmd
 import (
 	"html/template"
 	"log"
-	"strconv"
 	"time"
 
 	"github.com/go-macaron/i18n"
 	"github.com/go-macaron/session"
 	"github.com/hoffx/infoimadvent/config"
+	"github.com/hoffx/infoimadvent/parser"
 	"github.com/hoffx/infoimadvent/routes"
 	"github.com/hoffx/infoimadvent/services"
 	"github.com/hoffx/infoimadvent/storage"
@@ -100,18 +100,7 @@ func initMacaron() *macaron.Macaron {
 	m.Use(macaron.Renderer(macaron.RenderOptions{
 		Directory: "templates",
 		Funcs: []template.FuncMap{map[string]interface{}{
-			"add": func(summands ...interface{}) int {
-				var sum int
-				for _, s := range summands {
-					if i, ok := s.(int); ok {
-						sum += i
-					} else if s, ok := s.(string); ok {
-						i, _ := strconv.Atoi(s)
-						sum += i
-					}
-				}
-				return sum
-			},
+			"add": parser.Add,
 		}},
 	}))
 	m.Use(session.Sessioner(session.Options{

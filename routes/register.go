@@ -108,12 +108,24 @@ func Register(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer
 			}
 
 			// send confirmation email
+
+			encodedMail := base64.StdEncoding.EncodeToString([]byte(user.Email))
+			ctx.Data["User"] = user
+			ctx.Data["Link"] = "http://" + config.Config.Server.Address + "/confirm?user=" + encodedMail + "&token=" + confirmationToken
+
+			mailBody, err := ctx.HTMLString("confirmmail", ctx.Data)
+			if err != nil {
+				ctx.Error(500, ctx.Tr(ErrUnexpected))
+				log.Println(err)
+				ctx.Redirect("/login", 500)
+				return
+			}
+
 			m := gomail.NewMessage()
 			m.SetHeader("From", config.Config.Mail.Sender)
 			m.SetHeader("To", user.Email)
 			m.SetHeader("Subject", ctx.Tr("confirmation_mail_header"))
-			encodedMail := base64.StdEncoding.EncodeToString([]byte(user.Email))
-			m.SetBody("text/html", ctx.Tr("confirmation_mail_body")+`<a href="http://`+config.Config.Server.Address+`/confirm?user=`+encodedMail+`&token=`+confirmationToken+`" > http://`+config.Config.Server.Address+`/confirm?user=`+encodedMail+`&token=`+confirmationToken+`</a>`)
+			m.SetBody("text/html", mailBody)
 
 			d := gomail.NewDialer(config.Config.Mail.Address, config.Config.Mail.Port, config.Config.Mail.Username, config.Config.Mail.Password)
 

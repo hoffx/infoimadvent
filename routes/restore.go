@@ -56,13 +56,24 @@ func Restore(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer)
 			return
 		}
 
-		// TODO: write restore mail's text
+		// send restore email
+
+		ctx.Data["User"] = user
+		ctx.Data["Password"] = pw
+
+		mailBody, err := ctx.HTMLString("restoremail", ctx.Data)
+		if err != nil {
+			ctx.Error(500, ctx.Tr(ErrUnexpected))
+			log.Println(err)
+			ctx.Redirect("/login", 500)
+			return
+		}
 
 		m := gomail.NewMessage()
 		m.SetHeader("From", config.Config.Mail.Sender)
 		m.SetHeader("To", user.Email)
 		m.SetHeader("Subject", ctx.Tr("restore_mail_header"))
-		m.SetBody("text/html", ctx.Tr("restore_mail_body")+pw)
+		m.SetBody("text/html", mailBody)
 
 		d := gomail.NewDialer(config.Config.Mail.Address, config.Config.Mail.Port, config.Config.Mail.Username, config.Config.Mail.Password)
 

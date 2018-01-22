@@ -37,7 +37,7 @@
             {{if not .LoggedIn}}
                 <form action="/login" name="login"  method="post" autocomplete="on">
                     <input name="email" class="textfield" type="email" placeholder={{.i18n.Tr "email"}} required=true {{if .Email}} value={{.Email}} {{end}} />
-                    <input name="pw" class="textfield" type="password" placeholder={{.i18n.Tr "password"}} required=true minlength={{.Config.MinPwL}} maxlength={{.Config.MaxPwL}} />
+                    <input name="pw" class="textfield" type="password" placeholder={{.i18n.Tr "password"}} {{if not .Error}} required=true {{end}} minlength={{.Config.MinPwL}} maxlength={{.Config.MaxPwL}} />
                     <button class="button" type="submit">{{.i18n.Tr "login"}}</button>
                     {{if .Error}}
                         <button formaction="/restore" type="submit" class="button small">{{.i18n.Tr "restore_pw"}}</button>
