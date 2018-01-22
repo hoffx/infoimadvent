@@ -24,6 +24,9 @@ var Reset = cli.Command{
 		}, cli.BoolFlag{
 			Name:   "web, w",
 			Hidden: false,
+		}, cli.BoolFlag{
+			Name:   "all, a",
+			Hidden: false,
 		},
 	},
 }
@@ -36,13 +39,13 @@ func reset(ctx *cli.Context) {
 		initStorer()
 	}
 
-	if ctx.Bool("quests") {
+	if ctx.Bool("quests") || ctx.Bool("all") {
 		err := resetQuests()
 		if err != nil {
 			log.Fatal(err)
 		}
 	}
-	if ctx.Bool("users") {
+	if ctx.Bool("users") || ctx.Bool("all") {
 		err := resetUsers()
 		if err != nil {
 			log.Fatal(err)
