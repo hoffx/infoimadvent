@@ -2,8 +2,11 @@ package storage
 
 import (
 	"errors"
+	"os"
 
 	"github.com/go-xorm/xorm"
+	"github.com/hoffx/infoimadvent/config"
+	macaron "gopkg.in/macaron.v1"
 )
 
 // answers
@@ -47,6 +50,72 @@ func buildQuery(keys map[string]interface{}) (query string, values []interface{}
 			first = false
 		}
 		query += k + " = ?"
+	}
+	return
+}
+
+func ResetUsers(uStorer *UserStorer, rStorer *RelationStorer) (err error) {
+	err = os.RemoveAll(config.Config.Sessioner.StoragePath)
+	if err != nil {
+		return
+	}
+	err = os.Mkdir(config.Config.Sessioner.StoragePath, os.ModePerm)
+	if err != nil {
+		return
+	}
+	_, err = os.Create(config.Config.Sessioner.StoragePath + "/keep.me")
+	if err != nil {
+		return
+	}
+	err = uStorer.ResetDB()
+	if err != nil {
+		return
+	}
+	err = rStorer.ResetDB()
+	return
+}
+
+func ResetQuests(qStorer *QuestStorer) (err error) {
+	err = os.RemoveAll(config.Config.FileSystem.MDStoragePath)
+	if err != nil {
+		return
+	}
+	err = os.Mkdir(config.Config.FileSystem.MDStoragePath, os.ModePerm)
+	if err != nil {
+		return
+	}
+	_, err = os.Create(config.Config.FileSystem.MDStoragePath + "/keep.me")
+	if err != nil {
+		return
+	}
+	err = os.RemoveAll(config.Config.FileSystem.AssetsStoragePath)
+	if err != nil {
+		return
+	}
+	err = os.Mkdir(config.Config.FileSystem.AssetsStoragePath, os.ModePerm)
+	if err != nil {
+		return
+	}
+	_, err = os.Create(config.Config.FileSystem.AssetsStoragePath + "/keep.me")
+	if err != nil {
+		return
+	}
+	err = qStorer.ResetDB()
+	return
+}
+
+func InitStorers() (u UserStorer, q QuestStorer, r RelationStorer, err error) {
+	u, err = NewUserStorer(config.Config.DB.Name, config.Config.DB.User, config.Config.DB.Password, macaron.Env == macaron.DEV)
+	if err != nil {
+		return
+	}
+	q, err = NewQuestStorer(config.Config.DB.Name, config.Config.DB.User, config.Config.DB.Password, macaron.Env == macaron.DEV)
+	if err != nil {
+		return
+	}
+	r, err = NewRelationStorer(config.Config.DB.Name, config.Config.DB.User, config.Config.DB.Password, macaron.Env == macaron.DEV)
+	if err != nil {
+		return
 	}
 	return
 }

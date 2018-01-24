@@ -2,6 +2,7 @@ package config
 
 import (
 	"log"
+	"time"
 
 	ini "gopkg.in/ini.v1"
 )
@@ -26,10 +27,11 @@ type Sessioner struct {
 }
 
 type Server struct {
-	Address string `ini:"address"`
-	Ip      string `ini:"ip"`
-	Port    int    `ini:"port"`
-	DevMode bool   `ini:"devmode"`
+	Address    string     `ini:"address"`
+	Ip         string     `ini:"ip"`
+	Port       int        `ini:"port"`
+	DevMode    bool       `ini:"devmode"`
+	ResetMonth time.Month `ini:"resetmonth"`
 }
 
 type Mail struct {
