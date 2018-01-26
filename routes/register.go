@@ -28,6 +28,7 @@ func Register(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer
 
 	ctx.Data["Config"] = Config{config.Config.Grades.Min, config.Config.Grades.Max, config.Config.Auth.MinPwLength, config.Config.Auth.MaxPwLength}
 	ctx.Data["Teacher"] = false
+	ctx.Data["IsAdvent"] = isAdvent()
 
 	if ctx.Req.Method == "GET" {
 		// handle get requests

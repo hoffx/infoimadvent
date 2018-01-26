@@ -19,6 +19,7 @@ func Login(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer, s
 	}
 
 	ctx.Data["Config"] = Config{config.Config.Auth.MinPwLength, config.Config.Auth.MaxPwLength}
+	ctx.Data["IsAdvent"] = isAdvent()
 
 	if ctx.Req.Method == "GET" {
 		value := sess.Get("user")
