@@ -4,6 +4,9 @@ import (
 	"html/template"
 	"log"
 
+	"github.com/go-macaron/cache"
+	"github.com/go-macaron/captcha"
+
 	"github.com/go-macaron/i18n"
 	"github.com/go-macaron/session"
 	"github.com/hoffx/infoimadvent/config"
@@ -97,6 +100,8 @@ func initMacaron() *macaron.Macaron {
 		Provider:       "file",
 		ProviderConfig: config.Config.Sessioner.StoragePath,
 	}))
+	m.Use(cache.Cacher())
+	m.Use(captcha.Captchaer())
 
 	m.Map(&qStorer)
 	m.Map(&uStorer)

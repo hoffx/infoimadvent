@@ -8,6 +8,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/elgs/gostrgen"
+	"github.com/go-macaron/captcha"
 	"github.com/go-macaron/session"
 	"github.com/hoffx/infoimadvent/config"
 	"github.com/hoffx/infoimadvent/storage"
@@ -16,7 +17,7 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-func Register(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer, sess session.Store) {
+func Register(ctx *macaron.Context, cpt *captcha.Captcha, log *log.Logger, uStorer *storage.UserStorer, sess session.Store) {
 	defer ctx.HTML(200, "register")
 
 	// TODO: handle form refill on failure
@@ -54,13 +55,17 @@ func Register(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer
 		ctx.Data["Teacher"] = t
 
 		g, err := strconv.Atoi(ctx.Req.FormValue("grade"))
-
 		if err != nil {
 			ctx.Data["Error"] = ctx.Tr(ErrIllegalInput)
 			return
 		}
 
 		ctx.Data["Grade"] = g
+
+		if !cpt.VerifyReq(ctx.Req) {
+			ctx.Data["Error"] = ctx.Tr(ErrInvalidCaptcha)
+			return
+		}
 
 		fGrade := uint(g)
 		if fGrade < config.Config.Grades.Min || fGrade > config.Config.Grades.Max {

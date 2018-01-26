@@ -18,6 +18,7 @@ const (
 	ErrUserNotFound     = "user_not_found_error"
 	ErrRelationExists   = "relation_already_exists_error"
 	ErrNoStudent        = "this_is_a_teacher_error"
+	ErrInvalidCaptcha   = "invalid_captcha_error"
 )
 
 // messages
