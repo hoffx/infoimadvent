@@ -22,6 +22,7 @@ minify:
 	minify -r --match .+\.js static/js/quest static/extensions/katex static/js static/extensions/katex-autorender -o static/js/quest.min.js
 
 generate-css:
+	rm -f static/style/*.css
 	lessc static/style/about.less static/style/about.css
 	lessc static/style/account.less static/style/account.css
 	lessc static/style/calendar.less static/style/calendar.css
