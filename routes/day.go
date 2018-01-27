@@ -19,7 +19,7 @@ import (
 
 type Name string
 
-func Day(ctx *macaron.Context, log *log.Logger, qStorer *storage.QuestStorer, sess session.Store, uStorer *storage.UserStorer) {
+func Day(ctx *macaron.Context, log *log.Logger, dStorer *storage.DocumentStorer, sess session.Store, uStorer *storage.UserStorer) {
 	num := ctx.ParamsInt("day")
 	if num < 1 || num > 24 {
 		ctx.Error(404, ctx.Tr(ErrIllegalDate))
@@ -60,14 +60,14 @@ func Day(ctx *macaron.Context, log *log.Logger, qStorer *storage.QuestStorer, se
 		}
 	}
 
-	quest, err := qStorer.Get(map[string]interface{}{"day": num, "grade": user.Grade, "is_about": false})
+	doc, err := dStorer.Get(map[string]interface{}{"day": num, "grade": user.Grade, "type": storage.About})
 	if err != nil {
 		ctx.Redirect("/calendar", 500)
 		log.Println(err)
 		return
 	}
 
-	data, err := ioutil.ReadFile(quest.Path)
+	data, err := ioutil.ReadFile(doc.Path)
 	if err != nil {
 		ctx.Error(500, ctx.Tr(ErrFS))
 		ctx.Redirect("/calendar", 500)
@@ -75,7 +75,7 @@ func Day(ctx *macaron.Context, log *log.Logger, qStorer *storage.QuestStorer, se
 		return
 	}
 
-	name := Name(path.Base(quest.Path))
+	name := Name(path.Base(doc.Path))
 	html, err := parser.ParseAndProcess(data, []func(*string) error{name.parseUrls})
 	if err != nil {
 		ctx.Error(500, ctx.Tr(ErrUnexpected))
@@ -94,7 +94,7 @@ func Day(ctx *macaron.Context, log *log.Logger, qStorer *storage.QuestStorer, se
 	}
 
 	if d > num {
-		solString, _ := solutionToString(quest.Solution)
+		solString, _ := solutionToString(doc.Solution)
 		ctx.Data["Solution"+solString] = true
 	}
 

@@ -5,8 +5,8 @@ import (
 	macaron "gopkg.in/macaron.v1"
 )
 
-func PublicReady(ctx *macaron.Context, qStorer *storage.QuestStorer) {
-	if !qStorer.Complete {
+func PublicReady(ctx *macaron.Context, dStorer *storage.DocumentStorer) {
+	if !dStorer.Complete {
 		ctx.Error(503, ctx.Tr(ErrNotReady))
 	}
 }

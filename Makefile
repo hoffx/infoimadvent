@@ -30,3 +30,4 @@ generate-css:
 	lessc static/style/home.less static/style/home.css
 	lessc static/style/register.less static/style/register.css
 	lessc static/style/login.less static/style/login.css
+	lessc static/style/tos.less static/style/tos.css

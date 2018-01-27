@@ -5,7 +5,6 @@ import (
 
 	"github.com/go-macaron/session"
 	"github.com/hoffx/infoimadvent/config"
-	"github.com/hoffx/infoimadvent/services"
 	"github.com/hoffx/infoimadvent/storage"
 	"golang.org/x/crypto/bcrypt"
 	macaron "gopkg.in/macaron.v1"
@@ -71,8 +70,6 @@ func Login(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer, s
 
 		ctx.Data["LoggedIn"] = true
 		ctx.Data["Message"] = ctx.Tr(MessLoggedIn)
-
-		services.SendRewardMail(ctx, user)
 	}
 
 }

@@ -25,7 +25,7 @@ var Web = cli.Command{
 }
 
 var uStorer storage.UserStorer
-var qStorer storage.QuestStorer
+var dStorer storage.DocumentStorer
 var rStorer storage.RelationStorer
 
 func runWeb(ctx *cli.Context) {
@@ -33,9 +33,9 @@ func runWeb(ctx *cli.Context) {
 	config.Load(ctx.GlobalString("config"))
 
 	// init storers
-	if !qStorer.Active || !uStorer.Active || !rStorer.Active {
+	if !dStorer.Active || !uStorer.Active || !rStorer.Active {
 		var err error
-		uStorer, qStorer, rStorer, err = storage.InitStorers()
+		uStorer, dStorer, rStorer, err = storage.InitStorers()
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -54,7 +54,7 @@ func runWeb(ctx *cli.Context) {
 
 	// set up score-calculation service
 
-	s := services.NewDBStorage(&uStorer, &qStorer, &rStorer)
+	s := services.NewDBStorage(&uStorer, &dStorer, &rStorer)
 	s.SetupRoutines()
 
 	// set up web service
@@ -103,13 +103,14 @@ func initMacaron() *macaron.Macaron {
 	m.Use(cache.Cacher())
 	m.Use(captcha.Captchaer())
 
-	m.Map(&qStorer)
+	m.Map(&dStorer)
 	m.Map(&uStorer)
 	m.Map(&rStorer)
 
 	m.Get("/", routes.Home)
 	m.Route("/login", "GET,POST", routes.Login)
 	m.Get("/about", routes.About)
+	m.Get("/tos", routes.ToS)
 	m.Route("/register", "GET,POST", routes.Register)
 	m.Get("/confirm", routes.Confirm)
 	m.Post("/restore", routes.Restore)

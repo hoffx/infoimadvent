@@ -22,7 +22,13 @@
                 </label>
         <label>markdown: <input type="file" style="display: block; font-size: 12pt; margin: 1em;" name="md" required=true /></label>
         <label>assets zip: <input type="file" style="display: block; font-size: 12pt; margin: 1em;" name="assets"/></label>
-        <label>is about text: <input class="checkbox" type="checkbox" name="about" /> </label>
+        <label style="display: block; min-width: 200px; font-size: 12pt; margin: 1em;" >type:
+            <select name="type" size="3">
+                <option {{if .Quest}} selected {{end}}>Quest</option>
+                <option {{if .ToS}} selected {{end}}>Terms of Service</option>
+                <option {{if .About}} selected {{end}}>About</option>
+            </select>
+            </label>
         <button style="display: block; min-width: 200px; font-size: 12pt; margin: 1em;" class="button" type="submit">Submit</button>
     </form>
 </body>

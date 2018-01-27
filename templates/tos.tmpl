@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="{{.Lang}}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{.i18n.Tr "tos"}} | {{.i18n.Tr "service"}}</title>
+    <link rel="stylesheet" type="text/css" href="/style/tos.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Zilla+Slab" rel="stylesheet">
+</head>
+<body>
+    <div class="title">
+        <h1>{{.i18n.Tr "tos"}}</h1>
+    </div>
+    <div class="container option-container">
+        <div class="options">
+            <div class="option back">
+                <a href="/"><h2>{{.i18n.Tr "back"}}</a></h2>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="box text">{{.Text}}</div>
+    </div>
+</body>
+</html>

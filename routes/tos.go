@@ -11,9 +11,9 @@ import (
 	macaron "gopkg.in/macaron.v1"
 )
 
-func About(ctx *macaron.Context, dStorer *storage.DocumentStorer, log *log.Logger) {
+func ToS(ctx *macaron.Context, dStorer *storage.DocumentStorer, log *log.Logger) {
 
-	doc, err := dStorer.Get(map[string]interface{}{"type": storage.About})
+	doc, err := dStorer.Get(map[string]interface{}{"type": storage.ToS})
 	if err != nil {
 		ctx.Redirect("/", 500)
 		log.Println(err)
@@ -38,5 +38,5 @@ func About(ctx *macaron.Context, dStorer *storage.DocumentStorer, log *log.Logge
 	}
 	ctx.Data["Text"] = template.HTML(html)
 
-	ctx.HTML(200, "about")
+	ctx.HTML(200, "tos")
 }

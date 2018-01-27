@@ -17,7 +17,7 @@ import (
 	macaron "gopkg.in/macaron.v1"
 )
 
-func Upload(ctx *macaron.Context, log *log.Logger, qStorer *storage.QuestStorer) {
+func Upload(ctx *macaron.Context, log *log.Logger, dStorer *storage.DocumentStorer) {
 	defer ctx.HTML(200, "upload")
 
 	ctx.Data["MinYL"] = config.Config.Grades.Min
@@ -43,7 +43,16 @@ func Upload(ctx *macaron.Context, log *log.Logger, qStorer *storage.QuestStorer)
 			return
 		}
 		fSolution := ctx.Req.FormValue("solution")
-		fIsAbout := ctx.Req.FormValue("about") == "on"
+		fType := ctx.Req.FormValue("about")
+		var docType int
+		switch fType {
+		case "About":
+			docType = storage.About
+		case "Terms of Service":
+			docType = storage.ToS
+		default:
+			docType = storage.Quest
+		}
 
 		// save trivial form values
 		ctx.Data["Day"] = fDay
@@ -111,22 +120,22 @@ func Upload(ctx *macaron.Context, log *log.Logger, qStorer *storage.QuestStorer)
 		// create db entries
 
 		for i := fMinGrade; i <= fMaxGrade; i++ {
-			quest := storage.Quest{f.Name(), i, fDay, solution, fIsAbout}
-			oldQ, err := qStorer.Get(map[string]interface{}{"grade": i, "day": fDay, "is_about": fIsAbout})
+			doc := storage.Document{f.Name(), i, fDay, solution, docType}
+			oldDoc, err := dStorer.Get(map[string]interface{}{"grade": i, "day": fDay, "type": docType})
 			if err != nil {
 				ctx.Data["Error"] = ctx.Tr(ErrDB)
 				log.Println(err)
 				return
 			}
-			if oldQ.Path == "" {
-				err = qStorer.Create(quest)
+			if oldDoc.Path == "" {
+				err = dStorer.Create(doc)
 				if err != nil {
 					ctx.Data["Error"] = ctx.Tr(ErrDB)
 					log.Println(err)
 					return
 				}
 			} else {
-				err = qStorer.Put(quest)
+				err = dStorer.Put(doc)
 				if err != nil {
 					ctx.Data["Error"] = ctx.Tr(ErrDB)
 					log.Println(err)

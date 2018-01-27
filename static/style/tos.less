@@ -1,0 +1,49 @@
+@import "main";
+
+@media all {
+    body {
+        grid-template-columns: 25vw 75vw;
+        grid-template-rows: 25vh 75vh;
+
+        .title{
+            grid-column-start:1;
+            grid-column-end:2;
+            grid-row-start:1;
+            grid-row-end: 2;
+
+            background-color: @background-gray;
+            color: @text-white;
+        }
+
+        .content{
+            grid-column-start: 2;
+            grid-column-end: 3;
+            grid-row-start: 1;
+            grid-row-end: 3;
+
+            background: none !important;
+            background-color: @background-white !important;
+        }
+
+        .text {
+            color: @text-gray;
+        }
+
+        .option-container{
+            grid-column-start: 1;
+            grid-column-end:2;
+            grid-row-start:2;
+            grid-row-end:3;
+
+            background-image: url("img/left-black.svg");
+            background-color: @background-gray;
+            
+            .options{
+                .option{
+                    border-top-color: @text-white;
+                    color: @text-white;
+                }
+            }
+        }
+    }
+}

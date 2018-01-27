@@ -3,6 +3,7 @@ package storage
 import (
 	"errors"
 	"os"
+	"path"
 
 	"github.com/go-xorm/xorm"
 	"github.com/hoffx/infoimadvent/config"
@@ -30,6 +31,13 @@ const (
 	Incredible = 200
 	Good       = 160
 	Ok         = 120
+)
+
+// types
+const (
+	Quest = iota
+	About
+	ToS
 )
 
 var ErrNoEffect = errors.New("no_effect_error")
@@ -75,41 +83,63 @@ func ResetUsers(uStorer *UserStorer, rStorer *RelationStorer) (err error) {
 	return
 }
 
-func ResetQuests(qStorer *QuestStorer) (err error) {
-	err = os.RemoveAll(config.Config.FileSystem.MDStoragePath)
-	if err != nil {
-		return
+func ResetDocuments(dStorer *DocumentStorer, questsOnly bool) (err error) {
+	if questsOnly {
+		var docs []Document
+		docs, err = dStorer.GetAll(map[string]interface{}{"type": Quest})
+		if err != nil {
+			return
+		}
+		files := make(map[string]bool, 0)
+		for _, d := range docs {
+			files[d.Path] = true
+		}
+		for k := range files {
+			err = os.Remove(k)
+			if err != nil {
+				return
+			}
+			err = os.RemoveAll(config.Config.FileSystem.AssetsStoragePath + "/" + path.Base(k))
+			if err != nil {
+				return
+			}
+		}
+	} else {
+		err = os.RemoveAll(config.Config.FileSystem.MDStoragePath)
+		if err != nil {
+			return
+		}
+		err = os.Mkdir(config.Config.FileSystem.MDStoragePath, os.ModePerm)
+		if err != nil {
+			return
+		}
+		_, err = os.Create(config.Config.FileSystem.MDStoragePath + "/keep.me")
+		if err != nil {
+			return
+		}
+		err = os.RemoveAll(config.Config.FileSystem.AssetsStoragePath)
+		if err != nil {
+			return
+		}
+		err = os.Mkdir(config.Config.FileSystem.AssetsStoragePath, os.ModePerm)
+		if err != nil {
+			return
+		}
+		_, err = os.Create(config.Config.FileSystem.AssetsStoragePath + "/keep.me")
+		if err != nil {
+			return
+		}
+		err = dStorer.ResetDB()
 	}
-	err = os.Mkdir(config.Config.FileSystem.MDStoragePath, os.ModePerm)
-	if err != nil {
-		return
-	}
-	_, err = os.Create(config.Config.FileSystem.MDStoragePath + "/keep.me")
-	if err != nil {
-		return
-	}
-	err = os.RemoveAll(config.Config.FileSystem.AssetsStoragePath)
-	if err != nil {
-		return
-	}
-	err = os.Mkdir(config.Config.FileSystem.AssetsStoragePath, os.ModePerm)
-	if err != nil {
-		return
-	}
-	_, err = os.Create(config.Config.FileSystem.AssetsStoragePath + "/keep.me")
-	if err != nil {
-		return
-	}
-	err = qStorer.ResetDB()
 	return
 }
 
-func InitStorers() (u UserStorer, q QuestStorer, r RelationStorer, err error) {
+func InitStorers() (u UserStorer, d DocumentStorer, r RelationStorer, err error) {
 	u, err = NewUserStorer(config.Config.DB.Name, config.Config.DB.User, config.Config.DB.Password, macaron.Env == macaron.DEV)
 	if err != nil {
 		return
 	}
-	q, err = NewQuestStorer(config.Config.DB.Name, config.Config.DB.User, config.Config.DB.Password, macaron.Env == macaron.DEV)
+	d, err = NewDocumentStorer(config.Config.DB.Name, config.Config.DB.User, config.Config.DB.Password, macaron.Env == macaron.DEV)
 	if err != nil {
 		return
 	}

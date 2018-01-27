@@ -33,16 +33,21 @@ func reset(ctx *cli.Context) {
 	if config.Config.DB.Name == "" {
 		config.Load(ctx.GlobalString("config"))
 	}
-	if !uStorer.Active || !qStorer.Active || !rStorer.Active {
+	if !uStorer.Active || !dStorer.Active || !rStorer.Active {
 		var err error
-		uStorer, qStorer, rStorer, err = storage.InitStorers()
+		uStorer, dStorer, rStorer, err = storage.InitStorers()
 		if err != nil {
 			log.Fatal(err)
 		}
 	}
 
-	if ctx.Bool("quests") || ctx.Bool("all") {
-		err := storage.ResetQuests(&qStorer)
+	if ctx.Bool("quests") && ctx.Bool("all") {
+		err := storage.ResetDocuments(&dStorer, false)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else if ctx.Bool("quests") || ctx.Bool("all") {
+		err := storage.ResetDocuments(&dStorer, true)
 		if err != nil {
 			log.Fatal(err)
 		}
