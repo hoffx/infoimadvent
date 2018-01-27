@@ -23,9 +23,11 @@
             </div>
             {{end}}
             {{if .LoggedIn}}
-            <div class="option current">
-                <a href="/day"><h2>{{.i18n.Tr "current"}}</a></h2>
-            </div>
+                {{if .IsAdvent}}
+                    <div class="option current">
+                        <a href="/day"><h2>{{.i18n.Tr "current"}}</a></h2>
+                    </div>
+                {{end}}
             <div class="option calendar">
                 <a href="/calendar"><h2>{{.i18n.Tr "calendar"}}</a></h2>
             </div>

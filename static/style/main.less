@@ -3,6 +3,7 @@
 @transition: 0.2s;
 
 @media all {
+
     body {
         // body style
         position: fixed;
@@ -19,6 +20,10 @@
         p{
             line-height: 1.5;
 
+            _:-moz-tree-row(hover), &::first-letter {
+                margin-top: 0.15em;
+            } 
+
             &::first-letter{
                 font-family: 'Zilla Slab', serif;
                 float:left;
@@ -26,6 +31,8 @@
                 line-height: 1em;
                 color: @gold;
                 margin-right: 10px;
+                
+                 
             }
         }
 
@@ -186,6 +193,8 @@
             h1{
                 text-align: center;
                 font-size: 50pt;
+                max-width: 90%;
+                word-wrap: break-word;
             }
         }
 
@@ -249,5 +258,16 @@
                 }
             }
         }
+    }
+}
+
+@media screen and (max-aspect-ratio: 3/2) {
+    body{
+        display: block;
+        position: static;
+    }
+    *{
+        background-image: none !important;
+
     }
 }
