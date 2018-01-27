@@ -299,7 +299,11 @@ config.ini
 *.min.js
 *.min.css
 *.css
-data/*
-!data/*/keep.me
+data/assets/*
+!data/assets/keep.me
+data/documents/*
+!data/documents/keep.me
+data/sessions/*
+!data/sessions/keep.me
 sql.log
 test/*
