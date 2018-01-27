@@ -60,7 +60,7 @@ func Day(ctx *macaron.Context, log *log.Logger, dStorer *storage.DocumentStorer,
 		}
 	}
 
-	doc, err := dStorer.Get(map[string]interface{}{"day": num, "grade": user.Grade, "type": storage.About})
+	doc, err := dStorer.Get(map[string]interface{}{"day": num, "grade": user.Grade, "type": storage.Quest})
 	if err != nil {
 		ctx.Redirect("/calendar", 500)
 		log.Println(err)

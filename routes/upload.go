@@ -43,15 +43,18 @@ func Upload(ctx *macaron.Context, log *log.Logger, dStorer *storage.DocumentStor
 			return
 		}
 		fSolution := ctx.Req.FormValue("solution")
-		fType := ctx.Req.FormValue("about")
+		fType := ctx.Req.FormValue("type")
 		var docType int
 		switch fType {
 		case "About":
 			docType = storage.About
+			ctx.Data["About"] = true
 		case "Terms of Service":
 			docType = storage.ToS
+			ctx.Data["ToS"] = true
 		default:
 			docType = storage.Quest
+			ctx.Data["Quest"] = true
 		}
 
 		// save trivial form values

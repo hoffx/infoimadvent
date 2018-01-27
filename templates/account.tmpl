@@ -77,7 +77,7 @@
                 {{end}}
                 <div class="element-container">
                     {{range .RelationsList}}
-                        <div class="element text">
+                        <div class="element text center">
                             {{if $.IsTeacher}}{{.Student}} | {{if .Confirmed}}{{$.i18n.Tr "score"}}: {{.Score}}{{end}}{{if not .Confirmed}}{{$.NotConfirmed}}{{end}} | <a href="/account?mode=relations&action=delete&email={{.Student}}">{{$.i18n.Tr "remove"}}</a>{{end}}
                             {{if not $.IsTeacher}}{{.Teacher}} | {{if .Confirmed}} <a href="/account?mode=relations&action=delete&email={{.Teacher}}">{{$.Remove}}</a>{{end}}{{if not .Confirmed}} <a href="/account?mode=relations&action=confirm&email={{.Teacher}}">{{$.Confirm}}</a>{{end}}{{end}}</div>
                     {{end}}
