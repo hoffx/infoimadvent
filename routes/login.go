@@ -5,6 +5,7 @@ import (
 
 	"github.com/go-macaron/session"
 	"github.com/hoffx/infoimadvent/config"
+	"github.com/hoffx/infoimadvent/services"
 	"github.com/hoffx/infoimadvent/storage"
 	"golang.org/x/crypto/bcrypt"
 	macaron "gopkg.in/macaron.v1"
@@ -49,12 +50,11 @@ func Login(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer, s
 			ctx.Data["Error"] = ctx.Tr(ErrNotConfirmed)
 			return
 		}
-		ctx.Data["LoggedIn"] = true
-		ctx.Data["Message"] = ctx.Tr(MessLoggedIn)
 		user.Active = true
 
 		err = sess.Set("user", user)
 		if err != nil {
+			user.Active = false
 			ctx.Data["Error"] = ctx.Tr(ErrUnexpected)
 			log.Println(err)
 			return
@@ -62,10 +62,16 @@ func Login(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer, s
 
 		err = uStorer.Put(user)
 		if err != nil {
+			user.Active = false
 			ctx.Data["Error"] = ctx.Tr(ErrDB)
 			log.Println(err)
 			return
 		}
+
+		ctx.Data["LoggedIn"] = true
+		ctx.Data["Message"] = ctx.Tr(MessLoggedIn)
+
+		services.SendRewardMail(ctx, user)
 	}
 
 }

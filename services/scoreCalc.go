@@ -7,7 +7,7 @@ import (
 	iiastorage "github.com/hoffx/infoimadvent/storage"
 )
 
-func (s *DBStorage) CalcScores() {
+func (s *DBStorage) calcScores() {
 	users, err := s.UStorer.GetAll(map[string]interface{}{})
 	if err != nil {
 		log.Println(err)

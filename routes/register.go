@@ -86,6 +86,7 @@ func Register(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer
 			// request accepted -> generating new user
 
 			// create user and write to db
+			// generate confirmation-token
 			confirmationToken, err := gostrgen.RandGen(40, gostrgen.LowerUpperDigit, "", "")
 			if err != nil {
 				ctx.Data["Error"] = ctx.Tr(ErrUnexpected)
@@ -98,8 +99,9 @@ func Register(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer
 				log.Println(err)
 				return
 			}
+			// get users lang
 
-			user = storage.User{fEmail, string(hash), uint(fGrade), false, false, confirmationToken, t, make([]int, 24), 0, false}
+			user = storage.User{fEmail, string(hash), uint(fGrade), false, false, confirmationToken, t, make([]int, 24), 0, false, ctx.Language()}
 			err = uStorer.Create(user)
 			if err != nil {
 				ctx.Data["Error"] = ctx.Tr(ErrDB)

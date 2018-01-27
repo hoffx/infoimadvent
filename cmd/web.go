@@ -43,7 +43,7 @@ func runWeb(ctx *cli.Context) {
 	if err != nil {
 		log.Fatal(err)
 	} else if user.Email == "" {
-		err = uStorer.Create(storage.User{config.Config.Auth.AdminMail, config.Config.Auth.AdminHash, config.Config.Grades.Max, true, true, "", true, make([]int, 24), 0, true})
+		err = uStorer.Create(storage.User{config.Config.Auth.AdminMail, config.Config.Auth.AdminHash, config.Config.Grades.Max, true, true, "", true, make([]int, 24), 0, true, "en-US"})
 		if err != nil {
 			log.Fatal(err)
 		}

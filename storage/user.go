@@ -24,6 +24,7 @@ type User struct {
 	Days              []int
 	Score             int
 	IsAdmin           bool
+	Lang              string
 }
 
 func NewUserStorer(name, user, password string, doLog bool) (UserStorer, error) {

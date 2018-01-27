@@ -43,14 +43,20 @@ func (s *DBStorage) SetupYearRoutine(scheduler scheduler.Scheduler, year int, lo
 		log.Fatal(err)
 	}
 
+	/*_, err = scheduler.RunAt(time.Date(year, time.January, 25, 3, 0, 0, 0, loc), s.sendRewardMail)
+	if err != nil {
+		log.Fatal(err)
+	}*/
+
 	s.SetupCalcRoutine(scheduler, year, loc)
 
 	s.SetupYearRoutine(scheduler, year+1, loc)
 }
 
 func (s *DBStorage) SetupCalcRoutine(scheduler scheduler.Scheduler, year int, loc *time.Location) {
-	for i := 1; i <= 24; i++ {
-		_, err := scheduler.RunAt(time.Date(year, time.January, i, 3, 0, 0, 0, loc), s.CalcScores)
+	// shift calculation day by one because it is done at 3am
+	for i := 2; i <= 25; i++ {
+		_, err := scheduler.RunAt(time.Date(year, time.January, i, 3, 0, 0, 0, loc), s.calcScores)
 		if err != nil {
 			log.Fatal(err)
 		}
