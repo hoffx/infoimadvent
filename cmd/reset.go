@@ -17,7 +17,7 @@ var Reset = cli.Command{
 			Name:   "users, u",
 			Hidden: false,
 		}, cli.BoolFlag{
-			Name:   "quests, q",
+			Name:   "docs, d",
 			Hidden: false,
 		}, cli.BoolFlag{
 			Name:   "web, w",
@@ -41,12 +41,12 @@ func reset(ctx *cli.Context) {
 		}
 	}
 
-	if ctx.Bool("quests") && ctx.Bool("all") {
+	if ctx.Bool("docs") && ctx.Bool("all") {
 		err := storage.ResetDocuments(&dStorer, false)
 		if err != nil {
 			log.Fatal(err)
 		}
-	} else if ctx.Bool("quests") || ctx.Bool("all") {
+	} else if ctx.Bool("docs") || ctx.Bool("all") {
 		err := storage.ResetDocuments(&dStorer, true)
 		if err != nil {
 			log.Fatal(err)
