@@ -27,19 +27,31 @@ func Upload(ctx *macaron.Context, log *log.Logger, dStorer *storage.DocumentStor
 		return
 	} else {
 		// parse trivial form values
-		fMinGrade, err := strconv.Atoi(ctx.Req.FormValue("mingrade"))
+		fValMinGrade := ctx.Req.FormValue("mingrade")
+		if fValMinGrade == "" {
+			fValMinGrade = "0"
+		}
+		fMinGrade, err := strconv.Atoi(fValMinGrade)
 		if err != nil {
-			ctx.Data["Error"] = ErrIllegalInput
+			ctx.Data["Error"] = ctx.Tr(ErrIllegalInput)
 			return
 		}
-		fMaxGrade, err := strconv.Atoi(ctx.Req.FormValue("maxgrade"))
+		fValMaxGrade := ctx.Req.FormValue("maxgrade")
+		if fValMaxGrade == "" {
+			fValMaxGrade = "0"
+		}
+		fMaxGrade, err := strconv.Atoi(fValMaxGrade)
 		if err != nil {
-			ctx.Data["Error"] = ErrIllegalInput
+			ctx.Data["Error"] = ctx.Tr(ErrIllegalInput)
 			return
 		}
-		fDay, err := strconv.Atoi(ctx.Req.FormValue("day"))
+		fValDay := ctx.Req.FormValue("day")
+		if fValDay == "" {
+			fValDay = "0"
+		}
+		fDay, err := strconv.Atoi(fValDay)
 		if err != nil {
-			ctx.Data["Error"] = ErrIllegalInput
+			ctx.Data["Error"] = ctx.Tr(ErrIllegalInput)
 			return
 		}
 		fSolution := ctx.Req.FormValue("solution")
@@ -87,7 +99,7 @@ func Upload(ctx *macaron.Context, log *log.Logger, dStorer *storage.DocumentStor
 		}
 		defer fMd.Close()
 
-		f, err := ioutil.TempFile(config.Config.FileSystem.MDStoragePath, "quest")
+		f, err := ioutil.TempFile(config.Config.FileSystem.MDStoragePath, "document")
 		if err != nil {
 			ctx.Data["Error"] = ctx.Tr(ErrFS)
 			log.Println(err)
@@ -105,7 +117,9 @@ func Upload(ctx *macaron.Context, log *log.Logger, dStorer *storage.DocumentStor
 		fAssets, _, err := ctx.Req.FormFile("assets")
 		if err != nil {
 			ctx.Data["Error"] = ctx.Tr(ErrNoAssets)
-			log.Println(err)
+			if err.Error() != "http: no such file" {
+				log.Println(err)
+			}
 		} else {
 			defer fAssets.Close()
 			buf := new(bytes.Buffer)
