@@ -15,6 +15,11 @@ var Config struct {
 	Mail       Mail             `ini:"mail"`
 	Sessioner  Sessioner        `ini:"sessioner"`
 	FileSystem FileSystem       `ini:"filesystem"`
+	Scheduler  Scheduler        `ini:"scheduler"`
+}
+
+type Scheduler struct {
+	StoragePath string `ini:"dbstoragepath"`
 }
 
 type FileSystem struct {

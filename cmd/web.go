@@ -52,7 +52,7 @@ func runWeb(ctx *cli.Context) {
 		}
 	}
 
-	// set up score-calculation service
+	// set up score-calculation and reset services
 
 	s := services.NewDBStorage(&uStorer, &dStorer, &rStorer)
 	s.SetupRoutines()

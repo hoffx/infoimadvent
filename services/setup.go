@@ -11,7 +11,7 @@ import (
 )
 
 type DBStorage struct {
-	storage.MemoryStorage
+	storage.Sqlite3Storage
 	UStorer *iiastorage.UserStorer
 	DStorer *iiastorage.DocumentStorer
 	RStorer *iiastorage.RelationStorer
@@ -20,17 +20,30 @@ type DBStorage struct {
 // TODO: find better solution for error handling
 
 func NewDBStorage(uStorer *iiastorage.UserStorer, dStorer *iiastorage.DocumentStorer, rStorer *iiastorage.RelationStorer) *DBStorage {
-	return &DBStorage{*storage.NewMemoryStorage(), uStorer, dStorer, rStorer}
+	storage := storage.NewSqlite3Storage(storage.Sqlite3Config{config.Config.Scheduler.StoragePath})
+	if err := storage.Connect(); err != nil {
+		log.Fatal(err)
+	}
+
+	if err := storage.Initialize(); err != nil {
+		log.Fatal(err)
+	}
+	return &DBStorage{storage, uStorer, dStorer, rStorer}
 }
 
 func (s *DBStorage) SetupRoutines() {
 	scheduler := scheduler.New(s)
 	loc := time.Now().Location()
 
+	// TODO: remove this test
+
+	scheduler.RunAfter(5*time.Second, s.test)
+
 	_, err := scheduler.RunAt(time.Date(time.Now().Year(), config.Config.Server.ResetMonth, 1, 0, 0, 0, 0, loc), s.SetupYearRoutine, scheduler, time.Now().Year(), loc)
 	if err != nil {
 		log.Fatal(err)
 	}
+	scheduler.
 }
 
 func (s *DBStorage) SetupYearRoutine(scheduler scheduler.Scheduler, year int, loc *time.Location) {
@@ -88,4 +101,8 @@ func (s *DBStorage) calcScores() {
 			u.Score += iiastorage.Wrong
 		}
 	}
+}
+
+func (s *DBStorage) test() {
+	log.Println("ho")
 }

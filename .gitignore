@@ -299,6 +299,7 @@ config.ini
 *.min.js
 *.min.css
 *.css
+data/scheduler.sqlite3
 data/assets/*
 !data/assets/keep.me
 data/documents/*
