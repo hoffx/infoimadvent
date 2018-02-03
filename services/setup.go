@@ -19,7 +19,7 @@ type DBStorage struct {
 
 // TODO: find better solution for error handling
 
-func NewDBStorage(uStorer *iiastorage.UserStorer, dStorer *iiastorage.DocumentStorer, rStorer *iiastorage.RelationStorer) *DBStorage {
+func NewDBStorage(uStorer *iiastorage.UserStorer, dStorer *iiastorage.DocumentStorer, rStorer *iiastorage.RelationStorer) DBStorage {
 	storage := storage.NewSqlite3Storage(storage.Sqlite3Config{config.Config.Scheduler.StoragePath})
 	if err := storage.Connect(); err != nil {
 		log.Fatal(err)
@@ -28,25 +28,44 @@ func NewDBStorage(uStorer *iiastorage.UserStorer, dStorer *iiastorage.DocumentSt
 	if err := storage.Initialize(); err != nil {
 		log.Fatal(err)
 	}
-	return &DBStorage{storage, uStorer, dStorer, rStorer}
+	return DBStorage{storage, uStorer, dStorer, rStorer}
 }
 
-func (s *DBStorage) SetupRoutines() {
+func (s DBStorage) SetupRoutines() {
 	scheduler := scheduler.New(s)
 	loc := time.Now().Location()
 
-	// TODO: remove this test
-
-	scheduler.RunAfter(5*time.Second, s.test)
-
-	_, err := scheduler.RunAt(time.Date(time.Now().Year(), config.Config.Server.ResetMonth, 1, 0, 0, 0, 0, loc), s.SetupYearRoutine, scheduler, time.Now().Year(), loc)
-	if err != nil {
+	if isSetUp, err := s.setupStarted(); err != nil {
 		log.Fatal(err)
+	} else if err == nil && !isSetUp {
+		_, err = scheduler.RunAt(time.Date(time.Now().Year(), config.Config.Server.ResetMonth, 1, 0, 0, 0, 0, loc), s.setupYearRoutine, scheduler, time.Now().Year(), loc)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
-	scheduler.
+
+	scheduler.Start()
 }
 
-func (s *DBStorage) SetupYearRoutine(scheduler scheduler.Scheduler, year int, loc *time.Location) {
+func (s DBStorage) setupStarted() (bool, error) {
+	tasks, err := s.Fetch()
+	if err != nil {
+		return false, err
+	}
+	for _, t := range tasks {
+		t, err := time.Parse("2006-01-02T15:04:05-07:00", t.NextRun)
+		if err != nil {
+			return false, err
+		}
+		y, m, _ := t.Date()
+		if y == time.Now().Year() && m == config.Config.Server.ResetMonth {
+			return true, nil
+		}
+	}
+	return false, nil
+}
+
+func (s DBStorage) setupYearRoutine(scheduler scheduler.Scheduler, year int, loc *time.Location) {
 	err := iiastorage.ResetUsers(s.UStorer, s.RStorer)
 	if err != nil {
 		log.Fatal(err)
@@ -56,22 +75,22 @@ func (s *DBStorage) SetupYearRoutine(scheduler scheduler.Scheduler, year int, lo
 		log.Fatal(err)
 	}
 
-	s.SetupCalcRoutine(scheduler, year, loc)
+	s.setupCalcRoutine(scheduler, year, loc)
 
-	s.SetupYearRoutine(scheduler, year+1, loc)
+	s.setupYearRoutine(scheduler, year+1, loc)
 }
 
-func (s *DBStorage) SetupCalcRoutine(scheduler scheduler.Scheduler, year int, loc *time.Location) {
+func (s DBStorage) setupCalcRoutine(scheduler scheduler.Scheduler, year int, loc *time.Location) {
 	// shift calculation day by one because it is done at 3am
 	for i := 2; i <= 25; i++ {
-		_, err := scheduler.RunAt(time.Date(year, time.January, i, 3, 0, 0, 0, loc), s.calcScores)
+		_, err := scheduler.RunAt(time.Date(year, time.February, i, 3, 0, 0, 0, loc), s.calcScores)
 		if err != nil {
 			log.Fatal(err)
 		}
 	}
 }
 
-func (s *DBStorage) calcScores() {
+func (s DBStorage) calcScores() {
 	users, err := s.UStorer.GetAll(map[string]interface{}{})
 	if err != nil {
 		log.Println(err)
@@ -81,13 +100,13 @@ func (s *DBStorage) calcScores() {
 	_, m, d := time.Now().Date()
 
 	// TODO: change back to december after testing
-	if m != time.January {
+	if m != time.February {
 		return
 	}
 
 	for _, u := range users {
 		// executed at 3:00 am at server-time => -1 for last day + -1 for slice index-shift
-		quest, err := s.DStorer.Get(map[string]interface{}{"day": d, "grade": u.Grade})
+		quest, err := s.DStorer.Get(map[string]interface{}{"day": d, "grade": u.Grade, "type": iiastorage.Quest})
 		if err != nil {
 			log.Println(err)
 			continue
@@ -101,8 +120,10 @@ func (s *DBStorage) calcScores() {
 			u.Score += iiastorage.Wrong
 		}
 	}
+	// TODO: remove this log
+	log.Println("calculated")
 }
 
-func (s *DBStorage) test() {
+func (s DBStorage) test() {
 	log.Println("ho")
 }

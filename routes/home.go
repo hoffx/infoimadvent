@@ -20,7 +20,7 @@ func Home(ctx *macaron.Context, sess session.Store) {
 
 func isAdvent() bool {
 	_, m, d := time.Now().Date()
-	if m == time.January && d >= 1 && d <= 24 {
+	if m == time.February && d >= 1 && d <= 24 {
 		return true
 	}
 	return false

@@ -122,5 +122,6 @@ func (s *DocumentStorer) Delete(keys map[string]interface{}) error {
 	}
 	query, values := buildQuery(keys)
 	_, err := s.db.Table("document").Where(query, values...).Delete(Document{})
+	s.Complete = s.isComplete()
 	return err
 }

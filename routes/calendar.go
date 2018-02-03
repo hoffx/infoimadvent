@@ -32,15 +32,15 @@ func Calendar(ctx *macaron.Context, log *log.Logger, sess session.Store) {
 		var opened, current, locked bool
 
 		// TODO: change back to december after testing
-		if d != storage.None || (i+1 < day && month == time.January) || month != time.January {
+		if d != storage.None || (i+1 < day && month == time.February) || month != time.February {
 			opened = true
 		}
 		// TODO: change back to december after testing
-		if month == time.January && day == i+1 {
+		if month == time.February && day == i+1 {
 			current = true
 		}
 		// TODO: change back to december after testing
-		if month != time.January || day < i+1 {
+		if month != time.February || day < i+1 {
 			locked = true
 		}
 		tDays = append(tDays, templDay{"/day/" + strconv.Itoa(i+1), opened, i + 1, current, locked})
