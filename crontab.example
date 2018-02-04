@@ -1,10 +1,10 @@
 # ----- IT during Advent --------------------------
 #
 # yearly reset
-0 0 1 9 * [path_to_infoimadvent_executable] reset --standard >> [path_to_log_file]
+0 0 1 9 * cd [path_to_infoimadvent_directory] && ./infoimadvent reset --standard >> reset.log
 
 # score calculation (day is shifted by one, because
 # the function calculates the last completed day)
-0 2 2-25 12 * [path_to_infoimadvent_executable] calc >> [path_to_log_file]
+0 2 2-25 12 * cd [path_to_infoimadvent_directory] && ./infoimadvent calc >> calc.log
 #
 # -------------------------------------------------
