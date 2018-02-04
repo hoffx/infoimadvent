@@ -4,6 +4,7 @@ import (
 	"errors"
 	"os"
 	"path"
+	"strings"
 
 	"github.com/go-xorm/xorm"
 	"github.com/hoffx/infoimadvent/config"
@@ -72,7 +73,7 @@ func ResetUsers(uStorer *UserStorer, rStorer *RelationStorer) (err error) {
 		return
 	}
 	_, err = os.Create(config.Config.Sessioner.StoragePath + "/keep.me")
-	if err != nil {
+	if err != nil && !strings.Contains(err.Error(), "file exists") {
 		return
 	}
 	err = uStorer.ResetDB()
@@ -96,7 +97,7 @@ func ResetDocuments(dStorer *DocumentStorer, questsOnly bool) (err error) {
 		}
 		for k := range files {
 			err = os.Remove(k)
-			if err != nil {
+			if err != nil && !strings.Contains(err.Error(), "no such file or directory") {
 				return
 			}
 			err = os.RemoveAll(config.Config.FileSystem.AssetsStoragePath + "/" + path.Base(k))
@@ -114,7 +115,7 @@ func ResetDocuments(dStorer *DocumentStorer, questsOnly bool) (err error) {
 			return
 		}
 		_, err = os.Create(config.Config.FileSystem.MDStoragePath + "/keep.me")
-		if err != nil {
+		if err != nil && !strings.Contains(err.Error(), "file exists") {
 			return
 		}
 		err = os.RemoveAll(config.Config.FileSystem.AssetsStoragePath)
@@ -126,7 +127,7 @@ func ResetDocuments(dStorer *DocumentStorer, questsOnly bool) (err error) {
 			return
 		}
 		_, err = os.Create(config.Config.FileSystem.AssetsStoragePath + "/keep.me")
-		if err != nil {
+		if err != nil && !strings.Contains(err.Error(), "file exists") {
 			return
 		}
 		err = dStorer.ResetDB()

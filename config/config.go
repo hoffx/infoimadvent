@@ -2,7 +2,6 @@ package config
 
 import (
 	"log"
-	"time"
 
 	ini "gopkg.in/ini.v1"
 )
@@ -15,11 +14,6 @@ var Config struct {
 	Mail       Mail             `ini:"mail"`
 	Sessioner  Sessioner        `ini:"sessioner"`
 	FileSystem FileSystem       `ini:"filesystem"`
-	Scheduler  Scheduler        `ini:"scheduler"`
-}
-
-type Scheduler struct {
-	StoragePath string `ini:"dbstoragepath"`
 }
 
 type FileSystem struct {
@@ -32,11 +26,10 @@ type Sessioner struct {
 }
 
 type Server struct {
-	Address    string     `ini:"address"`
-	Ip         string     `ini:"ip"`
-	Port       int        `ini:"port"`
-	DevMode    bool       `ini:"devmode"`
-	ResetMonth time.Month `ini:"resetmonth"`
+	Address string `ini:"address"`
+	Ip      string `ini:"ip"`
+	Port    int    `ini:"port"`
+	DevMode bool   `ini:"devmode"`
 }
 
 type Mail struct {

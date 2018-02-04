@@ -12,7 +12,6 @@ import (
 	"github.com/hoffx/infoimadvent/config"
 	"github.com/hoffx/infoimadvent/parser"
 	"github.com/hoffx/infoimadvent/routes"
-	"github.com/hoffx/infoimadvent/services"
 	"github.com/hoffx/infoimadvent/storage"
 	"github.com/urfave/cli"
 	macaron "gopkg.in/macaron.v1"
@@ -29,17 +28,7 @@ var dStorer storage.DocumentStorer
 var rStorer storage.RelationStorer
 
 func runWeb(ctx *cli.Context) {
-	// load config
-	config.Load(ctx.GlobalString("config"))
-
-	// init storers
-	if !dStorer.Active || !uStorer.Active || !rStorer.Active {
-		var err error
-		uStorer, dStorer, rStorer, err = storage.InitStorers()
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
+	setupSystem(ctx)
 
 	// write admin to db
 	user, err := uStorer.Get(map[string]interface{}{"email": config.Config.Auth.AdminMail})
@@ -52,16 +41,26 @@ func runWeb(ctx *cli.Context) {
 		}
 	}
 
-	// set up score-calculation and reset services
-
-	s := services.NewDBStorage(&uStorer, &dStorer, &rStorer)
-	s.SetupRoutines()
-
 	// set up web service
 
 	m := initMacaron()
 
 	m.Run(config.Config.Server.Ip, config.Config.Server.Port)
+}
+
+func setupSystem(ctx *cli.Context) {
+	// check if config is already loaded
+	if config.Config.DB.Name == "" {
+		config.Load(ctx.GlobalString("config"))
+	}
+	// check if storage has been activated
+	if !uStorer.Active || !dStorer.Active || !rStorer.Active {
+		var err error
+		uStorer, dStorer, rStorer, err = storage.InitStorers()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 }
 
 func initMacaron() *macaron.Macaron {
