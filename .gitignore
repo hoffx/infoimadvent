@@ -308,3 +308,4 @@ data/sessions/*
 !data/sessions/keep.me
 *.log
 test/*
+infoimadvent

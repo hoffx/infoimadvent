@@ -80,6 +80,13 @@ func ResetUsers(uStorer *UserStorer, rStorer *RelationStorer) (err error) {
 	if err != nil {
 		return
 	}
+
+	// write admin to db
+	err = uStorer.Create(User{config.Config.Auth.AdminMail, config.Config.Auth.AdminHash, config.Config.Grades.Max, true, true, "", true, make([]int, 24), 0, true, "en-US"})
+	if err != nil {
+		return
+	}
+
 	err = rStorer.ResetDB()
 	return
 }
@@ -105,6 +112,7 @@ func ResetDocuments(dStorer *DocumentStorer, questsOnly bool) (err error) {
 				return
 			}
 		}
+		err = dStorer.Delete(map[string]interface{}{"type": Quest})
 	} else {
 		err = os.RemoveAll(config.Config.FileSystem.MDStoragePath)
 		if err != nil {
