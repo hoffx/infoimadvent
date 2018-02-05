@@ -4,8 +4,10 @@ import (
 	"html/template"
 	"image/color"
 	"log"
+	"strconv"
 
 	"github.com/go-macaron/cache"
+	"github.com/robfig/cron"
 	"github.com/theMomax/captcha"
 
 	"github.com/go-macaron/i18n"
@@ -29,7 +31,9 @@ var dStorer storage.DocumentStorer
 var rStorer storage.RelationStorer
 
 func runWeb(ctx *cli.Context) {
-	setupSystem(ctx)
+	setupSystem(ctx.GlobalString("config"))
+
+	startCronJobs()
 
 	// write admin to db
 	user, err := uStorer.Get(map[string]interface{}{"email": config.Config.Auth.AdminMail})
@@ -49,10 +53,18 @@ func runWeb(ctx *cli.Context) {
 	m.Run(config.Config.Server.Ip, config.Config.Server.Port)
 }
 
-func setupSystem(ctx *cli.Context) {
+func startCronJobs() {
+	c := cron.New()
+	c.AddFunc("0 0 1 "+strconv.Itoa(config.Config.Server.ResetMonth)+" *", standardReset)
+	// TODO: change back to december after testing
+	c.AddFunc("0 2 2-25 2 *", calcOperation)
+	c.Start()
+}
+
+func setupSystem(configpath string) {
 	// check if config is already loaded
 	if config.Config.DB.Name == "" {
-		config.Load(ctx.GlobalString("config"))
+		config.Load(configpath)
 	}
 	// check if storage has been activated
 	if !uStorer.Active || !dStorer.Active || !rStorer.Active {

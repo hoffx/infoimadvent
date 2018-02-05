@@ -26,10 +26,11 @@ type Sessioner struct {
 }
 
 type Server struct {
-	Address string `ini:"address"`
-	Ip      string `ini:"ip"`
-	Port    int    `ini:"port"`
-	DevMode bool   `ini:"devmode"`
+	Address    string `ini:"address"`
+	Ip         string `ini:"ip"`
+	Port       int    `ini:"port"`
+	DevMode    bool   `ini:"devmode"`
+	ResetMonth int    `ini:"resetmonth"`
 }
 
 type Mail struct {

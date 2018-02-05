@@ -15,8 +15,12 @@ var Calc = cli.Command{
 }
 
 func calc(ctx *cli.Context) {
-	setupSystem(ctx)
+	setupSystem(ctx.GlobalString("config"))
 
+	calcOperation()
+}
+
+func calcOperation() {
 	users, err := uStorer.GetAll(map[string]interface{}{})
 	if err != nil {
 		log.Println(err)

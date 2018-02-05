@@ -32,20 +32,17 @@ var Reset = cli.Command{
 }
 
 func reset(ctx *cli.Context) {
-	setupSystem(ctx)
+	setupSystem(ctx.GlobalString("config"))
 
 	if ctx.Bool("standard") {
-		err := storage.ResetDocuments(&dStorer, true)
-		if err != nil {
-			log.Fatal(err)
-		}
+		standardReset()
 	} else if ctx.Bool("docs") || ctx.Bool("all") {
 		err := storage.ResetDocuments(&dStorer, false)
 		if err != nil {
 			log.Fatal(err)
 		}
 	}
-	if ctx.Bool("users") || ctx.Bool("all") || ctx.Bool("standard") {
+	if ctx.Bool("users") || ctx.Bool("all") {
 		err := storage.ResetUsers(&uStorer, &rStorer)
 		if err != nil {
 			log.Fatal(err)
@@ -53,5 +50,16 @@ func reset(ctx *cli.Context) {
 	}
 	if ctx.Bool("web") {
 		runWeb(ctx)
+	}
+}
+
+func standardReset() {
+	err := storage.ResetDocuments(&dStorer, true)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = storage.ResetUsers(&uStorer, &rStorer)
+	if err != nil {
+		log.Fatal(err)
 	}
 }
