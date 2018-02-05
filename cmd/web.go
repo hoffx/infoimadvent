@@ -2,10 +2,11 @@ package cmd
 
 import (
 	"html/template"
+	"image/color"
 	"log"
 
 	"github.com/go-macaron/cache"
-	"github.com/go-macaron/captcha"
+	"github.com/theMomax/captcha"
 
 	"github.com/go-macaron/i18n"
 	"github.com/go-macaron/session"
@@ -100,7 +101,11 @@ func initMacaron() *macaron.Macaron {
 		ProviderConfig: config.Config.Sessioner.StoragePath,
 	}))
 	m.Use(cache.Cacher())
-	m.Use(captcha.Captchaer())
+	m.Use(captcha.Captchaer(
+		captcha.Options{
+			ColorPalette: buildColorPalette(),
+		},
+	))
 
 	m.Map(&dStorer)
 	m.Map(&uStorer)
@@ -133,4 +138,8 @@ func initMacaron() *macaron.Macaron {
 	}, routes.PublicReady, routes.Protect)
 
 	return m
+}
+
+func buildColorPalette() (cp color.Palette) {
+	return color.Palette{color.RGBA{196, 187, 69, 255}, color.RGBA{65, 144, 42, 255}, color.RGBA{210, 78, 76, 255}, color.RGBA{210, 210, 210, 255}}
 }
