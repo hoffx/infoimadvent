@@ -2,17 +2,19 @@ package cmd
 
 import (
 	"html/template"
+	"image/color"
 	"log"
+	"strconv"
 
 	"github.com/go-macaron/cache"
-	"github.com/go-macaron/captcha"
+	"github.com/robfig/cron"
+	"github.com/theMomax/captcha"
 
 	"github.com/go-macaron/i18n"
 	"github.com/go-macaron/session"
 	"github.com/hoffx/infoimadvent/config"
 	"github.com/hoffx/infoimadvent/parser"
 	"github.com/hoffx/infoimadvent/routes"
-	"github.com/hoffx/infoimadvent/services"
 	"github.com/hoffx/infoimadvent/storage"
 	"github.com/urfave/cli"
 	macaron "gopkg.in/macaron.v1"
@@ -29,17 +31,9 @@ var dStorer storage.DocumentStorer
 var rStorer storage.RelationStorer
 
 func runWeb(ctx *cli.Context) {
-	// load config
-	config.Load(ctx.GlobalString("config"))
+	setupSystem(ctx.GlobalString("config"))
 
-	// init storers
-	if !dStorer.Active || !uStorer.Active || !rStorer.Active {
-		var err error
-		uStorer, dStorer, rStorer, err = storage.InitStorers()
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
+	startCronJobs()
 
 	// write admin to db
 	user, err := uStorer.Get(map[string]interface{}{"email": config.Config.Auth.AdminMail})
@@ -52,16 +46,34 @@ func runWeb(ctx *cli.Context) {
 		}
 	}
 
-	// set up score-calculation and reset services
-
-	s := services.NewDBStorage(&uStorer, &dStorer, &rStorer)
-	s.SetupRoutines()
-
 	// set up web service
 
 	m := initMacaron()
 
 	m.Run(config.Config.Server.Ip, config.Config.Server.Port)
+}
+
+func startCronJobs() {
+	c := cron.New()
+	c.AddFunc("0 0 1 "+strconv.Itoa(config.Config.Server.ResetMonth)+" *", standardReset)
+	// TODO: change back to december after testing
+	c.AddFunc("0 2 2-25 2 *", calcOperation)
+	c.Start()
+}
+
+func setupSystem(configpath string) {
+	// check if config is already loaded
+	if config.Config.DB.Name == "" {
+		config.Load(configpath)
+	}
+	// check if storage has been activated
+	if !uStorer.Active || !dStorer.Active || !rStorer.Active {
+		var err error
+		uStorer, dStorer, rStorer, err = storage.InitStorers()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 }
 
 func initMacaron() *macaron.Macaron {
@@ -101,7 +113,11 @@ func initMacaron() *macaron.Macaron {
 		ProviderConfig: config.Config.Sessioner.StoragePath,
 	}))
 	m.Use(cache.Cacher())
-	m.Use(captcha.Captchaer())
+	m.Use(captcha.Captchaer(
+		captcha.Options{
+			ColorPalette: buildColorPalette(),
+		},
+	))
 
 	m.Map(&dStorer)
 	m.Map(&uStorer)
@@ -134,4 +150,8 @@ func initMacaron() *macaron.Macaron {
 	}, routes.PublicReady, routes.Protect)
 
 	return m
+}
+
+func buildColorPalette() (cp color.Palette) {
+	return color.Palette{color.RGBA{196, 187, 69, 255}, color.RGBA{65, 144, 42, 255}, color.RGBA{210, 78, 76, 255}, color.RGBA{210, 210, 210, 255}}
 }

@@ -28,7 +28,7 @@ func Day(ctx *macaron.Context, log *log.Logger, dStorer *storage.DocumentStorer,
 	}
 	_, m, d := time.Now().Date()
 	// TODO: change back to december after testing
-	if m != time.January || d < num {
+	if m != time.February || d < num {
 		ctx.Error(406, ctx.Tr(ErrIllegalDate))
 		ctx.Redirect("/calendar", 406)
 		return

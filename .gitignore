@@ -306,5 +306,6 @@ data/documents/*
 !data/documents/keep.me
 data/sessions/*
 !data/sessions/keep.me
-sql.log
+*.log
 test/*
+infoimadvent

@@ -8,10 +8,10 @@ import (
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/elgs/gostrgen"
-	"github.com/go-macaron/captcha"
 	"github.com/go-macaron/session"
 	"github.com/hoffx/infoimadvent/config"
 	"github.com/hoffx/infoimadvent/storage"
+	"github.com/theMomax/captcha"
 	macaron "gopkg.in/macaron.v1"
 
 	"gopkg.in/gomail.v2"
