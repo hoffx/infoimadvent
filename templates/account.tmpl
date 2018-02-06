@@ -76,10 +76,20 @@
                 <div class="message text">{{.Message}}</div>
                 {{end}}
                 <div class="element-container">
-                    {{range .RelationsList}}
-                        <div class="element text center">
-                            {{if $.IsTeacher}}{{.Student}} | {{if .Confirmed}}{{$.i18n.Tr "score"}}: {{.Score}}{{end}}{{if not .Confirmed}}{{$.NotConfirmed}}{{end}} | <a href="/account?mode=relations&action=delete&email={{.Student}}">{{$.i18n.Tr "remove"}}</a>{{end}}
-                            {{if not $.IsTeacher}}{{.Teacher}} | {{if .Confirmed}} <a href="/account?mode=relations&action=delete&email={{.Teacher}}">{{$.Remove}}</a>{{end}}{{if not .Confirmed}} <a href="/account?mode=relations&action=confirm&email={{.Teacher}}">{{$.Confirm}}</a>{{end}}{{end}}</div>
+                    {{if .RelationsList}}
+                        {{range .RelationsList}}
+                            <div class="element text center">
+                                {{if $.IsTeacher}}{{.Student}} | {{if .Confirmed}}{{$.i18n.Tr "score"}}: {{.Score}}{{end}}{{if not .Confirmed}}{{$.NotConfirmed}}{{end}} | <a href="/account?mode=relations&action=delete&email={{.Student}}">{{$.i18n.Tr "remove"}}</a>{{end}}
+                                {{if not $.IsTeacher}}{{.Teacher}} | {{if .Confirmed}} <a href="/account?mode=relations&action=delete&email={{.Teacher}}">{{$.Remove}}</a>{{end}}{{if not .Confirmed}} <a href="/account?mode=relations&action=confirm&email={{.Teacher}}">{{$.Confirm}}</a>{{end}}{{end}}</div>
+                        {{end}}
+                    {{end}}
+                    {{if not .RelationsList}}
+                        {{if .IsTeacher}}
+                            <div class="text center">{{.i18n.Tr "no_students"}}</div>
+                        {{end}}
+                        {{if not .IsTeacher}}
+                            <div class="text center">{{.i18n.Tr "no_teachers"}}</div>
+                        {{end}}
                     {{end}}
                 </div>
             {{end}}
