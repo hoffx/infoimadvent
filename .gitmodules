@@ -1,3 +1,4 @@
 [submodule "static/extensions/katex/katex-fonts"]
 	path = static/extensions/katex/katex-fonts
 	url = https://github.com/KaTeX/katex-fonts.git
+	ignore = dirty
