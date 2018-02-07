@@ -40,7 +40,7 @@
     <div class="content">
         <div class="box">
             {{if .ChangePw}}
-                <form action="/account" name="changepw"  method="post" autocomplete="on">
+                <form action="/account?mode=changepw" name="changepw"  method="post" autocomplete="on">
                     <input name="pwOld" class="textfield" type="password" placeholder={{.i18n.Tr "password_old"}} required=true minlength={{.Config.MinPwL}} maxlength={{.Config.MaxPwL}} {{if .PwOld}} value={{.PwOld}} {{end}} />
                     <input name="pw1" class="textfield" type="password" placeholder={{.i18n.Tr "password_new"}} required=true minlength={{.Config.MinPwL}} maxlength={{.Config.MaxPwL}}  {{if .Pw}} value={{.Pw}} {{end}}/>
                     <input name="pw2" class="textfield" type="password" placeholder={{.i18n.Tr "password_new"}} required=true minlength={{.Config.MinPwL}} maxlength={{.Config.MaxPwL}}  {{if .Pw}} value={{.Pw}} {{end}}/>
@@ -58,7 +58,7 @@
             {{end}}
             {{if .Score}}
                 <div>
-                    <h2>{{.ScoreVal}}</h2>
+                    <h2 class="center">{{.ScoreVal}}</h2>
                     <h4 class="text" >{{.i18n.Tr "score"}}</h4>
                 </div>
             {{end}}
