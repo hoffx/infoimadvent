@@ -40,7 +40,7 @@
     <div class="content">
         <div class="box">
             {{if .ChangePw}}
-                <form action="/account" name="changepw"  method="post" autocomplete="on">
+                <form action="/account?mode=changepw" name="changepw"  method="post" autocomplete="on">
                     <input name="pwOld" class="textfield" type="password" placeholder={{.i18n.Tr "password_old"}} required=true minlength={{.Config.MinPwL}} maxlength={{.Config.MaxPwL}} {{if .PwOld}} value={{.PwOld}} {{end}} />
                     <input name="pw1" class="textfield" type="password" placeholder={{.i18n.Tr "password_new"}} required=true minlength={{.Config.MinPwL}} maxlength={{.Config.MaxPwL}}  {{if .Pw}} value={{.Pw}} {{end}}/>
                     <input name="pw2" class="textfield" type="password" placeholder={{.i18n.Tr "password_new"}} required=true minlength={{.Config.MinPwL}} maxlength={{.Config.MaxPwL}}  {{if .Pw}} value={{.Pw}} {{end}}/>
@@ -58,7 +58,7 @@
             {{end}}
             {{if .Score}}
                 <div>
-                    <h2>{{.ScoreVal}}</h2>
+                    <h2 class="center">{{.ScoreVal}}</h2>
                     <h4 class="text" >{{.i18n.Tr "score"}}</h4>
                 </div>
             {{end}}
@@ -76,10 +76,20 @@
                 <div class="message text">{{.Message}}</div>
                 {{end}}
                 <div class="element-container">
-                    {{range .RelationsList}}
-                        <div class="element text center">
-                            {{if $.IsTeacher}}{{.Student}} | {{if .Confirmed}}{{$.i18n.Tr "score"}}: {{.Score}}{{end}}{{if not .Confirmed}}{{$.NotConfirmed}}{{end}} | <a href="/account?mode=relations&action=delete&email={{.Student}}">{{$.i18n.Tr "remove"}}</a>{{end}}
-                            {{if not $.IsTeacher}}{{.Teacher}} | {{if .Confirmed}} <a href="/account?mode=relations&action=delete&email={{.Teacher}}">{{$.Remove}}</a>{{end}}{{if not .Confirmed}} <a href="/account?mode=relations&action=confirm&email={{.Teacher}}">{{$.Confirm}}</a>{{end}}{{end}}</div>
+                    {{if .RelationsList}}
+                        {{range .RelationsList}}
+                            <div class="element text center">
+                                {{if $.IsTeacher}}{{.Student}} | {{if .Confirmed}}{{$.i18n.Tr "score"}}: {{.Score}}{{end}}{{if not .Confirmed}}{{$.NotConfirmed}}{{end}} | <a href="/account?mode=relations&action=delete&email={{.Student}}">{{$.i18n.Tr "remove"}}</a>{{end}}
+                                {{if not $.IsTeacher}}{{.Teacher}} | {{if .Confirmed}} <a href="/account?mode=relations&action=delete&email={{.Teacher}}">{{$.Remove}}</a>{{end}}{{if not .Confirmed}} <a href="/account?mode=relations&action=confirm&email={{.Teacher}}">{{$.Confirm}}</a>{{end}}{{end}}</div>
+                        {{end}}
+                    {{end}}
+                    {{if not .RelationsList}}
+                        {{if .IsTeacher}}
+                            <div class="text center">{{.i18n.Tr "no_students"}}</div>
+                        {{end}}
+                        {{if not .IsTeacher}}
+                            <div class="text center">{{.i18n.Tr "no_teachers"}}</div>
+                        {{end}}
                     {{end}}
                 </div>
             {{end}}

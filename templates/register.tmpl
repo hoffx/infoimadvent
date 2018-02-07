@@ -33,7 +33,7 @@
                     <div class="checkbox-container text"><input class="checkbox" type="checkbox" name="teacher" {{if .Teacher}} checked=true {{end}} /><span>{{.i18n.Tr "teacher"}}</span></div>
                     <input name="captcha" class="textfield" type="text" placeholder={{.i18n.Tr "captcha"}} required=true minlength="6" maxlength="6" />
                     <div class="captcha center">{{.Captcha.CreateHtml}}</div>
-                    <div class="tos text center small">{{.i18n.Tr "tos_warning"}} - <a href="/tos">{{.i18n.Tr "tos_read"}}</a></div>
+                    <div class="tos text center small">{{.i18n.Tr "tos_warning"}} - <a target="_blank" href="/tos">{{.i18n.Tr "tos_read"}}</a></div>
                     <button class="button" type="submit">{{.i18n.Tr "register"}}</button>
                 </form>
             {{end}}

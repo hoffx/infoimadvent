@@ -34,7 +34,7 @@ var Reset = cli.Command{
 func reset(ctx *cli.Context) {
 	setupSystem(ctx.GlobalString("config"))
 
-	if ctx.Bool("standard") {
+	if ctx.Bool("standard") || (!ctx.Bool("docs") && !ctx.Bool("all") && !ctx.Bool("users")) {
 		standardReset()
 	} else if ctx.Bool("docs") || ctx.Bool("all") {
 		err := storage.ResetDocuments(&dStorer, false)
