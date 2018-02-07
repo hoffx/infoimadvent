@@ -50,5 +50,10 @@ func calcOperation() {
 		} else {
 			u.Score += storage.Wrong
 		}
+
+		err = uStorer.Put(u)
+		if err != nil {
+			log.Println(err)
+		}
 	}
 }
