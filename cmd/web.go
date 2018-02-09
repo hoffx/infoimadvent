@@ -130,6 +130,7 @@ func initMacaron() *macaron.Macaron {
 	m.Route("/register", "GET,POST", routes.Register)
 	m.Get("/confirm", routes.Confirm)
 	m.Post("/restore", routes.Restore)
+	m.Get("/certificate", routes.Certificate)
 
 	m.Group("", func() {
 		m.Route("/upload", "GET,POST", routes.Upload)

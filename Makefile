@@ -32,3 +32,4 @@ generate-css:
 	lessc static/style/register.less static/style/register.css
 	lessc static/style/login.less static/style/login.css
 	lessc static/style/tos.less static/style/tos.css
+	lessc static/style/certificate.less static/style/certificate.css
