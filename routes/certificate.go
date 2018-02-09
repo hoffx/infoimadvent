@@ -22,6 +22,4 @@ func Certificate(ctx *macaron.Context, sess session.Store) {
 	// }
 
 	ctx.HTML(200, "certificate")
-
-	return
 }
