@@ -11,13 +11,11 @@
         body {
             width: 210mm;
             height: 297mm;
-            min-height: 100%;
             margin: auto;
-            padding-top: 36mm;
             background-color: #222222;
             font-family: 'Zilla Slab', serif;
             text-align: center;
-            border: 1px solid black;
+            /* border: 1px solid black; */
         }
         body div,
         body h1 {
@@ -27,7 +25,7 @@
         body h1 {
             color: #c4bb45;
             font-size: 88pt;
-            padding-bottom: 36mm;
+            padding: 36mm 0;
         }
         body .awarded-to,
         body .score {
@@ -50,24 +48,17 @@
             color: #d2d2d2;
             margin: auto;
             padding-top: 15mm;
-            font-size: 26pt;
+            font-size: 21pt;
         }
-        /* body .end {
-            width: 100%;
-            height: 10mm;
-            margin-top: 56mm;
-            background-color: red;
-        } */
     </style>
 </head>
 <body>
-    <h1>Certificate</h1>
+    <h1>{{.i18n.Tr "certificate"}}</h1>
     <div class="awarded-to">{{.i18n.Tr "awarded_to"}}</div> 
     <div class="email">{{.Email}}</div>
     <div class="score">
         {{.i18n.Tr "certificate_score_pre"}} <span class="points">{{.Score}}</span> {{.i18n.Tr "certificate_score_post"}}
     </div>
     <div class="iia">{{.i18n.Tr "service"}}</div>
-    <div class="end"></div>
 </body>
 </html>

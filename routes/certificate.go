@@ -39,6 +39,8 @@ func Certificate(ctx *macaron.Context, sess session.Store) {
 
 	page := wkhtmltopdf.NewPageReader(strings.NewReader(htmlBody))
 	page.PrintMediaType.Set(true)
+	page.DisableSmartShrinking.Set(true)
+
 	pdfg.AddPage(page)
 
 	err = pdfg.Create()
@@ -49,7 +51,7 @@ func Certificate(ctx *macaron.Context, sess session.Store) {
 		return
 	}
 
-	err = pdfg.WriteFile("./certificate.pdf")
+	err = pdfg.WriteFile("pdf/certificate.pdf")
 	if err != nil {
 		ctx.Error(500, ctx.Tr(ErrUnexpected))
 		log.Println(err)
@@ -57,5 +59,5 @@ func Certificate(ctx *macaron.Context, sess session.Store) {
 		return
 	}
 
-	ctx.HTML(200, "certificate")
+	ctx.Redirect("/account?mode=certificate", 302)
 }

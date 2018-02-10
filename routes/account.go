@@ -209,6 +209,8 @@ func Account(ctx *macaron.Context, log *log.Logger, sess session.Store, rStorer 
 			}
 			ctx.Data["RelationsList"] = relations
 		}
+	} else if mode == "certificate" {
+		ctx.Data["Certificate"] = true
 	} else {
 		// display user's score
 		ctx.Data["Score"] = true
