@@ -29,7 +29,7 @@
                     <a href="/account?mode=relations"><h2>{{if .IsTeacher}}{{.i18n.Tr "your_students"}}{{end}}{{if not .IsTeacher}}{{.i18n.Tr "your_teachers"}}{{end}}</h2></a>
                 </div>
             {{end}}
-            {{if not .Certificate}}
+            {{if .Certificate}}
                 <div class="option certificate">
                     <a href="/certificate"><h2>{{.i18n.Tr "certificate_menu"}}</h2></a>
                 </div>
