@@ -70,5 +70,5 @@ func Certificate(ctx *macaron.Context, sess session.Store) {
 func certificateReady() bool {
 	_, month, day := time.Now().Date()
 
-	return month != time.December || day > 24
+	return month != time.February || day > 24
 }

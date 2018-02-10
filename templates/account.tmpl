@@ -62,9 +62,9 @@
                 {{end}}
             {{end}}
             {{if .Score}}
-                <div>
+                <div class="center element">
                     <h2 class="center">{{.ScoreVal}}</h2>
-                    <h4 class="text" >{{.i18n.Tr "score"}}</h4>
+                    <h4 class="text center" >{{.i18n.Tr "score"}}</h4>
                 </div>
             {{end}}
             {{if .Relations}}
@@ -99,7 +99,7 @@
                 </div>
             {{end}}
             {{if .Certificate}}
-                <div class="text message">{{.i18n.Tr "certificate_generated"}}</div>
+                <div class="text message center">{{.i18n.Tr "certificate_generated"}}</div>
             {{end}}
         </div>
     </div>
