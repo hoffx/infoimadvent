@@ -139,6 +139,7 @@ func initMacaron() *macaron.Macaron {
 	m.Group("", func() {
 		m.Get("/logout", routes.Logout)
 		m.Route("/account", "GET,POST", routes.Account)
+		m.Get("/certificate", routes.Certificate)
 	}, routes.Protect)
 
 	m.Group("", func() {
