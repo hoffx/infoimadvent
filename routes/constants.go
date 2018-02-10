@@ -19,6 +19,7 @@ const (
 	ErrRelationExists   = "relation_already_exists_error"
 	ErrNoStudent        = "this_is_a_teacher_error"
 	ErrInvalidCaptcha   = "invalid_captcha_error"
+	ErrAdventNotOver    = "advent_not_over_error"
 )
 
 // messages

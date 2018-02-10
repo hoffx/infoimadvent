@@ -29,6 +29,11 @@
                     <a href="/account?mode=relations"><h2>{{if .IsTeacher}}{{.i18n.Tr "your_students"}}{{end}}{{if not .IsTeacher}}{{.i18n.Tr "your_teachers"}}{{end}}</h2></a>
                 </div>
             {{end}}
+            {{if .Certificate}}
+                <div class="option certificate">
+                    <a href="/certificate"><h2>{{.i18n.Tr "certificate_menu"}}</h2></a>
+                </div>
+            {{end}}
             <div class="option logout">
                 <a href="/logout"><h2>{{.i18n.Tr "logout"}}</h2></a>
             </div>
@@ -92,6 +97,9 @@
                         {{end}}
                     {{end}}
                 </div>
+            {{end}}
+            {{if .Certificate}}
+                <div class="text message">{{.i18n.Tr "certificate_generated"}}</div>
             {{end}}
         </div>
     </div>
