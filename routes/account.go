@@ -215,7 +215,5 @@ func Account(ctx *macaron.Context, log *log.Logger, sess session.Store, rStorer 
 		ctx.Data["ScoreVal"] = user.Score
 	}
 
-	if certificateReady() {
-		ctx.Data["Certificate"] = true
-	}
+	ctx.Data["Certificate"] = certificateReady()
 }

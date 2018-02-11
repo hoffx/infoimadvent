@@ -150,6 +150,11 @@ func initMacaron() *macaron.Macaron {
 		})
 	}, routes.PublicReady, routes.Protect)
 
+	err := routes.GenerateFont()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	return m
 }
 
