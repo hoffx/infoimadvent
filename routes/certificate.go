@@ -1,17 +1,18 @@
 package routes
 
 import (
+	"bytes"
+	"io"
 	"log"
-	"strings"
-	"time"
+	"strconv"
 
-	wkhtmltopdf "github.com/SebastiaanKlippert/go-wkhtmltopdf"
 	"github.com/go-macaron/session"
 	"github.com/hoffx/infoimadvent/storage"
+	"github.com/jung-kurt/gofpdf"
 	macaron "gopkg.in/macaron.v1"
 )
 
-func Certificate(ctx *macaron.Context, sess session.Store) {
+func Certificate(ctx *macaron.Context, sess session.Store, log *log.Logger) {
 
 	if !certificateReady() {
 		ctx.Error(503, ctx.Tr(ErrAdventNotOver))
@@ -23,52 +24,35 @@ func Certificate(ctx *macaron.Context, sess session.Store) {
 	ctx.Data["Email"] = user.Email
 	ctx.Data["Score"] = user.Score
 
-	htmlBody, err := ctx.HTMLString("certificate", ctx.Data)
+	file := new(bytes.Buffer)
+	err := generateCertificate(file, user, ctx)
 	if err != nil {
-		ctx.Error(500, ctx.Tr(ErrUnexpected))
 		log.Println(err)
+		ctx.Error(500, ctx.Tr(ErrUnexpected))
 		ctx.Redirect("/account", 500)
 		return
 	}
 
-	pdfg, err := wkhtmltopdf.NewPDFGenerator()
-	if err != nil {
-		ctx.Error(500, ctx.Tr(ErrUnexpected))
-		log.Println(err)
-		ctx.Redirect("/account", 500)
-		return
-	}
+	ctx.Resp.Header().Add("content-disposition", "attachment; filename="+ctx.Tr("certificate")+".pdf")
+	ctx.Resp.Write(file.Bytes())
+}
 
-	pdfg.MarginTop.Set(0)
-	pdfg.MarginBottom.Set(0)
-	pdfg.MarginLeft.Set(0)
-	pdfg.MarginRight.Set(0)
+func generateCertificate(file io.Writer, user storage.User, ctx *macaron.Context) error {
+	pdf := gofpdf.New("P", "mm", "A4", "")
+	pdf.AddPage()
+	pdf.SetFont("Arial", "B", 16)
+	pdf.Cell(40, 10, ctx.Tr("score")+": "+strconv.Itoa(user.Score))
 
-	page := wkhtmltopdf.NewPageReader(strings.NewReader(htmlBody))
-	page.PrintMediaType.Set(true)
-	page.DisableSmartShrinking.Set(true)
+	err := pdf.Output(file)
+	pdf.Close()
 
-	pdfg.AddPage(page)
-
-	if err = pdfg.Create(); err != nil {
-		ctx.Error(500, ctx.Tr(ErrUnexpected))
-		log.Println(err)
-		ctx.Redirect("/account", 500)
-		return
-	}
-
-	if err = pdfg.WriteFile("pdf/certificate.pdf"); err != nil {
-		ctx.Error(500, ctx.Tr(ErrUnexpected))
-		log.Println(err)
-		ctx.Redirect("/account", 500)
-		return
-	}
-
-	ctx.ServeFile("pdf/certificate.pdf")
+	return err
 }
 
 func certificateReady() bool {
-	_, month, day := time.Now().Date()
+	// TODO: change back after testing
+	//_, month, day := time.Now().Date()
 
-	return month != time.December || day > 24
+	//return month != time.February && day > 24
+	return true
 }
