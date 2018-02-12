@@ -9,6 +9,15 @@ import (
 )
 
 func Home(ctx *macaron.Context, sess session.Store) {
+	query := ctx.Req.URL.Query()
+
+	if query["cookies"] != nil && query["cookies"][0] == "accepted" {
+		ctx.SetCookie("cookies", "accepted", 1<<31-1)
+		ctx.Data["Cookies"] = true
+	} else {
+		ctx.Data["Cookies"] = ctx.GetCookie("cookies") == "accepted"
+	}
+
 	value := sess.Get("user")
 	sUser, ok := value.(storage.User)
 	if ok && sUser.Active {
