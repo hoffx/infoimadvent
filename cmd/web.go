@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/go-macaron/cache"
+	"github.com/jung-kurt/gofpdf"
 	"github.com/robfig/cron"
 	"github.com/theMomax/captcha"
 
@@ -47,7 +48,7 @@ func runWeb(ctx *cli.Context) {
 	}
 
 	// generate font files for PDF generations
-	err = routes.GenerateFont()
+	err = gofpdf.MakeFont("static/fonts/zillaslab.ttf", "static/fonts/cp1252.map", "static/fonts/", nil, true)
 	if err != nil {
 		log.Fatal(err)
 	}
