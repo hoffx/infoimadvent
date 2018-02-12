@@ -22,8 +22,8 @@ update-js:
 	wget -O - --header="Accept-Encoding: gzip" https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-alpha2/contrib/auto-render.min.js | gunzip > static/extensions/katex-autorender/katex-autorender.min.js
 
 update-fonts:
-	wget -O static/fonts/ZillaSlab-Regular.ttf https://github.com/google/fonts/raw/master/ofl/zillaslab/ZillaSlab-Regular.ttf
-
+	wget -O static/fonts/zillaslab.ttf https://github.com/google/fonts/raw/master/ofl/zillaslab/ZillaSlab-Regular.ttf # gzipped version not available
+	wget -O - --header="Accept-Encoding: gzip" https://raw.githubusercontent.com/jung-kurt/gofpdf/master/font/cp1252.map | gunzip > static/fonts/cp1252.map
 minify:
 	minify -r --match .+\.js static/js/quest static/extensions/katex static/extensions/katex-autorender -o static/js/quest.min.js
 

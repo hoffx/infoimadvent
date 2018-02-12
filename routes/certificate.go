@@ -8,12 +8,11 @@ import (
 	"time"
 
 	"github.com/go-macaron/session"
+	"github.com/hoffx/infoimadvent/config"
 	"github.com/hoffx/infoimadvent/storage"
 	"github.com/jung-kurt/gofpdf"
 	macaron "gopkg.in/macaron.v1"
 )
-
-const fontDir = "static/fonts/"
 
 func Certificate(ctx *macaron.Context, sess session.Store, log *log.Logger) {
 
@@ -41,13 +40,16 @@ func Certificate(ctx *macaron.Context, sess session.Store, log *log.Logger) {
 }
 
 func GenerateFont() error {
-	return gofpdf.MakeFont(fontDir+"ZillaSlab-Regular.ttf", fontDir+"cp1252.map", fontDir, nil, true)
+	fontDir := "static/fonts/"
+	return gofpdf.MakeFont(fontDir+"zillaslab.ttf", fontDir+"cp1252.map", fontDir, nil, true)
 }
 
 func generateCertificate(file io.Writer, user storage.User, ctx *macaron.Context) error {
+	fontDir := "static/fonts/"
+
 	pdf := gofpdf.New("P", "mm", "A4", fontDir)
 	utf8tr := pdf.UnicodeTranslatorFromDescriptor("cp1252")
-	pdf.AddFont("Zilla Slab", "", "ZillaSlab-Regular.json")
+	pdf.AddFont("Zilla Slab", "", "zillaslab.json")
 	pdf.AddPage()
 
 	pdf.Ln(39)
@@ -83,5 +85,5 @@ func generateCertificate(file io.Writer, user storage.User, ctx *macaron.Context
 
 func certificateReady() bool {
 	_, month, day := time.Now().Date()
-	return month != time.December || day > 24
+	return (month == time.December && day > 25) || (int(month) < config.Config.Server.ResetMonth)
 }

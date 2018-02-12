@@ -311,4 +311,3 @@ test/*
 infoimadvent
 pdf/*.pdf
 static/fonts/*
-static/!fonts/*.map

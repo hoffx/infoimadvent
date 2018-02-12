@@ -46,6 +46,12 @@ func runWeb(ctx *cli.Context) {
 		}
 	}
 
+	// generate font files for PDF generations
+	err = routes.GenerateFont()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// set up web service
 
 	m := initMacaron()
@@ -149,11 +155,6 @@ func initMacaron() *macaron.Macaron {
 			m.Get("/:day", routes.Day)
 		})
 	}, routes.PublicReady, routes.Protect)
-
-	err := routes.GenerateFont()
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	return m
 }
