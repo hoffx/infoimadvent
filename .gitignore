@@ -310,3 +310,4 @@ data/sessions/*
 test/*
 infoimadvent
 pdf/*.pdf
+static/fonts/*
