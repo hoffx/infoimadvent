@@ -1,7 +1,5 @@
 # you need the following tools installed and in your path variable
 # - github.com/tdewolff/minify/cmd/minify
-# - github.com/SebastiaanKlippert/go-wkhtmltopdf
-# - wkhtmltopdf
 # - lessc
 # - wget
 # - gunzip
