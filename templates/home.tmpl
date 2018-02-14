@@ -42,5 +42,11 @@
     <div class="content">
         <p class="text box">{{.i18n.Tr "description"}}</p>
     </div>
+    {{if not .Cookies}}
+    <div class="cookies">
+        <a href="?cookies=accepted">&times;</a>
+        <div class="notice">{{.i18n.Tr "cookies"}}</div>
+    </div>
+    {{end}}
 </body>
 </html>
