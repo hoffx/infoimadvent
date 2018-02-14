@@ -4,6 +4,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/hoffx/infoimadvent/config"
 	"github.com/hoffx/infoimadvent/storage"
 	"github.com/urfave/cli"
 )
@@ -30,7 +31,7 @@ func calcOperation() {
 	_, m, d := time.Now().Date()
 
 	// TODO: change back to december after testing
-	if m != time.February {
+	if m != config.Config.Server.Advent {
 		return
 	}
 

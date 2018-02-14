@@ -2,6 +2,7 @@ package config
 
 import (
 	"log"
+	"time"
 
 	ini "gopkg.in/ini.v1"
 )
@@ -31,6 +32,7 @@ type Server struct {
 	Port       int    `ini:"port"`
 	DevMode    bool   `ini:"devmode"`
 	ResetMonth int    `ini:"resetmonth"`
+	Advent     time.Month
 }
 
 type Mail struct {

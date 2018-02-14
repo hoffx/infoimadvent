@@ -80,5 +80,5 @@ func generateCertificate(file io.Writer, user storage.User, ctx *macaron.Context
 
 func certificateReady() bool {
 	_, month, day := time.Now().Date()
-	return (month == time.December && day > 25) || (int(month) < config.Config.Server.ResetMonth)
+	return (month == config.Config.Server.Advent && day > 25) || ((int(month) < config.Config.Server.ResetMonth) && int(month) > int(config.Config.Server.Advent))
 }

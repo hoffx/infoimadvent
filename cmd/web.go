@@ -5,6 +5,7 @@ import (
 	"image/color"
 	"log"
 	"strconv"
+	"time"
 
 	"github.com/go-macaron/cache"
 	"github.com/jung-kurt/gofpdf"
@@ -33,6 +34,12 @@ var rStorer storage.RelationStorer
 
 func runWeb(ctx *cli.Context) {
 	setupSystem(ctx.GlobalString("config"))
+
+	if config.Config.Server.DevMode {
+		config.Config.Server.Advent = time.Now().Month()
+	} else {
+		config.Config.Server.Advent = time.December
+	}
 
 	startCronJobs()
 

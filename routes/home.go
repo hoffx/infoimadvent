@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/go-macaron/session"
+	"github.com/hoffx/infoimadvent/config"
 	"github.com/hoffx/infoimadvent/storage"
 	macaron "gopkg.in/macaron.v1"
 )
@@ -20,7 +21,7 @@ func Home(ctx *macaron.Context, sess session.Store) {
 
 func isAdvent() bool {
 	_, m, d := time.Now().Date()
-	if m == time.February && d >= 1 && d <= 24 {
+	if m == config.Config.Server.Advent && d >= 1 && d <= 24 {
 		return true
 	}
 	return false

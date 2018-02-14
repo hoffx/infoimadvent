@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/go-macaron/session"
+	"github.com/hoffx/infoimadvent/config"
 	"github.com/hoffx/infoimadvent/storage"
 	macaron "gopkg.in/macaron.v1"
 )
@@ -32,15 +33,15 @@ func Calendar(ctx *macaron.Context, log *log.Logger, sess session.Store) {
 		var opened, current, locked bool
 
 		// TODO: change back to december after testing
-		if d != storage.None || (i+1 < day && month == time.February) || month != time.February {
+		if d != storage.None || (i+1 < day && month == config.Config.Server.Advent) || month != config.Config.Server.Advent {
 			opened = true
 		}
 		// TODO: change back to december after testing
-		if month == time.February && day == i+1 {
+		if month == config.Config.Server.Advent && day == i+1 {
 			current = true
 		}
 		// TODO: change back to december after testing
-		if month != time.February || day < i+1 {
+		if month != config.Config.Server.Advent || day < i+1 {
 			locked = true
 		}
 		tDays = append(tDays, templDay{"/day/" + strconv.Itoa(i+1), opened, i + 1, current, locked})

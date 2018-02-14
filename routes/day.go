@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/go-macaron/session"
+	"github.com/hoffx/infoimadvent/config"
 	"github.com/hoffx/infoimadvent/parser"
 	"github.com/hoffx/infoimadvent/storage"
 
@@ -28,7 +29,7 @@ func Day(ctx *macaron.Context, log *log.Logger, dStorer *storage.DocumentStorer,
 	}
 	_, m, d := time.Now().Date()
 	// TODO: change back to december after testing
-	if m != time.February || d < num {
+	if m != config.Config.Server.Advent || d < num {
 		ctx.Error(406, ctx.Tr(ErrIllegalDate))
 		ctx.Redirect("/calendar", 406)
 		return
