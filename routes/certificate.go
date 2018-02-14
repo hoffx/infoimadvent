@@ -39,6 +39,11 @@ func Certificate(ctx *macaron.Context, sess session.Store, log *log.Logger) {
 	ctx.Resp.Write(file.Bytes())
 }
 
+func GenerateFont() error {
+	fontDir := "static/fonts/"
+	return gofpdf.MakeFont(fontDir+"zillaslab.ttf", fontDir+"cp1252.map", fontDir, nil, true)
+}
+
 func generateCertificate(file io.Writer, user storage.User, ctx *macaron.Context) error {
 	fontDir := "static/fonts/"
 
