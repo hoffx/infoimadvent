@@ -4,7 +4,9 @@
 # - wkhtmltopdf
 # - lessc
 # - wget
-# - gunzip
+# - gzip
+# - zip
+# - tar
 
 all: init minify generate-css
 	go install
@@ -38,3 +40,64 @@ generate-css:
 	lessc static/style/login.less static/style/login.css
 	lessc static/style/tos.less static/style/tos.css
 	lessc static/style/certificate.less static/style/certificate.css
+
+
+build: config = config.ini
+
+build:
+ifeq ($(config),)
+	@echo "Assuming you want to use config.ini ! You can specify a different file using the following syntax: make build config=<your_config.ini>"
+endif
+ifeq ($(os),)
+	@echo "Assuming you want to compile for your GOOS ! You can specify a different os using the following syntax: make build config=<target_os>"
+	@echo "You must export your GOOS before running this command !"
+endif
+ifeq ($(arc),)
+	@echo "Assuming you want to compile for your GOARCH ! You can specify a different architecture using the following syntax: make build arc=<target_arc>"
+	@echo "You must export your GOARCH before running this command !"
+endif
+	@read -r -p "Also, make sure your repository is complete and up to date ! Continue ? [Y/n]: " continue; \
+	([ "$(continue)" != "n" ] && [ "$(continue)" != "N" ] && [ "$(continue)" != "no" ]) || (echo "Exiting."; exit 1;);
+
+ifeq ($(os),)
+ifeq ($(arc),)
+	@go build
+ifeq ($(GOOS), linux)
+	@rm -f "infoimadvent($(GOOS)|$(GOARCH)).tar.gz"
+	@tar cfz "infoimadvent($(GOOS)|$(GOARCH)).tar.gz" infoimadvent LICENSE README.md $(config) templates locales data/sessions/keep.me data/documents/keep.me data/assets/keep.me static/style/*.css static/fonts static/js/*.min.js static/favicon.ico static/style/img/* static/extensions/katex/katex-fonts/fonts static/extensions/katex/katex-fonts/katex.min.css
+else
+	@rm -f "infoimadvent($(GOOS)|$(GOARCH)).zip"
+	@zip -qr "infoimadvent($(GOOS)|$(GOARCH))" infoimadvent LICENSE README.md $(config) templates locales data/sessions/keep.me data/documents/keep.me data/assets/keep.me static/style/*.css static/fonts static/js/*.min.js static/favicon.ico static/style/img/* static/extensions/katex/katex-fonts/fonts static/extensions/katex/katex-fonts/katex.min.css
+endif
+else
+	@GOARCH=$(arc) go build
+ifeq ($(GOOS), linux)
+	@rm -f "infoimadvent($(GOOS)|$(arc)).tar.gz"
+	@tar cfz "infoimadvent($(GOOS)|$(arc)).tar.gz" infoimadvent LICENSE README.md $(config) templates locales data/sessions/keep.me data/documents/keep.me data/assets/keep.me static/style/*.css static/fonts static/js/*.min.js static/favicon.ico static/style/img/* static/extensions/katex/katex-fonts/fonts static/extensions/katex/katex-fonts/katex.min.css
+else
+	@rm -f "infoimadvent($(GOOS)|$(arc)).zip"
+	@zip -qr "infoimadvent($(GOOS)|$(arc))" infoimadvent LICENSE README.md $(config) templates locales data/sessions/keep.me data/documents/keep.me data/assets/keep.me static/style/*.css static/fonts static/js/*.min.js static/favicon.ico static/style/img/* static/extensions/katex/katex-fonts/fonts static/extensions/katex/katex-fonts/katex.min.css
+endif
+endif
+else
+ifeq ($(arc),)
+	@GOOS=$(os) go build
+ifeq ($(os), linux)
+	@rm -f "infoimadvent($(os)|$(GOARCH)).tar.gz"
+	@tar cfz "infoimadvent($(os)|$(GOARCH)).tar.gz" infoimadvent LICENSE README.md $(config) templates locales data/sessions/keep.me data/documents/keep.me data/assets/keep.me static/style/*.css static/fonts static/js/*.min.js static/favicon.ico static/style/img/* static/extensions/katex/katex-fonts/fonts static/extensions/katex/katex-fonts/katex.min.css
+else
+	@rm -f "infoimadvent($(os)|$(GOARCH)).zip"
+	@zip -qr "infoimadvent($(os)|$(GOARCH))" infoimadvent LICENSE README.md $(config) templates locales data/sessions/keep.me data/documents/keep.me data/assets/keep.me static/style/*.css static/fonts static/js/*.min.js static/favicon.ico static/style/img/* static/extensions/katex/katex-fonts/fonts static/extensions/katex/katex-fonts/katex.min.css
+endif
+else
+	@GOOS=$(os) GOARCH=$(arc) go build
+ifeq ($(os), linux)
+	@rm -f "infoimadvent($(os)|$(arc)).tar.gz"
+	@tar cfz "infoimadvent($(os)|$(arc)).tar.gz" infoimadvent LICENSE README.md $(config) templates locales data/sessions/keep.me data/documents/keep.me data/assets/keep.me
+else
+	@rm -f "infoimadvent($(os)|$(arc)).zip"
+	@zip -qr "infoimadvent($(os)|$(arc))" infoimadvent LICENSE README.md $(config) templates locales data/sessions/keep.me data/documents/keep.me data/assets/keep.me static/style/*.css static/fonts static/js/*.min.js static/favicon.ico static/style/img/* static/extensions/katex/katex-fonts/fonts static/extensions/katex/katex-fonts/katex.min.css
+endif
+endif
+endif
+
