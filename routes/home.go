@@ -9,6 +9,7 @@ import (
 	macaron "gopkg.in/macaron.v1"
 )
 
+// Home handles the route "/"
 func Home(ctx *macaron.Context, sess session.Store) {
 	value := sess.Get("user")
 	sUser, ok := value.(storage.User)

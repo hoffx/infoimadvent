@@ -5,14 +5,18 @@ import (
 
 	"github.com/go-xorm/core"
 
+	// blank import required by xorm
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
 )
 
+// UserStorer is a normal Storer. The extra type is needed
+// by macaron for the identification of the storer
 type UserStorer struct {
 	Storer
 }
 
+// User is a person
 type User struct {
 	Email             string
 	Hash              string
@@ -27,6 +31,8 @@ type User struct {
 	Lang              string
 }
 
+// NewUserStorer generates a UserStorer. If doLog is true, it
+//will create a log file "sql.log"
 func NewUserStorer(name, user, password string, doLog bool) (UserStorer, error) {
 	db, err := xorm.NewEngine("mysql", user+":"+password+"@/"+name+"?charset=utf8")
 	if err != nil {
@@ -53,6 +59,7 @@ func NewUserStorer(name, user, password string, doLog bool) (UserStorer, error) 
 	return UserStorer{Storer{db}}, nil
 }
 
+// ResetDB deletes the user table
 func (s *UserStorer) ResetDB() error {
 	err := s.db.DropTables(User{})
 	if err != nil {
@@ -62,11 +69,14 @@ func (s *UserStorer) ResetDB() error {
 	return err
 }
 
+// Create creates a new entry
 func (s *UserStorer) Create(user User) error {
 	_, err := s.db.Insert(user)
 	return err
 }
 
+// Put modifies a entry. The user is identified by its
+// email value
 func (s *UserStorer) Put(user User) error {
 	oldUser, err := s.Get(map[string]interface{}{"email": user.Email})
 	if err != nil {
@@ -82,6 +92,7 @@ func (s *UserStorer) Put(user User) error {
 	return s.Create(user)
 }
 
+// Get returns one user defined by the provided keys
 func (s *UserStorer) Get(keys map[string]interface{}) (User, error) {
 	if len(keys) == 0 {
 		return User{}, ErrNoKey
@@ -92,12 +103,14 @@ func (s *UserStorer) Get(keys map[string]interface{}) (User, error) {
 	return user, err
 }
 
+// GetAll returns a slice of users defined by the provided keys
 func (s *UserStorer) GetAll(keys map[string]interface{}) (users []User, err error) {
 	query, values := buildQuery(keys)
 	err = s.db.Table("user").Where(query, values...).Find(&users)
 	return
 }
 
+// Delete deletes all entries defined by the provided keys
 func (s *UserStorer) Delete(keys map[string]interface{}) error {
 	if len(keys) == 0 {
 		return ErrNoKey

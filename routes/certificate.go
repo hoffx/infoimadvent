@@ -14,6 +14,7 @@ import (
 	macaron "gopkg.in/macaron.v1"
 )
 
+// Certificate handles the route "/certificate"
 func Certificate(ctx *macaron.Context, sess session.Store, log *log.Logger) {
 
 	if !certificateReady() {
@@ -26,6 +27,7 @@ func Certificate(ctx *macaron.Context, sess session.Store, log *log.Logger) {
 	ctx.Data["Email"] = user.Email
 	ctx.Data["Score"] = user.Score
 
+	// create pdf
 	file := new(bytes.Buffer)
 	err := generateCertificate(file, user, ctx)
 	if err != nil {
@@ -35,6 +37,7 @@ func Certificate(ctx *macaron.Context, sess session.Store, log *log.Logger) {
 		return
 	}
 
+	// write pdf to response and mark as attachment
 	ctx.Resp.Header().Add("content-disposition", "attachment; filename="+ctx.Tr("certificate")+".pdf")
 	ctx.Resp.Write(file.Bytes())
 }

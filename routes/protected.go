@@ -6,6 +6,8 @@ import (
 	macaron "gopkg.in/macaron.v1"
 )
 
+// Protect ensures the routes "/logout", "/account", "/certificate",
+// "/calendar" and "/day" can only be accessed when logged in
 func Protect(ctx *macaron.Context, sess session.Store) {
 	value := sess.Get("user")
 	sUser, ok := value.(storage.User)

@@ -8,6 +8,7 @@ import (
 	macaron "gopkg.in/macaron.v1"
 )
 
+// Overview handles the route "/overview"
 func Overview(ctx *macaron.Context, log *log.Logger, dStorer *storage.DocumentStorer) {
 	var days [24]map[int]string
 

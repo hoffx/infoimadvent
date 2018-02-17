@@ -17,6 +17,7 @@ import (
 	macaron "gopkg.in/macaron.v1"
 )
 
+// Upload handles the route "/upload"
 func Upload(ctx *macaron.Context, log *log.Logger, dStorer *storage.DocumentStorer) {
 	defer ctx.HTML(200, "upload")
 
@@ -25,151 +26,156 @@ func Upload(ctx *macaron.Context, log *log.Logger, dStorer *storage.DocumentStor
 
 	if ctx.Req.Method == "GET" {
 		return
+	}
+
+	// parse trivial form values
+	fValMinGrade := ctx.Req.FormValue("mingrade")
+	if fValMinGrade == "" {
+		fValMinGrade = "0"
+	}
+	fMinGrade, err := strconv.Atoi(fValMinGrade)
+	if err != nil {
+		ctx.Data["Error"] = ctx.Tr(ErrIllegalInput)
+		return
+	}
+	fValMaxGrade := ctx.Req.FormValue("maxgrade")
+	if fValMaxGrade == "" {
+		fValMaxGrade = "0"
+	}
+	fMaxGrade, err := strconv.Atoi(fValMaxGrade)
+	if err != nil {
+		ctx.Data["Error"] = ctx.Tr(ErrIllegalInput)
+		return
+	}
+	fValDay := ctx.Req.FormValue("day")
+	if fValDay == "" {
+		fValDay = "0"
+	}
+	fDay, err := strconv.Atoi(fValDay)
+	if err != nil {
+		ctx.Data["Error"] = ctx.Tr(ErrIllegalInput)
+		return
+	}
+	fSolution := ctx.Req.FormValue("solution")
+	fType := ctx.Req.FormValue("type")
+
+	// save trivial form values
+	ctx.Data["Day"] = fDay
+	ctx.Data["MinGrade"] = fMinGrade
+	ctx.Data["MaxGrade"] = fMaxGrade
+	ctx.Data[fSolution] = true
+
+	var docType int
+	switch fType {
+	case "About":
+		docType = storage.About
+		ctx.Data["About"] = true
+		fMinGrade = 0
+		fMaxGrade = 0
+		fSolution = ""
+		fDay = 0
+	case "Terms of Service":
+		docType = storage.ToS
+		ctx.Data["ToS"] = true
+		fMinGrade = 0
+		fMaxGrade = 0
+		fSolution = ""
+		fDay = 0
+	default:
+		docType = storage.Quest
+		ctx.Data["Quest"] = true
+	}
+
+	solution, err := solutionToInt(fSolution)
+	if err != nil {
+		ctx.Data["Error"] = ctx.Tr(ErrIllegalInput)
+		return
+	}
+
+	// load and save form files
+	fMd, _, err := ctx.Req.FormFile("md")
+	if err != nil {
+		ctx.Data["Error"] = ctx.Tr(ErrIllegalInput)
+		log.Println(err)
+		return
+	}
+	defer fMd.Close()
+
+	f, err := ioutil.TempFile(config.Config.FileSystem.MDStoragePath, "document")
+	if err != nil {
+		ctx.Data["Error"] = ctx.Tr(ErrFS)
+		log.Println(err)
+		return
+	}
+	defer f.Close()
+
+	_, err = io.Copy(f, fMd)
+	if err != nil {
+		ctx.Data["Error"] = ctx.Tr(ErrFS)
+		log.Println(err)
+		return
+	}
+
+	fAssets, _, err := ctx.Req.FormFile("assets")
+	if err != nil {
+		ctx.Data["Error"] = ctx.Tr(ErrNoAssets)
+		if err.Error() != "http: no such file" {
+			log.Println(err)
+		}
 	} else {
-		// parse trivial form values
-		fValMinGrade := ctx.Req.FormValue("mingrade")
-		if fValMinGrade == "" {
-			fValMinGrade = "0"
-		}
-		fMinGrade, err := strconv.Atoi(fValMinGrade)
+		defer fAssets.Close()
+		buf := new(bytes.Buffer)
+		length, err := buf.ReadFrom(fAssets)
 		if err != nil {
 			ctx.Data["Error"] = ctx.Tr(ErrIllegalInput)
-			return
-		}
-		fValMaxGrade := ctx.Req.FormValue("maxgrade")
-		if fValMaxGrade == "" {
-			fValMaxGrade = "0"
-		}
-		fMaxGrade, err := strconv.Atoi(fValMaxGrade)
-		if err != nil {
-			ctx.Data["Error"] = ctx.Tr(ErrIllegalInput)
-			return
-		}
-		fValDay := ctx.Req.FormValue("day")
-		if fValDay == "" {
-			fValDay = "0"
-		}
-		fDay, err := strconv.Atoi(fValDay)
-		if err != nil {
-			ctx.Data["Error"] = ctx.Tr(ErrIllegalInput)
-			return
-		}
-		fSolution := ctx.Req.FormValue("solution")
-		fType := ctx.Req.FormValue("type")
-
-		// save trivial form values
-		ctx.Data["Day"] = fDay
-		ctx.Data["MinGrade"] = fMinGrade
-		ctx.Data["MaxGrade"] = fMaxGrade
-		ctx.Data[fSolution] = true
-
-		var docType int
-		switch fType {
-		case "About":
-			docType = storage.About
-			ctx.Data["About"] = true
-			fMinGrade = 0
-			fMaxGrade = 0
-			fSolution = ""
-			fDay = 0
-		case "Terms of Service":
-			docType = storage.ToS
-			ctx.Data["ToS"] = true
-			fMinGrade = 0
-			fMaxGrade = 0
-			fSolution = ""
-			fDay = 0
-		default:
-			docType = storage.Quest
-			ctx.Data["Quest"] = true
+			log.Println(err)
 		}
 
-		solution, err := solutionToInt(fSolution)
-		if err != nil {
-			ctx.Data["Error"] = ctx.Tr(ErrIllegalInput)
-			return
-		}
-
-		// load and save form files
-		fMd, _, err := ctx.Req.FormFile("md")
+		reader, err := zip.NewReader(bytes.NewReader(buf.Bytes()), length)
 		if err != nil {
 			ctx.Data["Error"] = ctx.Tr(ErrIllegalInput)
 			log.Println(err)
 			return
 		}
-		defer fMd.Close()
-
-		f, err := ioutil.TempFile(config.Config.FileSystem.MDStoragePath, "document")
+		err = unzipAndSave(*reader, config.Config.FileSystem.AssetsStoragePath+"/"+path.Base(f.Name()))
 		if err != nil {
 			ctx.Data["Error"] = ctx.Tr(ErrFS)
 			log.Println(err)
 			return
 		}
-		defer f.Close()
+	}
 
-		_, err = io.Copy(f, fMd)
+	// create db entries
+
+	for i := fMinGrade; i <= fMaxGrade; i++ {
+		doc := storage.Document{
+			Path:     f.Name(),
+			Grade:    i,
+			Day:      fDay,
+			Solution: solution,
+			Type:     docType,
+		}
+		oldDoc, err := dStorer.Get(map[string]interface{}{"grade": i, "day": fDay, "type": docType})
 		if err != nil {
-			ctx.Data["Error"] = ctx.Tr(ErrFS)
+			ctx.Data["Error"] = ctx.Tr(ErrDB)
 			log.Println(err)
 			return
 		}
-
-		fAssets, _, err := ctx.Req.FormFile("assets")
-		if err != nil {
-			ctx.Data["Error"] = ctx.Tr(ErrNoAssets)
-			if err.Error() != "http: no such file" {
-				log.Println(err)
-			}
-		} else {
-			defer fAssets.Close()
-			buf := new(bytes.Buffer)
-			length, err := buf.ReadFrom(fAssets)
-			if err != nil {
-				ctx.Data["Error"] = ctx.Tr(ErrIllegalInput)
-				log.Println(err)
-			}
-
-			reader, err := zip.NewReader(bytes.NewReader(buf.Bytes()), length)
-			if err != nil {
-				ctx.Data["Error"] = ctx.Tr(ErrIllegalInput)
-				log.Println(err)
-				return
-			}
-			err = unzipAndSave(*reader, config.Config.FileSystem.AssetsStoragePath+"/"+path.Base(f.Name()))
-			if err != nil {
-				ctx.Data["Error"] = ctx.Tr(ErrFS)
-				log.Println(err)
-				return
-			}
-		}
-
-		// create db entries
-
-		for i := fMinGrade; i <= fMaxGrade; i++ {
-			doc := storage.Document{f.Name(), i, fDay, solution, docType}
-			oldDoc, err := dStorer.Get(map[string]interface{}{"grade": i, "day": fDay, "type": docType})
+		if oldDoc.Path == "" {
+			err = dStorer.Create(doc)
 			if err != nil {
 				ctx.Data["Error"] = ctx.Tr(ErrDB)
 				log.Println(err)
 				return
 			}
-			if oldDoc.Path == "" {
-				err = dStorer.Create(doc)
-				if err != nil {
-					ctx.Data["Error"] = ctx.Tr(ErrDB)
-					log.Println(err)
-					return
-				}
-			} else {
-				err = dStorer.Put(doc)
-				if err != nil {
-					ctx.Data["Error"] = ctx.Tr(ErrDB)
-					log.Println(err)
-					return
-				}
+		} else {
+			err = dStorer.Put(doc)
+			if err != nil {
+				ctx.Data["Error"] = ctx.Tr(ErrDB)
+				log.Println(err)
+				return
 			}
 		}
-
 	}
 }
 

@@ -10,6 +10,7 @@ import (
 func main() {
 	app := cli.NewApp()
 	app.Name = "iia"
+	app.Version = "alpha"
 	app.Usage = "A dynamic website for students of all ages to have fun before Christmas called IT during Advent"
 	app.Author = "Hoff Industires"
 	app.Flags = []cli.Flag{

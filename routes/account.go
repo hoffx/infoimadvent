@@ -10,6 +10,7 @@ import (
 	macaron "gopkg.in/macaron.v1"
 )
 
+// Account handles the route "/account"
 func Account(ctx *macaron.Context, log *log.Logger, sess session.Store, rStorer *storage.RelationStorer, uStorer *storage.UserStorer) {
 	defer ctx.HTML(200, "account")
 
@@ -19,6 +20,7 @@ func Account(ctx *macaron.Context, log *log.Logger, sess session.Store, rStorer 
 
 	ctx.Data["Config"] = Config{config.Config.Auth.MinPwLength, config.Config.Auth.MaxPwLength}
 
+	// get seesion-user (must exist because /account is protected)
 	user := sess.Get("user").(storage.User)
 	user, err := uStorer.Get(map[string]interface{}{"email": user.Email})
 	if err != nil {
@@ -100,7 +102,11 @@ func Account(ctx *macaron.Context, log *log.Logger, sess session.Store, rStorer 
 					return
 				}
 				// set connection's confirmed status to true
-				err = rStorer.Put(storage.Relation{email[0], user.Email, true})
+				err = rStorer.Put(storage.Relation{
+					Teacher:   email[0],
+					Student:   user.Email,
+					Confirmed: true,
+				})
 				if err == storage.ErrNoEffect {
 					ctx.Data["Error"] = ctx.Tr(ErrUserNotFound)
 					return
@@ -121,7 +127,11 @@ func Account(ctx *macaron.Context, log *log.Logger, sess session.Store, rStorer 
 					}
 					ctx.Data["Message"] = ctx.Tr(MessUserRemoved)
 				} else {
-					err = rStorer.Put(storage.Relation{email[0], user.Email, false})
+					err = rStorer.Put(storage.Relation{
+						Teacher:   email[0],
+						Student:   user.Email,
+						Confirmed: false,
+					})
 					if err == storage.ErrNoEffect {
 						ctx.Data["Error"] = ctx.Tr(ErrUserNotFound)
 						return
@@ -192,7 +202,11 @@ func Account(ctx *macaron.Context, log *log.Logger, sess session.Store, rStorer 
 					ctx.Data["Error"] = ctx.Tr(ErrRelationExists)
 					return
 				}
-				err = rStorer.Create(storage.Relation{user.Email, reqestedU.Email, false})
+				err = rStorer.Create(storage.Relation{
+					Teacher:   user.Email,
+					Student:   reqestedU.Email,
+					Confirmed: false,
+				})
 				if err != nil {
 					ctx.Data["Error"] = ctx.Tr(ErrDB)
 					log.Println(err)

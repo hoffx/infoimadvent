@@ -20,6 +20,7 @@ type templDay struct {
 	Locked  bool
 }
 
+// Calendar handles the route "/calendar"
 func Calendar(ctx *macaron.Context, log *log.Logger, sess session.Store) {
 
 	value := sess.Get("user")

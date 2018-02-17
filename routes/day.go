@@ -18,8 +18,10 @@ import (
 	macaron "gopkg.in/macaron.v1"
 )
 
+// Name is a workaround for storing the document's name for use in parseUrls
 type Name string
 
+// Day handles the routes "/day/[some_day]"
 func Day(ctx *macaron.Context, log *log.Logger, dStorer *storage.DocumentStorer, sess session.Store, uStorer *storage.UserStorer) {
 	num := ctx.ParamsInt("day")
 	if num < 1 || num > 24 {

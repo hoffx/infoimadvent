@@ -7,30 +7,32 @@ import (
 	"github.com/urfave/cli"
 )
 
+// Reset holds the cli command for all available reset methods
 var Reset = cli.Command{
 	Name:   "reset",
 	Usage:  "resets database and session-storage",
 	Action: reset,
 	Flags: []cli.Flag{
 		cli.BoolFlag{
-			Name:   "users, u",
-			Hidden: false,
+			Name:  "users, u",
+			Usage: "deletes all users except admin",
 		}, cli.BoolFlag{
-			Name:   "docs, d",
-			Hidden: false,
+			Name:  "docs, d",
+			Usage: "deletes all documents of all types",
 		}, cli.BoolFlag{
-			Name:   "web, w",
-			Hidden: false,
+			Name:  "all, a",
+			Usage: "deletes all documents of all types and all users except admin",
 		}, cli.BoolFlag{
-			Name:   "all, a",
-			Hidden: false,
+			Name:  "standard, s",
+			Usage: "deletes all documents of type quest and all users except admin",
 		}, cli.BoolFlag{
-			Name:   "standard, s",
-			Hidden: false,
+			Name:  "web, w",
+			Usage: "starts the webserver after executing the reset",
 		},
 	},
 }
 
+// reset interprets the cli command "reset"
 func reset(ctx *cli.Context) {
 	setupSystem(ctx.GlobalString("config"))
 
@@ -53,6 +55,8 @@ func reset(ctx *cli.Context) {
 	}
 }
 
+// standardReset deletes all documents of type quest
+// and all users (except admin)
 func standardReset() {
 	err := storage.ResetDocuments(&dStorer, true)
 	if err != nil {

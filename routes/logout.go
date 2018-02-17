@@ -6,6 +6,7 @@ import (
 	macaron "gopkg.in/macaron.v1"
 )
 
+// Logout handles the route "/logout"
 func Logout(ctx *macaron.Context, uStorer *storage.UserStorer, sess session.Store) {
 	value := sess.Get("user")
 	sUser, ok := value.(storage.User)

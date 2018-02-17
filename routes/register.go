@@ -17,10 +17,9 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
+// Register handles the route "/register"
 func Register(ctx *macaron.Context, cpt *captcha.Captcha, log *log.Logger, uStorer *storage.UserStorer, sess session.Store) {
 	defer ctx.HTML(200, "register")
-
-	// TODO: handle form refill on failure
 
 	type Config struct {
 		MinYL, MaxYL   uint
@@ -106,7 +105,19 @@ func Register(ctx *macaron.Context, cpt *captcha.Captcha, log *log.Logger, uStor
 			}
 			// get users lang
 
-			user = storage.User{fEmail, string(hash), uint(fGrade), false, false, confirmationToken, t, make([]int, 24), 0, false, ctx.Language()}
+			user = storage.User{
+				Email:             fEmail,
+				Hash:              string(hash),
+				Grade:             uint(fGrade),
+				Active:            false,
+				Confirmed:         false,
+				ConfirmationToken: confirmationToken,
+				Teacher:           t,
+				Days:              make([]int, 24),
+				Score:             0,
+				IsAdmin:           false,
+				Lang:              ctx.Language(),
+			}
 			err = uStorer.Create(user)
 			if err != nil {
 				ctx.Data["Error"] = ctx.Tr(ErrDB)

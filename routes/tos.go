@@ -11,6 +11,7 @@ import (
 	macaron "gopkg.in/macaron.v1"
 )
 
+// ToS handles the route "/tos"
 func ToS(ctx *macaron.Context, dStorer *storage.DocumentStorer, log *log.Logger) {
 
 	doc, err := dStorer.Get(map[string]interface{}{"type": storage.ToS})

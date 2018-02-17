@@ -6,6 +6,8 @@ import (
 	macaron "gopkg.in/macaron.v1"
 )
 
+// RequireAdmin ensures the routes "/upload" and "/overview" can
+// only be accessed by the admin
 func RequireAdmin(ctx *macaron.Context, sess session.Store) {
 	value := sess.Get("user")
 	sUser, ok := value.(storage.User)

@@ -8,6 +8,8 @@ import (
 	macaron "gopkg.in/macaron.v1"
 )
 
+// Confirm handles the route "/confirm". The route is used by the confirmation
+// link sent via mail.
 func Confirm(ctx *macaron.Context, uStorer *storage.UserStorer, sess session.Store) {
 	query := ctx.Req.URL.Query()
 	var user storage.User

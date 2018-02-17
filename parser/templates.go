@@ -2,6 +2,7 @@ package parser
 
 import "strconv"
 
+// Add adds up the given summands. It is used in templates
 func Add(summands ...interface{}) int {
 	var sum int
 	for _, s := range summands {

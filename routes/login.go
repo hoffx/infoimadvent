@@ -10,6 +10,7 @@ import (
 	macaron "gopkg.in/macaron.v1"
 )
 
+// Login handles the route "/login"
 func Login(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer, sess session.Store) {
 	defer ctx.HTML(200, "login")
 	defer parseURL(ctx)

@@ -23,6 +23,7 @@ import (
 	macaron "gopkg.in/macaron.v1"
 )
 
+// Web holds the cli command for starting the webserver
 var Web = cli.Command{
 	Name:   "web",
 	Usage:  "Start webserver",
@@ -49,7 +50,19 @@ func runWeb(ctx *cli.Context) {
 	if err != nil {
 		log.Fatal(err)
 	} else if user.Email == "" {
-		err = uStorer.Create(storage.User{config.Config.Auth.AdminMail, config.Config.Auth.AdminHash, config.Config.Grades.Max, true, true, "", true, make([]int, 24), 0, true, "en-US"})
+		err = uStorer.Create(storage.User{
+			Email:             config.Config.Auth.AdminMail,
+			Hash:              config.Config.Auth.AdminHash,
+			Grade:             config.Config.Grades.Max,
+			Active:            true,
+			Confirmed:         true,
+			ConfirmationToken: "",
+			Teacher:           true,
+			Days:              make([]int, 24),
+			Score:             0,
+			IsAdmin:           true,
+			Lang:              "en-US",
+		})
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -65,14 +78,14 @@ func runWeb(ctx *cli.Context) {
 
 	m := initMacaron()
 
-	m.Run(config.Config.Server.Ip, config.Config.Server.Port)
+	m.Run(config.Config.Server.IP, config.Config.Server.Port)
 }
 
 func startCronJobs() {
 	c := cron.New()
 	c.AddFunc("0 0 1 "+strconv.Itoa(config.Config.Server.ResetMonth)+" *", standardReset)
 	// TODO: change back to december after testing
-	c.AddFunc("0 2 2-25 2 *", calcOperation)
+	c.AddFunc("0 2 2-25 2 *", calcLatest)
 	c.Start()
 }
 
