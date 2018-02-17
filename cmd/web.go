@@ -12,6 +12,7 @@ import (
 	"github.com/robfig/cron"
 	"github.com/theMomax/captcha"
 
+	"github.com/go-macaron/gzip"
 	"github.com/go-macaron/i18n"
 	"github.com/go-macaron/session"
 	"github.com/hoffx/infoimadvent/config"
@@ -76,18 +77,15 @@ func startCronJobs() {
 }
 
 func setupSystem(configpath string) {
-	// check if config is already loaded
-	if config.Config.DB.Name == "" {
-		config.Load(configpath)
+	// load config
+	config.Load(configpath)
+	// init storage
+	var err error
+	uStorer, dStorer, rStorer, err = storage.InitStorers()
+	if err != nil {
+		log.Fatal(err)
 	}
-	// check if storage has been activated
-	if !uStorer.Active || !dStorer.Active || !rStorer.Active {
-		var err error
-		uStorer, dStorer, rStorer, err = storage.InitStorers()
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
+
 }
 
 func initMacaron() *macaron.Macaron {
@@ -97,7 +95,7 @@ func initMacaron() *macaron.Macaron {
 	mp["user"] = storage.User{}
 	session.EncodeGob(mp)
 
-	if config.Config.Server.DevMode == true {
+	if config.Config.Server.DevMode {
 		macaron.Env = macaron.DEV
 	} else {
 		macaron.Env = macaron.PROD
@@ -132,6 +130,7 @@ func initMacaron() *macaron.Macaron {
 			ColorPalette: buildColorPalette(),
 		},
 	))
+	m.Use(gzip.Gziper())
 
 	m.Map(&dStorer)
 	m.Map(&uStorer)

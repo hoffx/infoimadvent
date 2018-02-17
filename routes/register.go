@@ -87,7 +87,6 @@ func Register(ctx *macaron.Context, cpt *captcha.Captcha, log *log.Logger, uStor
 		}
 		if user.Email != "" {
 			ctx.Data["Error"] = ctx.Tr(ErrUserExists)
-			ctx.Data["Grade"] = nil
 		} else {
 			// request accepted -> generating new user
 

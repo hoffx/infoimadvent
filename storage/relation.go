@@ -42,7 +42,7 @@ func NewRelationStorer(name, user, password string, doLog bool) (RelationStorer,
 		return RelationStorer{}, err
 	}
 
-	return RelationStorer{Storer{db, true}}, nil
+	return RelationStorer{Storer{db}}, nil
 }
 
 func (s *RelationStorer) ResetDB() error {

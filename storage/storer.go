@@ -8,7 +8,6 @@ import (
 
 	"github.com/go-xorm/xorm"
 	"github.com/hoffx/infoimadvent/config"
-	macaron "gopkg.in/macaron.v1"
 )
 
 // answers
@@ -45,8 +44,7 @@ var ErrNoEffect = errors.New("no_effect_error")
 var ErrNoKey = errors.New("no_key_error")
 
 type Storer struct {
-	db     *xorm.Engine
-	Active bool
+	db *xorm.Engine
 }
 
 func buildQuery(keys map[string]interface{}) (query string, values []interface{}) {
@@ -144,15 +142,15 @@ func ResetDocuments(dStorer *DocumentStorer, questsOnly bool) (err error) {
 }
 
 func InitStorers() (u UserStorer, d DocumentStorer, r RelationStorer, err error) {
-	u, err = NewUserStorer(config.Config.DB.Name, config.Config.DB.User, config.Config.DB.Password, macaron.Env == macaron.DEV)
+	u, err = NewUserStorer(config.Config.DB.Name, config.Config.DB.User, config.Config.DB.Password, config.Config.Server.DevMode)
 	if err != nil {
 		return
 	}
-	d, err = NewDocumentStorer(config.Config.DB.Name, config.Config.DB.User, config.Config.DB.Password, macaron.Env == macaron.DEV)
+	d, err = NewDocumentStorer(config.Config.DB.Name, config.Config.DB.User, config.Config.DB.Password, config.Config.Server.DevMode)
 	if err != nil {
 		return
 	}
-	r, err = NewRelationStorer(config.Config.DB.Name, config.Config.DB.User, config.Config.DB.Password, macaron.Env == macaron.DEV)
+	r, err = NewRelationStorer(config.Config.DB.Name, config.Config.DB.User, config.Config.DB.Password, config.Config.Server.DevMode)
 	if err != nil {
 		return
 	}

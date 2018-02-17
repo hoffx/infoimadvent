@@ -46,7 +46,7 @@ func NewDocumentStorer(name, user, password string, doLog bool) (DocumentStorer,
 		return DocumentStorer{}, err
 	}
 
-	qs := DocumentStorer{Storer{db, true}, false}
+	qs := DocumentStorer{Storer{db}, false}
 	qs.Complete = qs.isComplete()
 
 	return qs, nil

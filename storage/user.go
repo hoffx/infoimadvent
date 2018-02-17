@@ -50,7 +50,7 @@ func NewUserStorer(name, user, password string, doLog bool) (UserStorer, error) 
 		return UserStorer{}, err
 	}
 
-	return UserStorer{Storer{db, true}}, nil
+	return UserStorer{Storer{db}}, nil
 }
 
 func (s *UserStorer) ResetDB() error {
