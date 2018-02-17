@@ -129,7 +129,12 @@ func Register(ctx *macaron.Context, cpt *captcha.Captcha, log *log.Logger, uStor
 
 			encodedMail := base64.StdEncoding.EncodeToString([]byte(user.Email))
 			ctx.Data["User"] = user
-			ctx.Data["Link"] = "http://" + config.Config.Server.Address + "/confirm?user=" + encodedMail + "&token=" + confirmationToken
+			port := config.Config.Server.Port
+			if port != 80 && port != 443 {
+				ctx.Data["Link"] = "http://" + config.Config.Server.Address + ":" + strconv.Itoa(config.Config.Server.Port) + "/confirm?user=" + encodedMail + "&token=" + confirmationToken
+			} else {
+				ctx.Data["Link"] = "http://" + config.Config.Server.Address + "/confirm?user=" + encodedMail + "&token=" + confirmationToken
+			}
 
 			mailBody, err := ctx.HTMLString("confirmmail", ctx.Data)
 			if err != nil {
