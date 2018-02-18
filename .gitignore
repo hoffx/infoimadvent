@@ -312,3 +312,5 @@ infoimadvent
 pdf/*.pdf
 static/fonts/*
 !static/fonts/keep.me
+*.zip
+*.tar.gz
