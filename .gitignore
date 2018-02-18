@@ -295,7 +295,7 @@ debug
 .vscode
 
 # project-files
-config.ini
+*config.ini
 *.min.js
 *.min.css
 *.css
