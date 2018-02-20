@@ -85,7 +85,7 @@ func startCronJobs() {
 	c := cron.New()
 	c.AddFunc("0 0 1 "+strconv.Itoa(config.Config.Server.ResetMonth)+" *", standardReset)
 	// TODO: change back to december after testing
-	c.AddFunc("0 2 2-25 2 *", calcLatest)
+	c.AddFunc("0 2 2-25 "+strconv.Itoa(int(config.Config.Server.Advent))+" *", calcLatest)
 	c.Start()
 }
 

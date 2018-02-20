@@ -33,15 +33,12 @@ func Calendar(ctx *macaron.Context, log *log.Logger, sess session.Store) {
 
 		var opened, current, locked bool
 
-		// TODO: change back to december after testing
 		if d != storage.None || (i+1 < day && month == config.Config.Server.Advent) || month != config.Config.Server.Advent {
 			opened = true
 		}
-		// TODO: change back to december after testing
 		if month == config.Config.Server.Advent && day == i+1 {
 			current = true
 		}
-		// TODO: change back to december after testing
 		if month != config.Config.Server.Advent || day < i+1 {
 			locked = true
 		}

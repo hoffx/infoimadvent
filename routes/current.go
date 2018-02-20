@@ -12,7 +12,6 @@ import (
 // Current handles the route "/day". It is a shortcut for "/day/[current_day]"
 func Current(ctx *macaron.Context, log *log.Logger) {
 	_, m, d := time.Now().Date()
-	// TODO: change back to december after testing
 	if m == config.Config.Server.Advent && d > 0 && d <= 24 {
 		ctx.Redirect("/day/" + strconv.Itoa(d) + "?" + ctx.Req.URL.RawQuery)
 	} else {
