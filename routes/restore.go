@@ -31,7 +31,7 @@ func Restore(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer)
 		return
 	}
 	if !user.Confirmed {
-		ctx.Redirect("/login?Error="+ErrNotConfirmed, 302)
+		ctx.Redirect("/login?Error="+ctx.Tr(ErrNotConfirmed), 302)
 		return
 	}
 
@@ -65,7 +65,7 @@ func Restore(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer)
 	ctx.Data["User"] = user
 	ctx.Data["Password"] = pw
 
-	mailBody, err := ctx.HTMLString("restoremail", ctx.Data)
+	htmlBody, err := ctx.HTMLString("restoremail", ctx.Data)
 	if err != nil {
 		ctx.Error(500, ctx.Tr(ErrUnexpected))
 		log.Println(err)
@@ -77,7 +77,10 @@ func Restore(ctx *macaron.Context, log *log.Logger, uStorer *storage.UserStorer)
 	m.SetHeader("From", config.Config.Mail.Sender)
 	m.SetHeader("To", user.Email)
 	m.SetHeader("Subject", ctx.Tr("restore_mail_header"))
-	m.SetBody("text/html", mailBody)
+
+	plainBody := ctx.Tr("service") + "\n\n" + ctx.Tr("restore_mail_body") + pw
+	m.SetBody("text/plain", plainBody)
+	m.AddAlternative("text/html", htmlBody)
 
 	d := gomail.NewDialer(config.Config.Mail.Address, config.Config.Mail.Port, config.Config.Mail.Username, config.Config.Mail.Password)
 
