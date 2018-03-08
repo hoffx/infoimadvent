@@ -129,9 +129,10 @@ func Register(ctx *macaron.Context, cpt *captcha.Captcha, log *log.Logger, uStor
 
 			encodedMail := base64.StdEncoding.EncodeToString([]byte(user.Email))
 			ctx.Data["User"] = user
-			ctx.Data["Link"] = "http://" + config.Config.Server.Address + "/confirm?user=" + encodedMail + "&token=" + confirmationToken
+			linkstr := "http://" + config.Config.Server.Address + "/confirm?user=" + encodedMail + "&token=" + confirmationToken
+			ctx.Data["Link"] = linkstr
 
-			mailBody, err := ctx.HTMLString("confirmmail", ctx.Data)
+			htmlBody, err := ctx.HTMLString("confirmmail", ctx.Data)
 			if err != nil {
 				ctx.Error(500, ctx.Tr(ErrUnexpected))
 				log.Println(err)
@@ -143,7 +144,10 @@ func Register(ctx *macaron.Context, cpt *captcha.Captcha, log *log.Logger, uStor
 			m.SetHeader("From", config.Config.Mail.Sender)
 			m.SetHeader("To", user.Email)
 			m.SetHeader("Subject", ctx.Tr("confirmation_mail_header"))
-			m.SetBody("text/html", mailBody)
+
+			plainBody := ctx.Tr("service") + "\n\n" + ctx.Tr("confirmation_mail_body") + "\n" + linkstr
+			m.SetBody("text/plain", plainBody)
+			m.AddAlternative("text/html", htmlBody)
 
 			d := gomail.NewDialer(config.Config.Mail.Address, config.Config.Mail.Port, config.Config.Mail.Username, config.Config.Mail.Password)
 
