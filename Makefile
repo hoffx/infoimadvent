@@ -52,7 +52,7 @@ ifeq ($(version),)
 	@echo "Assuming this is a development build ! You can specify a version using the following syntax: make release version=<version_string>"
 endif
 ifeq ($(os),)
-	@echo "Assuming you want to compile for your GOOS ! You can specify a different os using the following syntax: make release config=<target_os>"
+	@echo "Assuming you want to compile for your GOOS ! You can specify a different os using the following syntax: make release os=<target_os>"
 	@echo "You must export your GOOS before running this command !"
 endif
 ifeq ($(arc),)
